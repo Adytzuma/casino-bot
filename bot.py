@@ -6,24 +6,17 @@ from ext.admin import ext_reload
 import ext.admin
 import os
 
+with open('prefixes.json') as fp:
+    PREFIXES = json.load(fp)
+
 def command_prefix_generator (bot, message):
 	#Gets costume prefix for server
-	default_prefix = "c!"
 	try:
 		server_id = message.server.id
 	except AttributeError:
-		return default_prefix
-	
-	with open("prefixs.json") as f:	
-		try:
-			prefixs = json.load(f)
-		except:	
-			prefixs = {}
-	
-	for i in range(0, len(prefixs)):
-		if prefixs.get(server_id, None) != None:
-			return(prefixs[str(server_id)])
-	return default_prefix
+		return "c!"
+
+	return prefixes.get(server_id, 'c!')
 
 bot = commands.Bot(command_prefix=command_prefix_generator)
 
