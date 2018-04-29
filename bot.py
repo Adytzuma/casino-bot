@@ -49,7 +49,7 @@ async def on_message(msg):
 			
 @bot.event
 async def on_message_edit(before, after):
-	if msg.author.bot != True:
+	if after.author.bot != True:
 		await bot.process_commands(after)
 		
 bot.loop.create_task(presence())
