@@ -219,15 +219,5 @@ class Admin:
 				except:
 					pass
 
-
-	@commands.check(is_owner)
-	@commands.command(name="reload")
-	async def reload_(self):
-		"""Reloads all modules"""	
-		exec_ = await ext_reload(self.bot)
-		if exec_ == True:
-			em = discord.Embed(title="All modules reloaded :white_check_mark:", colour=discord.Colour.light_grey())
-			await self.bot.say(embed = em)
-	
 def setup(bot):
 	bot.add_cog(Admin(bot))
