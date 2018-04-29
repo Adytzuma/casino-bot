@@ -17,13 +17,6 @@ class Moderation:
 		if old_prefix == new_prefix:
 			await self.bot.say("Prefix hasnt't changed, prefix is \"%s\"" %(old_prefix))
 			return
-			
-		with open("prefixs.json") as f:
-			try:
-				prefixs = json.load(f)
-			except:
-				prefixs = {}
-			
 		try:
 			del prefixs[ctx.message.server.id]
 		except KeyError:
@@ -31,10 +24,6 @@ class Moderation:
 		
 		if new_prefix != "c!":
 			prefixs.update({ctx.message.server.id: new_prefix})
-		
-		with open("prefixs.json", "w") as f:
-			f.write(json.dumps(prefixs, indent=4 * ' '))
-
 			
 		await self.bot.say("Prefix set to \"%s\"" %(new_prefix))
 		
