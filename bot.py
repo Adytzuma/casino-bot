@@ -56,13 +56,11 @@ async def on_member_jon(member):
 @bot.event
 async def on_message_edit(before, after):
 	await bot.process_commands(after)
-
-#@bot.event
-#async def on_message(msg):
-#	if "<@!434057626980974602>" in msg.content:
-#		await bot.say("The prefix for this server is `%s`, to check for the prefix again, mention the bot" %(.prefix))
-#	else:
-#		await bot.process_commands(msg)
+	
+@bot.event
+async def on_message(msg):
+	if message.author.bot != True:
+		await bot.process_commands(msg)
 		
 bot.loop.create_task(presence())
 bot.run(os.getenv('TOKEN'))
