@@ -11,7 +11,7 @@ class General:
 		t = await self.bot.say('Pong!')
 		ms = (t.timestamp-ctx.message.timestamp).total_seconds() * 1000
 #		lat = ctx.bot.latency * 1000
-		await self.bot.edit_message(t, new_content=':newspaper:Ping time: {}ms'.format(int(ms)))
+		await self.bot.edit_message(t, new_content='Ping time: {}ms'.format(int(ms)))
 		
 def setup(bot):
 	bot.add_cog(General(bot))
