@@ -11,7 +11,7 @@ prefixes = {}
 def command_prefix_generator (bot, message):
 	#Gets costume prefix for server
 	try:
-		return prefixes.get(server_id, 'c!')
+		return prefixes.get(message.server.id, 'c!')
 	except AttributeError:
 		return "c!"
 
