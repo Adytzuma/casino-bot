@@ -6,17 +6,14 @@ from ext.admin import ext_reload
 import ext.admin
 import os
 
-with open('prefixes.json') as fp:
-    PREFIXES = json.load(fp)
+prefixs = {}
 
 def command_prefix_generator (bot, message):
 	#Gets costume prefix for server
 	try:
-		server_id = message.server.id
+		return prefixes.get(server_id, 'c!')
 	except AttributeError:
 		return "c!"
-
-	return prefixes.get(server_id, 'c!')
 
 bot = commands.Bot(command_prefix=command_prefix_generator)
 
@@ -42,18 +39,18 @@ async def on_ready():
 async def on_member_jon(member):
 	if member.sever.id == "415241422736719882":
 		if member.bot == True:
-			await bot.add_roles(ctx.message.author, discord.Object("432826495719833601"))
+			await bot.add_roles(member, discord.Object("432826495719833601"))
 		else:
-			await bot.add_roles(ctx.message.author, discord.Object("433607950045544448"))
-
-@bot.event
-async def on_message_edit(before, after):
-	await bot.process_commands(after)
-	
+			await bot.add_roles(member, discord.Object("433607950045544448"))
 @bot.event
 async def on_message(msg):
 	if msg.author.bot != True:
 		await bot.process_commands(msg)
+			
+@bot.event
+async def on_message_edit(before, after):
+	if msg.author.bot != True:
+	await bot.process_commands(after)
 		
 bot.loop.create_task(presence())
 bot.run(os.getenv('TOKEN'))
