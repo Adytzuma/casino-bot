@@ -27,9 +27,9 @@ async def presence():
 				if u.bot == False:
 					a = a+1
 		await bot.change_presence(game=discord.Game(name=('%s users | %s servers' %(a, len(bot.servers))), type=3))
-		await sleep(60)
+		await sleep(30)
 		await bot.change_presence(game=discord.Game(name='c!help', type=2))
-		await sleep(60)
+		await sleep(30)
 		
 @bot.event
 async def on_ready():
