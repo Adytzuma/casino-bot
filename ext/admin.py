@@ -29,7 +29,8 @@ async def ext_reload(bot):
 	msgs = []
 	for i in files:
 		try:		
-			exec ("""bot.load_extension(i)""")
+			exec("bot.unload_extension(%s)" %(i))
+			exec ("bot.load_extension(%s)" %(i))
 		except Exception as e:
 			stdout = io.StringIO()
 			value = stdout.getvalue()
@@ -38,7 +39,7 @@ async def ext_reload(bot):
 			msgs.append(msg)
 			
 	if msgs != []:
-		for i in range(0, len(msgs))::
+		for i in range(0, len(msgs)):
 			bot.loop.create_task(await_reaction(msgs[i]))
 		
 class Admin:
