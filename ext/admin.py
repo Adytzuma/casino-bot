@@ -26,11 +26,9 @@ async def ext_reload(bot):
 		if f.endswith('.py'):
 			files.append('ext.' + f.replace(".py", ""))
 		
-	break_ = False
 	msgs = []
 	for i in files:
-		try:
-			exec ("""bot.unload_extension(i)""")
+		try:		
 			exec ("""bot.load_extension(i)""")
 		except Exception as e:
 			stdout = io.StringIO()
@@ -40,13 +38,9 @@ async def ext_reload(bot):
 			msgs.append(msg)
 			
 	if msgs != []:
-		for i in range(0, (len(msgs)-1)):
+		for i in range(0, len(msgs))::
 			bot.loop.create_task(await_reaction(msgs[i]))
 		
-	if break_ == True:
-		return False
-	return True
-
 class Admin:
 	def __init__(self, bot):
 		self.bot = bot
