@@ -29,8 +29,8 @@ async def ext_reload(bot):
 	msgs = []
 	for i in files:
 		try:		
-			exec("bot.unload_extension(%s)" %(i))
-			exec ("bot.load_extension(%s)" %(i))
+			exec("bot.unload_extension(\"%s\")" %(i))
+			exec ("bot.load_extension(\"%s\")" %(i))
 		except Exception as e:
 			stdout = io.StringIO()
 			value = stdout.getvalue()
