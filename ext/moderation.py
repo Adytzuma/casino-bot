@@ -1,21 +1,23 @@
 import discord
 from discord.ext import commands
-import json
 
 class Moderation:
 	def __init__ (self, bot):
 		self.bot = bot
 	
 	@commands.command(pass_context=True)
-	async def prefix(self, ctx, new_prefix="c!"):
+	async def prefix(self, ctx, new_prefix=None):
 		"""Change the bot prefix"""
 		if ctx.message.author.id != '377812572784820226' and ('manage_server', True) not in ctx.message.author.server_permissions:
 			await self.bot.say("You are not allowed to perform this action, missing `Manage Server`")
-			return
-			
+			return	
+
 		old_prefix = self.bot.command_prefix(self.bot, ctx.message)
+		if new_prefix = None:
+			await bot.say("The prefix for this server is \"%s\"" %())		
+			return	
 		if old_prefix == new_prefix:
-			await self.bot.say("Prefix hasnt't changed, prefix is \"%s\"" %(old_prefix))
+			await self.bot.say("Prefix hasnt't changed")
 			return
 		try:
 			del prefixs[ctx.message.server.id]
