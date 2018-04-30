@@ -11,9 +11,9 @@ prefixes = {}
 def command_prefix_generator (bot, message):
 	#Gets costume prefix for server
 	try:
-		return prefixes.get(message.server.id, 'c!')
+		return [prefixes.get(message.server.id, 'c!'), "<@!434057626980974602>"]
 	except AttributeError:
-		return "c!"
+		return ["c!", "<@!434057626980974602>"]
 
 bot = commands.Bot(command_prefix=command_prefix_generator)
 
