@@ -14,7 +14,7 @@ import inspect
 import textwrap
 
 ownerid = "377812572784820226"
-async def await_reaction(msg):
+async def await_reaction(msg: discordia.Message):
 	await bot.wait_for_reaction(emoji="\u274C", message=msg, user=(await bot.get_user_info(ownerid)))
 	await bot.delete_message(msg)
 
