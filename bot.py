@@ -36,7 +36,7 @@ async def on_ready():
 	await ext_reload(bot)
 
 @bot.event
-async def on_member_jon(member):
+async def on_member_join(member):
 	if member.sever.id == "415241422736719882":
 		if member.bot == True:
 			await bot.add_roles(member, discord.Object("432826495719833601"))
