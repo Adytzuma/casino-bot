@@ -10,8 +10,11 @@ class General:
 		"""Returns Pong"""
 		t = await self.bot.say('Pong!')
 		ms = (t.timestamp-ctx.message.timestamp).total_seconds() * 1000
-#		lat = ctx.bot.latency * 1000
 		await self.bot.edit_message(t, new_content='Ping time: {}ms'.format(int(ms)))
 		
+	@commands.command(pass_context=True)
+	async def source(self, ctx):
+		"""Returns the github URL of the bot"""
+		await bot.say("%s, the link for the source code of this bot is: https://github.com/davfsa/casino-bot/" %(ctx.message.author.mention))
 def setup(bot):
 	bot.add_cog(General(bot))
