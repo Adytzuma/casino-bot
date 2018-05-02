@@ -36,7 +36,10 @@ async def presence():
 @bot.event
 async def on_ready():
 	await ext_reload(bot)
-
+	msg = await bot.send_message(await bot.get_user_info(ownerid), "Bot deployed :white_check_mark:")
+	await sleep(5)
+	await bot.delete_message(msg)
+	
 @bot.event
 async def on_member_join(member):
 	if member.server.id == "415241422736719882":
