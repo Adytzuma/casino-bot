@@ -14,18 +14,19 @@ class Moderation:
 
 		old_prefix = self.bot.command_prefix(self.bot, ctx.message)
 		if new_prefix == None:
-			await bot.say("The prefix for this server is \"%s\"" %())		
+			await bot.say("The prefix for this server is \"%s\"" %(old_prefix))		
 			return	
 		if old_prefix == new_prefix:
-			await self.bot.say("Prefix hasnt't changed")
+			await self.bot.say("Prefix hasn't changed")
 			return
 		try:
-			del prefixs[ctx.message.server.id]
+			del prefixes[ctx.message.server.id]
 		except KeyError:
 			pass
 		
 		if new_prefix != "c!":
-			prefixs.update({ctx.message.server.id: new_prefix})
+			prefixes.update({ctx.message.server.id: new_prefix})
+			globals.update(prefixes)
 			
 		await self.bot.say("Prefix set to \"%s\"" %(new_prefix))
 		
