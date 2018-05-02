@@ -6,7 +6,8 @@ from ext.admin import ext_reload
 import ext.admin
 import os
 
-global prefixes = {}
+global prefixes
+prefixes = {}
 
 def command_prefix_generator (bot, message):
 	#Gets costume prefix for server
