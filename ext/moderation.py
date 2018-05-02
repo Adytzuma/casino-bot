@@ -25,9 +25,8 @@ class Moderation:
 			pass
 		
 		if new_prefix != "c!":
-			prefixes.update({ctx.message.server.id: new_prefix})
-			globals.update(prefixes)
-			
+			prefixes.update({ctx.message.server.id: new_prefix})					
+
 		await self.bot.say("Prefix set to \"%s\"" %(new_prefix))
 		
 def setup(bot):
