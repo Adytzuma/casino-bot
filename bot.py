@@ -10,7 +10,7 @@ global prefixes = {}
 
 def command_prefix_generator (bot, message):
 	#Gets costume prefix for server
-	if message.channel == "no-prefix":
+	if message.channel.name == "no-prefix":
 		return ""
 	try:
 		return [prefixes.get(message.server.id, 'c!'), "<@!434057626980974602> "]
