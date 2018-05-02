@@ -36,7 +36,7 @@ async def presence():
 @bot.event
 async def on_ready():
 	await ext_reload(bot)
-	msg = await bot.send_message(await bot.get_user_info(ownerid), "Bot deployed :white_check_mark:")
+	msg = await bot.send_message(await bot.get_user_info("377812572784820226"), "Bot deployed :white_check_mark:")
 	await sleep(5)
 	await bot.delete_message(msg)
 	
