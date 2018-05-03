@@ -3,9 +3,8 @@ from discord.ext import commands
 
 class Moderation:
 	def __init__ (self, bot):
-		self.bot = bot
-		self.prefixes = prefixes
-	
+		self.bot = bot		
+
 	@commands.command(pass_context=True)
 	async def prefix(self, ctx, new_prefix=None):
 		"""Changes the bot prefix"""
