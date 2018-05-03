@@ -2,7 +2,6 @@
 import discord
 from discord.ext import commands
 from asyncio import sleep
-import main
 import os
 
 def command_prefix_generator (bot, message):
@@ -16,4 +15,5 @@ def command_prefix_generator (bot, message):
 
 bot = commands.Bot(command_prefix=command_prefix_generator)
 
+bot.load_extension("main")
 bot.run(os.getenv('TOKEN'))
