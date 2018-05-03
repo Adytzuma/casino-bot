@@ -4,6 +4,7 @@ from discord.ext import commands
 from asyncio import sleep
 import os
 
+prefixes = {}
 def command_prefix_generator (bot, message):
 	#Gets costume prefix for server
 	if message.channel.name == "no-prefix":
