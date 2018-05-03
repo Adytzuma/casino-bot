@@ -5,9 +5,6 @@ from asyncio import sleep
 import main
 import os
 
-global prefixes
-prefixes = {}
-
 def command_prefix_generator (bot, message):
 	#Gets costume prefix for server
 	if message.channel.name == "no-prefix":
