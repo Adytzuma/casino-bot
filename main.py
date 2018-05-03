@@ -1,24 +1,25 @@
 import discord
 from discord.ext import commands
+from asyncio import sleep
+
+async def presence():
+	await bot.wait_until_ready()
+	while not bot.is_closed:
+		a = 0
+		for i in bot.servers:
+			for u in i.members:
+				if u.bot == False:
+					a = a+1
+		await bot.change_presence(game=discord.Game(name=('%s users | %s servers' %(a, len(bot.servers))), type=3))
+		await sleep(30)
+		await bot.change_presence(game=discord.Game(name='c!help', type=2))
+		await sleep(30)
 
 class Main:
 	def __init__(self, bot):			
 		self.bot = bot
-		
+		bot.loop.create_task(presence())		
 	
-	async def presence():
-		await self.bot.wait_until_ready()
-		while not self.bot.is_closed:
-			a = 0
-			for i in self.bot.servers:
-				for u in i.members:
-					if u.bot == False:
-						a = a+1
-			await self.bot.change_presence(game=discord.Game(name=('%s users | %s servers' %(a, len(bot.servers))), type=3))
-			await sleep(30)
-			await self.bot.change_presence(game=discord.Game(name='c!help', type=2))
-			await sleep(30)
-
 	@bot.event
 	async def on_ready():
 		await ext_reload(bot)
