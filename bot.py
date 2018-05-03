@@ -3,6 +3,8 @@ import discord
 from discord.ext import commands
 from asyncio import sleep
 import os
+import ext.admin
+from ext.admin import ext_reload
 
 prefixes = {}
 def command_prefix_generator (bot, message):
@@ -34,6 +36,7 @@ async def on_ready():
 	msg = await bot.send_message(await bot.get_user_info("377812572784820226"), "Bot deployed :white_check_mark:")
 	await sleep(5)
 	await bot.delete_message(msg)
+	
 @bot.event
 async def on_member_join(member):
 	if member.server.id == "415241422736719882":
