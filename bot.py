@@ -19,5 +19,4 @@ def command_prefix_generator (bot, message):
 
 bot = commands.Bot(command_prefix=command_prefix_generator)
 
-bot.loop.create_task(presence())
 bot.run(os.getenv('TOKEN'))
