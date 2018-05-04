@@ -6,7 +6,7 @@ class Fun:
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command(pass_contex=True)
+	@commands.command(pass_context=True)
 	async def infect(self, ctx, who: discord.Member, what):
 	    async def task(ctx):
 	        while True:
