@@ -14,7 +14,7 @@ class Moderation:
 
 		old_prefix = self.bot.command_prefix(self.bot, ctx.message)
 		if new_prefix == None:
-			await self.bot.say("The prefix for this server is \"%s\"" %(old_prefix))		
+			await self.bot.say("The prefix for this server is `%s`" %(old_prefix))		
 			return	
 		if old_prefix == new_prefix:
 			await self.bot.say("Prefix hasn't changed")
@@ -27,7 +27,7 @@ class Moderation:
 		if new_prefix != "c!":
 			prefixes.update({ctx.message.server.id: new_prefix})					
 
-		await self.bot.say("Prefix set to \"%s\"" %(new_prefix))
+		await self.bot.say("Prefix set to `%s`" %(new_prefix))
 		
 def setup(bot):
 	bot.add_cog(Moderation(bot))
