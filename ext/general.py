@@ -20,7 +20,7 @@ class General:
 
 
 	@commands.command()
-	async def infect(ctx, *, who: discord.Member, what):
+	async def infect(who: discord.Member, what):
 	    async def task():
 	        while True:
 	            m = await bot.wait_for(
