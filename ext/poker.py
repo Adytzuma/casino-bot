@@ -44,7 +44,7 @@ class Poker:
 			
 			self.waiting_games[channel_id].append(user)
         	
-			if len(self.waiting_games[channel_id]) == 2:
+			if len(self.waiting_games[channel_id]) == 4:
 				await self.bot.say('Game starting')
 				self.start(ctx)
 				return
