@@ -6,7 +6,7 @@ class Fun:
 	def __init__(self, bot):
 		self.bot = bot
 	@commands.command()
-	async def infect(self, who: discord.Member, what: discord.Emoji):
+	async def infect(self, who: discord.Member, what):
 	    async def task():
 	        while True:
 	            m = await self.bot.wait_for(
