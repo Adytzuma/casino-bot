@@ -6,15 +6,21 @@ class Fun:
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command(pass_context=True)
-	async def infect(self, ctx, who: discord.Member, what):
-	    async def task(con):
-	        while True:
-	            m = await self.bot.wait_for_message(check=lambda m: m.author.id == con.author.id and m.server.id == con.server.id)
-	            await m.add_reaction(what)
-	    future = self.bot.loop.create_task(task(ctx))
-	    await asyncio.sleep(60 * 60)
-	    future.cancel()
+	@commands.command(pass_context=True, name="infect")
+	async def infect_(ctx, who: discord.Member, what):
+
+		def check(msg):
+			return ctx.message.server.id == msg.server.id
+		
+		async def infect():
+			await self.bot.say(who.name + " has been infected with " + what + "for **one hour**")
+			while True:
+				m = await self.bot.wait_for_message(author=who, check =check)
+				await self.bot.add_reaction(m, what)
+		
+		infection = self.bot.loop.create_task(infect())
+		await asyncio.sleep(60 * 60)
+		infection.cancel()
 
 def setup(bot):
 	bot.add_cog(Fun(bot))
