@@ -18,7 +18,7 @@ class Fun:
 				m = await self.bot.wait_for_message(author=who, check =check)
 				await self.bot.add_reaction(m, what)
 		
-		infection = self.bot.loop.create_task(infect())
+		infection = self.bot.loop.create_task(infect(self))
 		await asyncio.sleep(60 * 60)
 		infection.cancel()
 
