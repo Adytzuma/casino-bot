@@ -5,6 +5,7 @@ from asyncio import sleep
 import os
 import ext.admin
 from ext.admin import ext_reload
+from ext.admin import await_reaction
 
 prefixes = {}
 def command_prefix_generator (bot, message):

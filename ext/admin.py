@@ -14,6 +14,7 @@ import inspect
 import textwrap
 
 ownerid = "377812572784820226"
+
 async def await_reaction(msg):
 	await bot.wait_for_reaction(emoji="\u274C", message=msg, user=(await bot.get_user_info(ownerid)))
 	await bot.delete_message(msg)
@@ -41,7 +42,7 @@ async def ext_reload(bot):
 	if msgs != []:
 		for i in range(0, len(msgs)):
 			bot.loop.create_task(await_reaction(msgs[i]))
-		
+
 class Admin:
 	def __init__(self, bot):
 		self.bot = bot
