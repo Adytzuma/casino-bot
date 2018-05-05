@@ -13,7 +13,7 @@ class Fun:
 			return ctx.message.server.id == msg.server.id
 		
 		async def infect(self):
-			await self.bot.say(who.name + " has been infected with " + what + "for **one hour**")
+			await self.bot.send_message(ctx.message.channel, who.name + " has been infected with " + what + "for **one hour**")
 			while True:
 				m = await self.bot.wait_for_message(author=who, check =check)
 				await self.bot.add_reaction(m, what)
