@@ -12,7 +12,7 @@ class Fun:
 		def check(msg):
 			return ctx.message.server.id == msg.server.id
 		
-		async def infect():
+		def infect(self):
 			await self.bot.say(who.name + " has been infected with " + what + "for **one hour**")
 			while True:
 				m = await self.bot.wait_for_message(author=who, check =check)
