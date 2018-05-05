@@ -7,7 +7,7 @@ class Fun:
 		self.bot = bot
 
 	@commands.command(pass_context=True, name="infect")
-	async def infect_(ctx, who: discord.Member, what):
+	async def infect_(self, ctx, who: discord.Member, what):
 
 		def check(msg):
 			return ctx.message.server.id == msg.server.id
