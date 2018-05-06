@@ -14,7 +14,7 @@ class Moderation:
 
 		old_prefix = self.bot.command_prefix(self.bot, ctx.message)
 		if new_prefix == None:
-			await self.bot.say("Please provide a prefix") 
+			await self.bot.say("Please provide a prefix. Do `c!help prefix`for more info") 
 			return
 		
 		if old_prefix == new_prefix:
