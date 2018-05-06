@@ -34,7 +34,7 @@ class Fun:
 			return
 
 		infection = self.bot.loop.create_task(infect(self))
-		self.infections.update([user, ctx.message.server.id] : infection)
+		self.infections.update({[user, ctx.message.server.id] : infection})
 		await asyncio.sleep(60 * 60)
 		infection.cancel()
 		del self.infections[user, ctx.message.server.id]
