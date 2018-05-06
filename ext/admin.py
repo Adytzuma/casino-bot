@@ -15,34 +15,6 @@ import textwrap
 
 ownerid = "377812572784820226"
 
-async def await_reaction(msg):
-	await bot.wait_for_reaction(emoji="\u274C", message=msg, user=(await bot.get_user_info(ownerid)))
-	await bot.delete_message(msg)
-
-async def ext_reload(bot):
-	#Imports modules
-	path = getcwd() + "/ext/"
-	files = []
-	for f in listdir(path):
-		if f.endswith('.py'):
-			files.append('ext.' + f.replace(".py", ""))
-		
-	msgs = []
-	for i in files:
-		try:		
-			exec("bot.unload_extension(\"%s\")" %(i))
-			exec ("bot.load_extension(\"%s\")" %(i))
-		except Exception as e:
-			stdout = io.StringIO()
-			value = stdout.getvalue()
-			msg = await bot.send_message(await bot.get_user_info(ownerid), ":warning:**There was a problem while loading the extension `%s`, please check the error and fix**:warning:" %(i) + '\nError:```py\n{}{}\n```'.format(value, traceback.format_exc()))
-			await bot.add_reaction(msg, "\u274C")
-			msgs.append(msg)
-			
-	if msgs != []:
-		for i in range(0, len(msgs)):
-			bot.loop.create_task(await_reaction(msgs[i]))
-
 class Admin:
 	def __init__(self, bot):
 		self.bot = bot

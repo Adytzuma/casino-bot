@@ -3,9 +3,6 @@ import discord
 from discord.ext import commands
 from asyncio import sleep
 import os
-import ext.admin
-from ext.admin import ext_reload
-from ext.admin import await_reaction
 
 prefixes = {}
 def command_prefix_generator (bot, message):
@@ -18,6 +15,34 @@ def command_prefix_generator (bot, message):
 		return "c!"
 
 bot = commands.Bot(command_prefix=command_prefix_generator)
+
+async def await_reaction(bot, msg):
+	await bot.wait_for_reaction(emoji="\u274C", message=msg, user=(await bot.get_user_info(ownerid)))
+	await bot.delete_message(msg)
+
+async def ext_reload(bot):
+	#Imports modules
+	path = getcwd() + "/ext/"
+	files = []
+	for f in listdir(path):
+		if f.endswith('.py'):
+			files.append('ext.' + f.replace(".py", ""))
+		
+	msgs = []
+	for i in files:
+		try:		
+			exec("bot.unload_extension(\"%s\")" %(i))
+			exec ("bot.load_extension(\"%s\")" %(i))
+		except Exception as e:
+			stdout = io.StringIO()
+			value = stdout.getvalue()
+			msg = await bot.send_message(await bot.get_user_info(ownerid), ":warning:**There was a problem while loading the extension `%s`, please check the error and fix**:warning:" %(i) + '\nError:```py\n{}{}\n```'.format(value, traceback.format_exc()))
+			await bot.add_reaction(msg, "\u274C")
+			msgs.append(msg)
+			
+	if msgs != []:
+		for i in range(0, len(msgs)):
+			bot.loop.create_task(await_reaction(bot, msgs[i]))
 
 async def presence():
 	await bot.wait_until_ready()
