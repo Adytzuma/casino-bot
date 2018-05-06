@@ -13,7 +13,7 @@ class Fun:
 
 	@commands.command(pass_context=True, name="infect")
 	async def infect_(self, ctx, user: discord.Member = None, emoji = None):
-		"""Infects a user with a emoji"""
+		"""Infects a user"""
 		if user == None or emoji == None:
 			await self.bot.say("Please provide a user and a emoji. Do `c!help infect` for more info")
 			return
@@ -22,7 +22,7 @@ class Fun:
 			return ctx.message.server.id == msg.server.id
 		
 		async def infect(self):
-			await self.bot.say("`" + user.name + "` has been infected with " + emoji + " for **one** hour")
+			await self.bot.send_message(ctx.message.channel, "`" + user.name + "` has been infected with " + emoji + " for **one** hour")
 			
 			while True:
 				m = await self.bot.wait_for_message(author=user, check =check)
