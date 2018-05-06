@@ -22,7 +22,7 @@ class Fun:
 			return ctx.message.server.id == msg.server.id
 		
 		async def infect(self):
-			await self.bot.say("`"user.name + "` has been infected with " + emoji + " for **one** hour")
+			await self.bot.say("`" + user.name + "` has been infected with " + emoji + " for **one** hour")
 			
 			while True:
 				m = await self.bot.wait_for_message(author=user, check =check)
