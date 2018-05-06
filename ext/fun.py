@@ -8,7 +8,7 @@ class Fun:
 		self.infections = {}
 		#Infections
 		"""
-		{[user, server.id] : infection_task}
+		{"user;server.id" : infection_task}
 		"""
 
 	@commands.command(pass_context=True, name="infect")
@@ -28,16 +28,16 @@ class Fun:
 				m = await self.bot.wait_for_message(author=user, check =check)
 				await self.bot.add_reaction(m, emoji)
 		
-		inf=self.infections.get([user, ctx.message.server.id], None)
+		inf=self.infections.get(str(user) + ";" + str(ctx.message.server.id), None)
 		if inf != None:
 			await self.bot.say("`" + user.name + "` is already infected")
 			return
 
 		infection = self.bot.loop.create_task(infect(self))
-		self.infections.update({[user, ctx.message.server.id] : infection})
+		self.infections.update({str(user) + ";" + str(ctx.message.server.id) : infection})
 		await asyncio.sleep(60 * 60)
 		infection.cancel()
-		del self.infections[user, ctx.message.server.id]
+		del self.infections[str(user) + ";" + str(ctx.message.server.id)]
 
 	@commands.command(pass_context=True)
 	async def heal(self, ctx, user: discord.Member = None):
@@ -46,14 +46,14 @@ class Fun:
 			await self.bot.say("Please provide a user. Do `c!help heal` for more info")
 			return
 
-		if user == ctx.messsage.author:
+		if user == ctx.message.author:
 			await self.bot.say("You can't heal yourself")
 			return
 
-		inf=self.infections.get([user, ctx.message.server.id], None)
+		inf=self.infections.get(str(user) + ";" + str(ctx.message.server.id), None)
 		if inf != None:
 			inf.cancel()
-			del self.infections[user, ctx.message.server.id]
+			del self.infections[str(user) + ";" + str(ctx.message.server.id)]
 			await self.bot.say("`" + user.name + "` has been healed")
 		else:
 			self.bot.say("`" + user.name +"` was not infected")
