@@ -28,8 +28,8 @@ class Fun:
 				m = await self.bot.wait_for_message(author=user, check =check)
 				await self.bot.add_reaction(m, emoji)
 		
-		in=self.infections.get([user, ctx.message.server.id], None)
-		if in != None:
+		inf=self.infections.get([user, ctx.message.server.id], None)
+		if inf != None:
 			await self.bot.say("`" + user.name + "` is already infected")
 			return
 
