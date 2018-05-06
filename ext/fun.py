@@ -56,7 +56,7 @@ class Fun:
 			del self.infections[str(user) + ";" + str(ctx.message.server.id)]
 			await self.bot.say("`" + user.name + "` has been healed")
 		else:
-			self.bot.say("`" + user.name +"` was not infected")
+			await self.bot.say("`" + user.name + "` was not infected")
 			
 def setup(bot):
 	bot.add_cog(Fun(bot))
