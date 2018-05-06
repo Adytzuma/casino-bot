@@ -1,9 +1,6 @@
 from discord.ext import commands
-from os import listdir, getcwd
-from os.path import isfile, join
 from contextlib import redirect_stdout
 import discord
-import json
 import traceback
 import io
 import time

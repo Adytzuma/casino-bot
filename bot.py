@@ -2,9 +2,15 @@
 import discord
 from discord.ext import commands
 from asyncio import sleep
-import os
+from os import listdir, getcwd
+from os.path import isfile, join
+import traceback
+from contextlib import redirect_stdout
+import io
 
 prefixes = {}
+ownerid = "377812572784820226"
+
 def command_prefix_generator (bot, message):
 	#Gets costume prefix for server
 	if message.channel.name == "no-prefix":
