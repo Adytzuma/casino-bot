@@ -7,6 +7,7 @@ from os.path import isfile, join
 import traceback
 from contextlib import redirect_stdout
 import io
+import os
 
 prefixes = {}
 ownerid = "377812572784820226"
