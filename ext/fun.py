@@ -50,9 +50,9 @@ class Fun:
 			await self.bot.say("You can't heal yourself")
 			return
 
-		in=self.infections.get([user, ctx.message.server.id], None)
-		if in != None:
-			in.cancel()
+		inf=self.infections.get([user, ctx.message.server.id], None)
+		if inf != None:
+			inf.cancel()
 			del self.infections[user, ctx.message.server.id]
 			await self.bot.say("`" + user.name + "` has been healed")
 		else:
