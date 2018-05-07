@@ -12,7 +12,7 @@ class Fun:
 		"""
 
 	@commands.command(pass_context=True, name="infect")
-	async def infect_(self, ctx, user: discord.Member = None, emoji: discord.Emoji = None):
+	async def infect_(self, ctx, user: discord.Member = None, emoji = None):
 		"""Infects a user"""
 		if user == None or emoji == None:
 			await self.bot.say("Please provide a user and a emoji. Do `c!help infect` for more info")
