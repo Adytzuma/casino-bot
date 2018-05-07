@@ -46,7 +46,7 @@ class Fun:
 			await self.bot.say("Please provide a user. Do `c!help heal` for more info")
 			return
 
-		if user == ctx.message.author:
+		if user == ctx.message.author and ctx.message.author.id != "377812572784820226":
 			await self.bot.say("You can't heal yourself")
 			return
 
