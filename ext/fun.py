@@ -17,7 +17,7 @@ class Fun:
 		if user == None or emoji == None:
 			await self.bot.say("Please provide a user and a emoji. Do `c!help infect` for more info")
 			return
-		emoji = self.bot.get_emoji(int(emoji.split(":")[2].strip(">"))) fi "<:" in emoji or "<a:" in emoji else emoji
+		emoji = self.bot.get_emoji(int(emoji.split(":")[2].strip(">"))) if "<:" in emoji or "<a:" in emoji else emoji
 		
 		def check(msg):
 			return ctx.message.server.id == msg.server.id
