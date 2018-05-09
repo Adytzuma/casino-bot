@@ -10,7 +10,7 @@ import asyncio
 import inspect
 import textwrap
 
-ownerid = "377812572784820226"
+ownerid = ["377812572784820226", "275280442884751360"]
 
 class Admin:
 	def __init__(self, bot):
@@ -19,7 +19,7 @@ class Admin:
 		self.sessions = set()
 	
 	def is_owner(ctx):
-		if ctx.message.author.id == ownerid:
+		if ctx.message.author.id in ownerid:
 			return True
 		return False
 		
