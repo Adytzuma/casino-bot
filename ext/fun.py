@@ -17,13 +17,18 @@ class Fun:
 		if user == None or emoji == None:
 			await self.bot.say("Please provide a user and a emoji. Do `c!help infect` for more info")
 			return
+		
 		emoji_stripped= emoji.strip("<>").split(":")[-1]
 		try:							
 			int(emoji_stripped)
 			emoji = discord.utils.get(self.bot.get_all_emojis(), id=emoji_stripped)
 		except Exception as e:
 			pass
-		
+		try:		
+			await self.bot.add_reaction(ctx.message, emoji)	
+		except:
+			await self.bot.say("Emoji not found")
+			
 		def check(msg):
 			return ctx.message.server.id == msg.server.id
 		
