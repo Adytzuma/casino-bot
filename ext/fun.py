@@ -23,12 +23,8 @@ class Fun:
 			int(emoji_stripped)
 			emoji = discord.utils.get(self.bot.get_all_emojis(), id=emoji_stripped)
 		except Exception as e:
-			pass
-		try:		
-			await self.bot.add_reaction(ctx.message, emoji)	
-		except:
-			await self.bot.say("Emoji not found")
-			
+			pass			
+
 		def check(msg):
 			return ctx.message.server.id == msg.server.id
 		
@@ -43,7 +39,11 @@ class Fun:
 		if inf != None:
 			await self.bot.say("`" + user.name + "` is already infected")
 			return
-
+		try:
+			await self.bot.add_reaction(ctx.message, emoji)
+		except:
+			await self.bot.say("Emoji not found")
+			
 		infection = self.bot.loop.create_task(infect(self))
 		self.infections.update({str(user) + ";" + str(ctx.message.server.id) : infection})
 		await asyncio.sleep(60 * 60)
