@@ -10,7 +10,8 @@ import asyncio
 import inspect
 import textwrap
 
-ownerid = ["377812572784820226", "275280442884751360"]
+global ownerid
+ownerid = ["377812572784820226"]
 
 class Admin:
 	def __init__(self, bot):
