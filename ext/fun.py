@@ -18,7 +18,7 @@ class Fun:
 			await self.bot.say("Please provide a user and a emoji. Do `c!help infect` for more info")
 			return
 		
-		emoji_stripped= emoji.strip("<>").split(":")[-1]
+		emoji_stripped= emoji.strip("<>").split(":")[-1][:-1]
 		try:							
 			int(emoji_stripped)
 			emoji = discord.utils.get(self.bot.get_all_emojis(), id=emoji_stripped)
@@ -29,7 +29,7 @@ class Fun:
 			return ctx.message.server.id == msg.server.id
 		
 		async def infect_task(self):
-			await self.bot.send_message(ctx.message.channel, "`" + user.name + "` has been infected with " + emoji + " for **one** hour")
+			await self.bot.send_message(ctx.message.channel, "`" + user.name + "` has been infected with " + str(emoji) + " for **one** hour")
 			
 			while True:
 				m = await self.bot.wait_for_message(author=user, check =check)
