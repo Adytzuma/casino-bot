@@ -33,7 +33,11 @@ class Fun:
 			
 			while True:
 				m = await self.bot.wait_for_message(author=user, check =check)
-				await self.bot.add_reaction(m, emoji)
+				try:
+					await self.bot.add_reaction(m, emoji)
+				except:
+					pass
+		
 		
 		inf=self.infections.get(str(user) + ";" + str(ctx.message.server.id), None)
 		if inf != None:
