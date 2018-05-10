@@ -43,6 +43,8 @@ class Fun:
 			await self.bot.add_reaction(ctx.message, emoji)
 		except:
 			await self.bot.say("Emoji not found")
+			return
+			
 			
 		infection = self.bot.loop.create_task(infect_task(self))
 		self.infections.update({str(user) + ";" + str(ctx.message.server.id) : infection})
