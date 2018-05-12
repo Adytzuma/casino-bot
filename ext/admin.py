@@ -10,8 +10,8 @@ import asyncio
 import inspect
 import textwrap
 
-global ownerid
-ownerid = ["377812572784820226"]
+global admin_perm_id
+admin_perm_id = ["377812572784820226"]
 
 class Admin:
 	def __init__(self, bot):
@@ -20,7 +20,7 @@ class Admin:
 		self.sessions = set()
 	
 	def is_owner(ctx):
-		if ctx.message.author.id in ownerid:
+		if ctx.message.author.id in admin_perm_id:
 			return True
 		return False
 		
