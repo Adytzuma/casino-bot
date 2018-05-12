@@ -40,7 +40,7 @@ class Fun:
 		
 		
 		inf=self.infections.get(str(user) + ";" + str(ctx.message.server.id), None)
-		if inf != None:
+		if inf is not None:
 			await self.bot.say("`" + user.name + "` is already infected")
 			return
 		try:
@@ -59,7 +59,7 @@ class Fun:
 	@commands.command(pass_context=True)
 	async def heal(self, ctx, user: discord.Member = None):
 		"""Heals a user from a infection"""
-		if user == None:
+		if user is None:
 			await self.bot.say("Please provide a user. Do `c!help heal` for more info")
 			return
 
@@ -68,7 +68,7 @@ class Fun:
 			return
 
 		inf=self.infections.get(str(user) + ";" + str(ctx.message.server.id), None)
-		if inf != None:
+		if inf is not None:
 			inf.cancel()
 			del self.infections[str(user) + ";" + str(ctx.message.server.id)]
 			await self.bot.say("`" + user.name + "` has been healed")
