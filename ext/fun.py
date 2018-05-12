@@ -76,8 +76,10 @@ class Fun:
 			await self.bot.say("`" + user.name + "` was not infected")
 	
 	@commands.command(pass_context=True)
-	async def fist(self, ctx, user: discord.Member = ctx.message.meber.author):
+	async def fist(self, ctx, user: discord.Member = None):
 		"""Fists a user"""
+		if user is None:
+			user = ctx.message.author
 		edits = 4
 		spaces = 12
 		time_to_wait = 0.4
