@@ -83,13 +83,13 @@ class Fun:
 		edits = 4
 		spaces = 12
 		time_to_wait = 0.4
-		msg = await bot.say(f"{user.mention}" + "\t"*int(edits*spaces) + ":left_facing_fist:")
+		msg = await self.bot.say(f"{user.mention}" + "\t"*int(edits*spaces) + ":left_facing_fist:")
 		for i in range(edits):
 			edits -= 1
 			await asyncio.sleep(time_to_wait)
-			await bot.edit_message(msg, f"{user.mention}" + "\t"*int(edits*spaces) + ":left_facing_fist:")
+			await self.bot.edit_message(msg, f"{user.mention}" + "\t"*int(edits*spaces) + ":left_facing_fist:")
 			if edits == 0:
-				await bot.edit_message(msg, f":boom: <----- This is you {user.mention}")
+				await self.bot.edit_message(msg, f":boom: <----- This is you {user.mention}")
 		
 def setup(bot):
 	bot.add_cog(Fun(bot))
