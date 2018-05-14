@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 import asyncio
+import aiohttp, os, traceback
+from PIL import Image
 
 class Fun:
 	def __init__(self, bot):
@@ -90,6 +92,31 @@ class Fun:
 			await self.bot.edit_message(msg, f"{user.mention}" + "\t"*int(edits*spaces) + ":left_facing_fist:")
 			if edits == 0:
 				await self.bot.edit_message(msg, f":boom: <----- This is you {user.mention}")
+
+	@commands.command(pass_context=True)
+	async def blurpify(self, ctx, user:discord.Member = None):
+		"""Makes the users profile picture blurple"""
+		mem = mem or ctx.message.author
+		async with aihttp.ClientSesion() as cs:
+			async with cs.get(mem.avatar_url) as r:
+				with open("blurpified.png", "wb") as f:
+					f.write(await r.read())
+
+		im = Image.open("blurpified.png")
+		im = im.resize((256, 256))
+		im = im.convert("RGB")
+		px = im.load()
+		for x in range(0, im.size[0]):
+			for y in range(0, im.size[0]):
+				r, g, b = ptx[x, y]
+				if (r+g+b)/3>180:
+					px[x, y] = (114, 137, 218)
+				else:
+					px[x, y] = (225, 225, 225)
+		im.save("blurpified.jpg")
+		await self.bot.upload("blurpified.jpg")
+		os.remove("blurpified.jpg")
+
 		
 def setup(bot):
 	bot.add_cog(Fun(bot))

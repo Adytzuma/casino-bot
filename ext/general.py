@@ -27,5 +27,7 @@ class General:
 	async def add(self, ctx):
 		"""Sends the invite to add the bot to your server"""
 		await self.bot.say("%s, the link to invite the bot is: https://discordapp.com/api/oauth2/authorize?client_id=434057626980974602&permissions=330752&scope=bot" %(ctx.message.author.mention))
+
+
 def setup(bot):
 	bot.add_cog(General(bot))
