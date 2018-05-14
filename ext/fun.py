@@ -96,9 +96,9 @@ class Fun:
 	@commands.command(pass_context=True)
 	async def blurpify(self, ctx, user:discord.Member = None):
 		"""Makes the users profile picture blurple"""
-		mem = mem or ctx.message.author
+		user = user or ctx.message.author
 		async with aihttp.ClientSesion() as cs:
-			async with cs.get(mem.avatar_url) as r:
+			async with cs.get(user.avatar_url) as r:
 				with open("blurpified.png", "wb") as f:
 					f.write(await r.read())
 
