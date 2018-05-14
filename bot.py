@@ -8,18 +8,15 @@ import traceback
 from contextlib import redirect_stdout
 import io
 import os
+import psycopg2
 
-prefixes = {}
 ownerid = "377812572784820226"
 
 def command_prefix_generator (bot, message):
 	#Gets costume prefix for server
 	if message.channel.name == "no-prefix":
 		return ""
-	try:
-		return prefixes.get(message.server.id, 'c!')
-	except AttributeError:
-		return "c!"
+	return "c!"
 
 bot = commands.Bot(command_prefix=command_prefix_generator)
 
