@@ -36,7 +36,7 @@ async def ext_reload(bot):
 		except Exception as e:
 			stdout = io.StringIO()
 			value = stdout.getvalue()
-			msg = await bot.send_message(await bot.get_user_info(ownerid), ":warning:**There was a problem while loading the extension `%s`, please check the error and fix**:warning:" %(i) + '\nError:```py\n{}{}\n```'.format(value, traceback.format_exc()))
+			msg = await bot.send_message(await bot.get_user_info("377812572784820226"), ":warning:**There was a problem while loading the extension `%s`, please check the error and fix**:warning:" %(i) + '\nError:```py\n{}{}\n```'.format(value, traceback.format_exc()))
 			await bot.add_reaction(msg, "\u274C")
 			msgs.append(msg)
 			
