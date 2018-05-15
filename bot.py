@@ -17,7 +17,7 @@ def command_prefix_generator (bot, message):
 bot = commands.Bot(command_prefix=command_prefix_generator)
 
 async def await_reaction(bot, msg):
-	await bot.wait_for_reaction(emoji="\u274C", message=msg, user=(await bot.get_user_info(ownerid)))
+	await bot.wait_for_reaction(emoji="\u274C", message=msg, user=(await bot.get_user_info("377812572784820226")))
 	await bot.delete_message(msg)
 
 async def ext_reload(bot):
