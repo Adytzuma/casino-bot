@@ -62,7 +62,8 @@ class Poker:
 
 		for sym in symbols:
 			for num in numbers:
-				
+				#Generate random number
+				pass
 
 	async def alert(self, info, user1 = None, user2 = None, user3 = None, user4 = None):
 		try:
