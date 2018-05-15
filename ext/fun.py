@@ -99,10 +99,10 @@ class Fun:
 		user = user or ctx.message.author
 		async with aiohttp.ClientSession() as cs:
 			async with cs.get(user.avatar_url) as r:
-				with open("blurpified.png", "wb") as f:
+				with open("temp.png", "wb") as f:
 					f.write(await r.read())
 
-		im = Image.open("blurpified.png")
+		im = Image.open("temp.png")
 		im = im.resize((256, 256))
 		im = im.convert("RGB")
 		px = im.load()
@@ -113,9 +113,9 @@ class Fun:
 					px[x, y] = (114, 137, 218)
 				else:
 					px[x, y] = (225, 225, 225)
-		im.save("blurpified.jpg")
-		await self.bot.upload("blurpified.jpg")
-		os.remove("blurpified.jpg")
+		im.save("temp.jpg")
+		await self.bot.upload("temp.jpg")
+		os.remove("temp.jpg")
 
 		
 def setup(bot):
