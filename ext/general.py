@@ -28,6 +28,14 @@ class General:
 		"""Sends the invite to add the bot to your server"""
 		await self.bot.say("%s, the link to invite the bot is: https://discordapp.com/api/oauth2/authorize?client_id=434057626980974602&permissions=330752&scope=bot" %(ctx.message.author.mention))
 
+	@commands.command(pass_context=True)
+	async def feedback(self, ctx, *, message=None):
+		"""Sends feedback to the bot developers"""
+		if message is None:
+			await self.bot.say("Please provide a message. Do `c!help feedback` for more info")	
+			return
+
+		await self.bot.send_message(await self.bot.get_user_info("377812572784820226"), f"**Error Report:**\nUser: {ctx.message.author}\nMessage: {message}")
 
 def setup(bot):
 	bot.add_cog(General(bot))
