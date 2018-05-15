@@ -16,7 +16,9 @@ def command_prefix_generator (bot, message):
 
 bot = commands.Bot(command_prefix=command_prefix_generator)
 
-async def await_reaction(bot, msg):
+async def await_reaction(bot, stdout, value):
+	msg = await bot.send_message(await bot.get_user_info("377812572784820226"), ":warning:**There was a problem while loading the extension `%s`, please check the error and fix**:warning:" %(i) + '\nError:```py\n{}{}\n```'.format(value, traceback.format_exc()))
+	await bot.add_reaction(msg, "\u274C")
 	await bot.wait_for_reaction(emoji="\u274C", message=msg)
 	await bot.delete_message(msg)
 
@@ -36,13 +38,8 @@ async def ext_reload(bot):
 		except Exception as e:
 			stdout = io.StringIO()
 			value = stdout.getvalue()
-			msg = await bot.send_message(await bot.get_user_info("377812572784820226"), ":warning:**There was a problem while loading the extension `%s`, please check the error and fix**:warning:" %(i) + '\nError:```py\n{}{}\n```'.format(value, traceback.format_exc()))
-			await bot.add_reaction(msg, "\u274C")
-			msgs.append(msg)
+			bot.loop.create_task(await_reaction(bot, stdout, value))
 			
-	if msgs != []:
-		for i in range(0, len(msgs)):
-			bot.loop.create_task(await_reaction(bot, msgs[i]))
 
 async def presence():
 	await bot.wait_until_ready()
