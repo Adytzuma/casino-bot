@@ -7,9 +7,6 @@ import traceback
 from contextlib import redirect_stdout
 import io
 import os
-import psycopg2
-
-ownerid = "377812572784820226"
 
 def command_prefix_generator (bot, message):
 	#Gets costume prefix for server
