@@ -108,7 +108,7 @@ class Fun:
 		px = im.load()
 		for x in range(0, im.size[0]):
 			for y in range(0, im.size[1]):
-				r, g, b = ptx[x, y]
+				r, g, b = px[x, y]
 				if (r+g+b)/3>180:
 					px[x, y] = (114, 137, 218)
 				else:
