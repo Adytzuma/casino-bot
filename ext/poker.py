@@ -82,7 +82,6 @@ class Poker:
 		cards = [self.generate_deck(), "", "", "", ""]
 		del self.waiting_games[channel_id]
 		
-		for i in 
 		for rn in range(1, 4):
 			for t in range(1, 4):
 				if i == 1:
