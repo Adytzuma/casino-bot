@@ -51,7 +51,7 @@ async def presence():
 @bot.event
 async def on_ready():
 	await ext_reload(bot)
-	em = discord.Embed(title= "Bot deployed", description="The bot has been deployed to **heroku** using the code of **github**", colour=discord.Colour.green(), timestamp=datetime.datetime.utcnow())
+	em = discord.Embed(title= "Bot deployed", description="The bot has been deployed to **heroku** using the code of **github**", colour=discord.Colour.green(), timestamp=datetime.utcnow())
 	msg = await bot.send_message(bot.get_channel("446298417413750786"), embed=em)
 	await bot.add_reaction(msg, "\u2705")
 	
