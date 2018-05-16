@@ -35,7 +35,7 @@ class General:
 			await self.bot.say("Please provide a message. Do `c!help feedback` for more info")	
 			return
 
-		await self.bot.send_message(self.bot.get_channel("446296161528315904"), f"**Error Report:**\nUser: {ctx.message.author.mention}\nMessage: {message}")
-
+		await self.bot.send_message(self.bot.get_channel("446296161528315904"), f"**Feedback:**\nUser: {ctx.message.author.mention}\nMessage: {message}")
+		await self.bot.say("Your feedback has been sent to the team:thumbsup:")	
 def setup(bot):
 	bot.add_cog(General(bot))
