@@ -116,7 +116,7 @@ class Poker:
 						if rtc == a[0]:
 							#Show cards
 							content = "**Your cards:**\n"
-							for c in cards[i]
+							for c in cards[i]:
 								card = self.get_card(c)
 								content = content + f"\t{card}\n"
 							await self.bot.delete_message(msg)
