@@ -62,7 +62,7 @@ class Poker:
 				cards.append(sym + num)
 				
 		for c in cards:
-			card = cards[randint(0, len(cards)])			
+			card = cards[randint(0, len(cards))]		
 			deck.append(card)
 			deck.remove(card)			     
 						     
