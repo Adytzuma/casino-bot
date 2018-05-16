@@ -17,12 +17,6 @@ def command_prefix_generator (bot, message):
 
 bot = commands.Bot(command_prefix=command_prefix_generator)
 
-async def await_reaction(bot, stdout, value, extension):
-	
-	await bot.add_reaction(msg, "\u274C")
-	await bot.wait_for_reaction(emoji="\u274C", message=msg)
-	await bot.delete_message(msg)
-
 async def ext_reload(bot):
 	#Imports modules
 	path = getcwd() + "/ext/"
@@ -39,8 +33,8 @@ async def ext_reload(bot):
 		except Exception as e:
 			stdout = io.StringIO()
 			value = stdout.getvalue()
-			await bot.send_message(bot.get_channel("446291887524020224"), ":warning:**There was a problem while loading the extension `%s`, please check the error and fix**:warning:" %(i) + '\nError:```py\n{}{}\n```'.format(value, traceback.format_exc()))
-			
+			msg = await bot.send_message(bot.get_channel("446291887524020224"), ":warning:**There was a problem while loading the extension `%s`, please check the error and fix**:warning:" %(i) + '\nError:```py\n{}{}\n```'.format(value, traceback.format_exc()))
+			await bot.add_reaction(msg, "\u274C")
 
 async def presence():
 	await bot.wait_until_ready()
@@ -57,7 +51,11 @@ async def presence():
 @bot.event
 async def on_ready():
 	await ext_reload(bot)
-	await bot.send_message(bot.get_channel("446298417413750786"), f"Bot deployed at {datetime.utcnow()}:white_check_mark:")
+	em = discord.Embed(description="Bot deployed")
+	em.set_footer(timestamp=datetime.datetime.utcnow()
+	msg = await bot.send_message(bot.get_channel("446298417413750786"), f"Bot deployed at {datetime.utcnow()}:white_check_mark:")
+	await bot.add_reaction(msg, "\u2705")
+	
 	
 @bot.event
 async def on_member_join(member):
@@ -66,10 +64,10 @@ async def on_member_join(member):
 			await bot.add_roles(member, discord.Object("432826495719833601"))
 		else:
 			await bot.add_roles(member, discord.Object("433607950045544448"))
-	@bot.event
-	async def on_message(msg):
-		if msg.author.bot != True:
-			await bot.process_commands(msg)
+@bot.event
+async def on_message(msg):
+	if msg.author.bot != True:
+		await bot.process_commands(msg)
 @bot.event
 async def on_message_edit(before, after):
 	if after.author.bot != True:
