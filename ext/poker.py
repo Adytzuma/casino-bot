@@ -96,7 +96,7 @@ class Poker:
 				done = False
 				while done != True:
 					if rn != 1:
-						msg = await self.bot.send_message(users[t -1], self.msgs["choose2"]
+						msg = await self.bot.send_message(users[t -1], self.msgs["choose2"])
 					else:
 						msg = await self.bot.send_message(users[t -1], self.msgs["choose1"])
 
