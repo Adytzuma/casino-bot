@@ -64,7 +64,7 @@ class Poker:
 		for c in cards:
 			card = cards[randint(0, len(cards))]		
 			deck.append(card)
-			deck.remove(card)			     
+			cards.remove(card)	     
 						     
 	async def alert(self, info, user1 = None, user2 = None, user3 = None, user4 = None):
 		try:
@@ -79,11 +79,18 @@ class Poker:
 		self.running_games.append(channel_id)
 		users = self.waiting_games[channel_id]
 		money = [5, 100, 100, 100, 100]
-		cards = [self.generate_deck(), "", "", "", ""]
+		cards = [self.generate_deck(), [], [], [], []]
 		del self.waiting_games[channel_id]
+
+		#Deal 4 cards per player
+		for u in range(1, 5):
+			for c in range(1, 5):
+				cards[u].append(cards[0][0])
+				cards[0].remove(cards[0][0])
+			
 		
-		for rn in range(1, 4):
-			for t in range(1, 4):
+		for rn in range(1, 5):
+			for t in range(1, 5):
 				if i == 1:
 					await self.alert_users(f"{users[0]}\'s turn. Wait for your turn", users[1], users[2], users[3])
 				elif i == 2:
