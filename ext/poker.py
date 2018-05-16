@@ -52,19 +52,20 @@ class Poker:
 		for i in range(0, 52):
 			deck.append("")
 
-		#Adds cards to the deck in a random order (work in progress)
+		#Generates a deck with all posible cards
 		symbols = self.card_symbols
 		numbers = self.card_numbers
-		clubs = []
-		spades = []
-		hearts = []
-		diamonds = []
-
+		cards = []
+		
 		for sym in symbols:
 			for num in numbers:
-				#Generate random number
-				pass
-
+				cards.append(sym + num)
+				
+		for c in cards:
+			card = cards[randint(0, len(cards)]				
+			deck.append(card)
+			deck.remove(card)			     
+						     
 	async def alert(self, info, user1 = None, user2 = None, user3 = None, user4 = None):
 		try:
 			await self.bot.send_message(user1, info)
