@@ -7,6 +7,7 @@ import traceback
 from contextlib import redirect_stdout
 import io
 import os
+from datetime import datetime
 
 def command_prefix_generator (bot, message):
 	#Gets costume prefix for server
@@ -17,7 +18,7 @@ def command_prefix_generator (bot, message):
 bot = commands.Bot(command_prefix=command_prefix_generator)
 
 async def await_reaction(bot, stdout, value, extension):
-	msg = await bot.send_message(await bot.get_user_info("377812572784820226"), ":warning:**There was a problem while loading the extension `%s`, please check the error and fix**:warning:" %(extension) + '\nError:```py\n{}{}\n```'.format(value, traceback.format_exc()))
+	
 	await bot.add_reaction(msg, "\u274C")
 	await bot.wait_for_reaction(emoji="\u274C", message=msg)
 	await bot.delete_message(msg)
@@ -38,7 +39,7 @@ async def ext_reload(bot):
 		except Exception as e:
 			stdout = io.StringIO()
 			value = stdout.getvalue()
-			bot.loop.create_task(await_reaction(bot, i, stdout, value))
+			await bot.send_message(bot.get_channel("446291887524020224"), ":warning:**There was a problem while loading the extension `%s`, please check the error and fix**:warning:" %(i) + '\nError:```py\n{}{}\n```'.format(value, traceback.format_exc()))
 			
 
 async def presence():
@@ -56,9 +57,7 @@ async def presence():
 @bot.event
 async def on_ready():
 	await ext_reload(bot)
-	msg = await bot.send_message(await bot.get_user_info("377812572784820226"), "Bot deployed :white_check_mark:")
-	await sleep(5)
-	await bot.delete_message(msg)
+	await bot.send_message(bot.get_channel("446298417413750786"), f"Bot deployed at {datetime.utcnow()}:white_check_mark:")
 	
 @bot.event
 async def on_member_join(member):
