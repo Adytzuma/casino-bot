@@ -76,18 +76,18 @@ async def on_message_edit(before, after):
 async def on_server_join(server):
 	em = discord.Embed(title="Server joined", colour=discord.Colour.green(), timestamp=datetime.utcnow())
 	em.set_image(url=server.icon_url)
-	em.add_field(title="Server name:", description=server.name)
-	em.add_field(title="Server id:", description=server.id)
-	em.add_field(title="Server owner:", description=server.owner.mention)
+	em.add_field(name="Server name:", value=server.name)
+	em.add_field(name="Server id:", value=server.id)
+	em.add_field(name="Server owner:", value=server.owner.mention)
 	await bot.send_message(bot.get_channel("446292018415665152"), embed=em)
 	
 @bot.event
 async def on_server_remove(server):
 	em = discord.Embed(title="Server left", colour=discord.Colour.gold(), timestamp=datetime.utcnow())
 	em.set_image(url=server.icon_url)
-	em.add_field(title="Server name:", description=server.name)
-	em.add_field(title="Server id:", description=server.id)
-	em.add_field(title="Server owner:", description=server.owner.mention)
+	em.add_field(name="Server name:", value=server.name)
+	em.add_field(name="Server id:", value=server.id)
+	em.add_field(name="Server owner:", value=server.owner.mention)
 	await bot.send_message(bot.get_channel("446292018415665152"), embed=em)
 	
 bot.loop.create_task(presence())
