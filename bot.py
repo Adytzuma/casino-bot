@@ -71,6 +71,21 @@ async def on_message(msg):
 async def on_message_edit(before, after):
 	if after.author.bot != True:
 		await bot.process_commands(after)
-
+		
+@bot.event
+async def on_server_join(server):
+	em = discord.Embed(title="Server joined", colour=discord.Colour.green(), timestamp=datetime.utcnow())
+	em.set_image(url=server.icon_url)
+	em.add_field(title="Server name:", description=server.name)
+	em.add_field(title="Server id:", description=server.id)
+	em.add_field(title="Server owner:", description=server.owner.mention)
+@bot.event
+async def on_server_remove(server):
+	em = discord.Embed(title="Server left", colour=discord.Colour.gold(), timestamp=datetime.utcnow())
+	em.set_image(url=server.icon_url)
+	em.add_field(title="Server name:", description=server.name)
+	em.add_field(title="Server id:", description=server.id)
+	em.add_field(title="Server owner:", description=server.owner.mention)
+	
 bot.loop.create_task(presence())
 bot.run(os.getenv('TOKEN'))
