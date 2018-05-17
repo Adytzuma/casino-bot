@@ -79,6 +79,8 @@ async def on_server_join(server):
 	em.add_field(title="Server name:", description=server.name)
 	em.add_field(title="Server id:", description=server.id)
 	em.add_field(title="Server owner:", description=server.owner.mention)
+	await bot.send_message(bot.get_channel("446292018415665152"), embed=em)
+	
 @bot.event
 async def on_server_remove(server):
 	em = discord.Embed(title="Server left", colour=discord.Colour.gold(), timestamp=datetime.utcnow())
@@ -86,6 +88,7 @@ async def on_server_remove(server):
 	em.add_field(title="Server name:", description=server.name)
 	em.add_field(title="Server id:", description=server.id)
 	em.add_field(title="Server owner:", description=server.owner.mention)
+	await bot.send_message(bot.get_channel("446292018415665152"), embed=em)
 	
 bot.loop.create_task(presence())
 bot.run(os.getenv('TOKEN'))
