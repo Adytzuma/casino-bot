@@ -21,7 +21,7 @@ class General:
 	@commands.command(pass_context=True)
 	async def invite(self, ctx):
 		"""Gives the invite for the official supporter bot server"""
-		await self.bot.say("%s, the link for the official supporter bot server is: https://discord.gg/hrN3hmz/" %(ctx.message.author.mention))
+		await self.bot.say("%s, the link for the official supporter bot server is: https://discord.gg/aDtBVA4/" %(ctx.message.author.mention))
 	
 	@commands.command(pass_context=True)
 	async def add(self, ctx):
