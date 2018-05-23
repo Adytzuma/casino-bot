@@ -9,13 +9,7 @@ import io
 import os
 from datetime import datetime
 
-def command_prefix_generator (bot, message):
-	#Gets costume prefix for server
-	if message.channel.name == "no-prefix":
-		return ""
-	return "c!"
-
-bot = commands.Bot(command_prefix=command_prefix_generator)
+bot = commands.Bot(command_prefix="c!")
 
 async def ext_reload(bot):
 	#Imports modules
@@ -56,22 +50,6 @@ async def on_ready():
 	await bot.add_reaction(msg, "\u2705")
 	
 	
-@bot.event
-async def on_member_join(member):
-	if member.server.id == "415241422736719882":
-		if member.bot == True:
-			await bot.add_roles(member, discord.Object("432826495719833601"))
-		else:
-			await bot.add_roles(member, discord.Object("433607950045544448"))
-
-
-	
-
-
-
-
-
-		
 @bot.event
 async def on_server_join(server):
 	em = discord.Embed(title="Server joined", colour=discord.Colour.green(), timestamp=datetime.utcnow())
