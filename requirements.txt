@@ -1,4 +1,2 @@
 discord.py
-psycopg2
 pillow
-heroku3
