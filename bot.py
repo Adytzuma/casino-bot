@@ -34,7 +34,7 @@ async def ext_reload(bot):
 
 async def presence():
     await bot.wait_until_ready()
-    while (not bot.is_closed):
+    while not bot.is_closed():
         a = 0
         for i in bot.guilds:
             for u in i.members:
