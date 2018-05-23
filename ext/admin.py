@@ -38,7 +38,7 @@ class Admin:
 			return '```py\n{0.__class__.__name__}: {0}\n```'.format(e)
 		return '```py\n{0.text}{1:>{0.offset}}\n{2}: {0}```'.format(e, '^', type(e).__name__)
  
-	@commands.check(is_owner)
+	@commands.check(is_owner) 
 	@commands.command(pass_context=True, name='exec')
 	async def _eval(self, ctx, *, body: str):
 		"""Execute or evaluate code in python"""
