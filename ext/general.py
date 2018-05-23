@@ -11,7 +11,7 @@ class General():
     async def ping(self, ctx):
         'Returns Pong'
         t = await ctx.send('Pong!')
-        ms = (t.timestamp - ctx.message.timestamp).total_seconds() * 1000
+        ms = (t.created_at - ctx.message.created_at).total_seconds() * 1000
         await t.edit(new_content='Ping time: {}ms'.format(int(ms)), content='Ping time: {}ms'.format(int(ms)))
 
     @commands.command()
