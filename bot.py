@@ -13,8 +13,10 @@ bot = commands.Bot(command_prefix='c!')
 
 
 async def ext_reload(bot):
+    #Imports modules
     path = getcwd() + '/ext/'
-    files = []  #Imports modules
+    files = []
+	
     for f in listdir(path):
         if f.endswith('.py'):
             files.append('ext.' + f.replace('.py', ''))
@@ -40,10 +42,9 @@ async def presence():
             for u in i.members:
                 if u.bot == False:
                     a = a + 1
-        await bot.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.watching, name='%s users | %s servers' % (a, len(bot.guilds))))
-        await sleep(30)
+
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='%s users | %s servers' % (a, len(bot.guilds))))
+		await sleep(30)
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name='c!help'))
         await sleep(30)
 
@@ -77,4 +78,4 @@ async def on_guild_remove(guild):
 
 
 bot.loop.create_task(presence())
-bot.run(os.getenv('TOKEN'))
+bot.run(os.getenv("TOKEN"))

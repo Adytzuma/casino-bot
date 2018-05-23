@@ -108,7 +108,7 @@ class Fun():
                 else:
                     px[(x, y)] = (225, 225, 225)
         im.save('temp.jpg')
-        await ctx.send(file='temp.jpg')
+        await ctx.send(file=discord.File('temp.jpg'))
         os.remove('temp.jpg')
 
 
