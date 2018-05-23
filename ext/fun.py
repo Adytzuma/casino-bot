@@ -108,7 +108,7 @@ class Fun():
                 else:
                     px[(x, y)] = (225, 225, 225)
         im.save('temp.jpg')
-        await self.bot.upload('temp.jpg')
+        await ctx.send(file='temp.jpg')
         os.remove('temp.jpg')
 
 
