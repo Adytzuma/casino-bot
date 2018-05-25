@@ -11,25 +11,30 @@ class Tag:
 		self.bot = bot
 
 	@commands.group(case_insensitive=True)
-	async def tag(self, ctx, *, tag=None):
+	async def tag(self, ctx):
 		"""Run help tag for more info"""
-		if ctx.invoked_subcommand is None:
-			await ctx.trigger_typing()
-			if tag is None:
-				return await ctx.send('Please provide a argument. Do `help tag` for more info')
+		pass
 			
-			found = None
-			for i in tags:
-				if i[0] == tag:
-					found = i[1]
+	@tag.command(case_insensitive=True)
+	async def get(self, ctx, tag=None):
+		"""Gets a tag"""
+		await ctx.trigger_typing()
+		if tag is None:
+			return await ctx.send('Please provide a argument. Do `help tag` for more info')
+			
+		found = None
+		for i in tags:
+			if i[0] == tag:
+				found = i[1]
 
-			if found is None:
-				return await ctx.send('Tag not found')
+		if found is None:
+			return await ctx.send('Tag not found')
 
 		await ctx.send(found)
 		
 	@tag.command(case_insensitive=True)
 	async def list(self, ctx):
+		"""Lists available tags"""
 		await ctx.trigger_typing()
 		desc = ""
 		for i in tags:
@@ -45,6 +50,7 @@ class Tag:
 		
 	@tag.command(case_insensitive=True)
 	async def add(self, ctx, tag_name=None, *, tag_info=None):
+		"""Adds a new tag"""
 		await ctx.trigger_typing()
 		if not ctx.author.guild_permissions.manage_guild:
 			return await ctx.send("You are not allowed to do this")
@@ -65,6 +71,7 @@ class Tag:
 		
 	@tag.command(case_insensitive=True)
 	async def remove(self, ctx, tag=None):
+		"""Remove a tag"""
 		await ctx.trigger_typing()
 		if not ctx.author.guild_permissions.manage_guild:
 			return await ctx.send("You are not allowed to do this")
