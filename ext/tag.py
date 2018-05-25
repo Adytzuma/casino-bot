@@ -29,9 +29,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import discord
 from discord.ext import commands
-import asyncio
 
-tags=[]
+
+tags=[['tst', 'this is a test']]
 #Hierarcy
 """[['tag name', 'tag info'], ['other tag name', 'other tag info']]"""
 
@@ -44,6 +44,14 @@ class Tag:
 		"""Return a tag's content"""
 		if tag is None:
 			return await ctx.send('Please provide a tag name')
+
+		if tag == 'list':
+			em = discord.Embed(title='Available tags:', colour=discord.Colour.light_blue())
+			for i in tags:
+				em.add_field(name=i[0], inline=False)
+
+			return await ctx.send(embed=em)
+
 		found = None
 		for i in tags:
 			if i[0] == tag:
