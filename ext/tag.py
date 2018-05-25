@@ -51,7 +51,7 @@ class Tag:
 			for i in tags:
 				desc = desc + i[0] + "\n"
 				
-			em = discord.Embed(title='Available tags:', description=desc ,colour=discord.Colour.blue())
+			em = discord.Embed(title='Available tags:', description=desc ,colour=discord.Colour(0x00FFFF))
 
 			return await ctx.send(embed=em)
 
