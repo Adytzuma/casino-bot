@@ -15,12 +15,12 @@ class Tag:
 		"""Run help tag for more info"""
 		if ctx.invoked_subcommand is None:
 			await ctx.trigger_typing()
-			if arg is None:
+			if tag is None:
 				return await ctx.send('Please provide a argument. Do `help tag` for more info')
 			
 			found = None
 			for i in tags:
-				if i[0] == arg:
+				if i[0] == tag:
 					found = i[1]
 
 			if found is None:
@@ -30,6 +30,7 @@ class Tag:
 		
 	@tag.command(case_insensitive=True)
 	async def list(self, ctx):
+		await ctx.trigger_typing()
 		desc = ""
 		for i in tags:
 			desc = desc + i[0] + "\n"
