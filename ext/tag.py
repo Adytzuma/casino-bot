@@ -28,7 +28,7 @@ class Tag:
 
 		await ctx.send(found)
 		
-	@tag.command(case=insensitive=True)
+	@tag.command(case_insensitive=True)
 	async def list(self, ctx):
 		desc = ""
 		for i in tags:
