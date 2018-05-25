@@ -41,7 +41,7 @@ class Tag:
 			desc = desc + i[0] + "\n"
 		
 		if desc == "":		
-			em = discord.Embed(title='Available tags:', description=None ,colour=discord.Colour(0x00FFFF))
+			em = discord.Embed(title='Available tags:', description="None" ,colour=discord.Colour(0x00FFFF))
 			
 		else:
 			em = discord.Embed(title='Available tags:', description=desc ,colour=discord.Colour(0x00FFFF))
