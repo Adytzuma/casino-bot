@@ -40,11 +40,11 @@ class Tag:
 		self.bot = bot
 
 	@commands.command(case_insensitive=True)
-	async def tag(self, ctx, tag=None):
+	async def tag(self, ctx, *, arg=None):
 		"""Return a tag's content"""
 		await ctx.trigger_typing()
 		if tag is None:
-			return await ctx.send('Please provide a tag name')
+			return await ctx.send('Please provide a argument. Do `help tag` for more help')
 
 		if tag == 'list':
 			desc = ""
@@ -54,17 +54,51 @@ class Tag:
 			em = discord.Embed(title='Available tags:', description=desc ,colour=discord.Colour(0x00FFFF))
 
 			return await ctx.send(embed=em)
-
+			
 		found = None
 		for i in tags:
 			if i[0] == tag:
 				found = i[1]
 
 		if found is None:
-        	    return await ctx.send('No tag found')
+			return await ctx.send('No tag found')
 
 		await ctx.send(found)
-
-
+		
+	@commands.command(case_insensitive=True)
+	async def tadd(self, ctx, tag_name=None, *, tag_info=None):
+		"""Adds a tag"""
+		await ctx.trigger_typing()
+		if not ctx.author.guild_permissions.manage_guild:
+			return await ctx.send("You are not allowed to do this")
+		
+		exists = False
+		for i in tags:
+			if i[0] == tag_name:
+				exists = True
+				
+		if not exists:
+			tags.append([tag_name, tag_info])
+			return await ctx.send("The tag has been added")
+		
+		await ctx.send("The tag already exists")
+		
+	@commands.command(case_insensitive=True)
+	async def tremove(self, ctx, tag=None):
+		"""Removes a tag"""
+		await ctx.trigger_typing()
+		if not ctx.author.guild_permissions.manage_guild:
+			return await ctx.send("You are not allowed to do this")
+		
+		found = None
+		for i in tags:
+			if i[0] == tag:
+				found = i
+				
+		if found is not None:
+			tags.remove(i)
+			return await ctx.send("The tag has been removed")
+		
+		await ctx.send("The tag has not been found")
 def setup(bot):
     bot.add_cog(Tag(bot))
