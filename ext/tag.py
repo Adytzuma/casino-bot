@@ -44,10 +44,10 @@ class Tag:
 		"""Return a tag's content"""
 		if tag is None:
 			return await ctx.send('Please provide a tag name')
-        	found = None
+		found = None
 		for i in tags:
-	    		if i[0] == tag:
-                		found = i[1]
+			if i[0] == tag:
+				found = i[1]
 
 	if found is None:
             return await ctx.send('No tag found')
