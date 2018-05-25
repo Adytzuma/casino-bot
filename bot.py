@@ -55,6 +55,15 @@ async def on_ready():
     em = discord.Embed(title='Bot deployed', colour=discord.Colour.green(), timestamp=datetime.utcnow())
     msg = await bot.get_channel(446298417413750786).send(embed=em)
     await msg.add_reaction('✅')
+	
+@bot.event
+async def on_command_error(ctx, error):
+	error = error.__cause__ or error
+	tb = traceback.format_exception(type(error), error, error.__traceback__, limit=2, chain=False)
+	tb = ''.join(tb)
+    fmt = f'**`Error in command {ctx.command}`**\n\n**{type(error).__name__}:**:\n```py\n{tb}\n```'
+    simple_fmt = f'**`{self.defaultprefix}{ctx.command}`**\n{joke}\n\n**{type(error).__name__}:**:\n**`{error}`**'
+    await bot.get_channel(446291887524020224).send(fmt)
 
 
 @bot.event
