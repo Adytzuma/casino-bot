@@ -57,7 +57,7 @@ class Tag:
 			
 		found = None
 		for i in tags:
-			if i[0] == tag:
+			if i[0] == arg:
 				found = i[1]
 
 		if found is None:
