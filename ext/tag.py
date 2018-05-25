@@ -31,7 +31,7 @@ import discord
 from discord.ext import commands
 
 
-tags=[['tst', 'this is a test']]
+tags=[['tst', 'this is a test'], ['tst2', 'this is another test']]
 #Hierarcy
 """[['tag name', 'tag info'], ['other tag name', 'other tag info']]"""
 
@@ -49,7 +49,8 @@ class Tag:
 		if tag == 'list':
 			desc = ""
 			for i in tags:
-				desc = desc + i + "\n"
+				desc = desc + i[0] + "\n"
+				
 			em = discord.Embed(title='Available tags:', description=desc ,colour=discord.Colour.blue())
 
 			return await ctx.send(embed=em)
