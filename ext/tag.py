@@ -13,7 +13,7 @@ class Tag:
 	@commands.group(case_insensitive=True)
 	async def tag(self, ctx, *, arg=None):
 		"""Run help tag for more info"""
-		if ctx.subcommand_invoked is None:
+		if ctx.invoked_subcommand is None:
 			await ctx.trigger_typing()
 			if arg is None:
 				return await ctx.send('Please provide a argument. Do `help tag` for more info')
