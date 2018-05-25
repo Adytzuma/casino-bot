@@ -49,10 +49,10 @@ class Tag:
 			if i[0] == tag:
 				found = i[1]
 
-	if found is None:
-            return await ctx.send('No tag found')
+		if found is None:
+        	    return await ctx.send('No tag found')
 
-	await ctx.send(found)
+		await ctx.send(found)
 
 
 def setup(bot):
