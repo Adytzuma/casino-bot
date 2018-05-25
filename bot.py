@@ -62,7 +62,7 @@ async def on_command_error(ctx, error):
 	tb = traceback.format_exception(type(error), error, error.__traceback__, limit=2, chain=False)
 	tb = ''.join(tb)
     fmt = '**`Error in command {}`**\n\n**{}:**:\n```py\n{}\n```'.format(ctx.command, type(error).__name__, tb)
-    await bot.get_channel(446291887524020224).send(fmt)
+    await bot.get_channel(446291887524020224).send(fmt) 
 
 
 @bot.event
