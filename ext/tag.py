@@ -1,32 +1,3 @@
-"""
-=== 
-
-MIT License
-
-Copyright (c) 2018 Dusty.P https://github.com/dustinpianalto
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-
-
 import discord
 from discord.ext import commands
 
@@ -39,35 +10,40 @@ class Tag:
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command(case_insensitive=True)
+	@commands.group(case_insensitive=True)
 	async def tag(self, ctx, *, arg=None):
-		"""Return a tag's content"""
-		await ctx.trigger_typing()
-		if arg is None:
-			return await ctx.send('Please provide a argument. Do `help tag` for more info')
-
-		if arg == 'list':
-			desc = ""
-			for i in tags:
-				desc = desc + i[0] + "\n"
-				
-			em = discord.Embed(title='Available tags:', description=desc ,colour=discord.Colour(0x00FFFF))
-
-			return await ctx.send(embed=em)
+		"""Run help tag for more info"""
+		if ctx.subcommand_invoked is None:
+			await ctx.trigger_typing()
+			if arg is None:
+				return await ctx.send('Please provide a argument. Do `help tag` for more info')
 			
-		found = None
-		for i in tags:
-			if i[0] == arg:
-				found = i[1]
+			found = None
+			for i in tags:
+				if i[0] == arg:
+					found = i[1]
 
-		if found is None:
-			return await ctx.send('Tag not found')
+			if found is None:
+				return await ctx.send('Tag not found')
 
 		await ctx.send(found)
 		
-	@commands.command(case_insensitive=True)
-	async def tadd(self, ctx, tag_name=None, *, tag_info=None):
-		"""Adds a tag"""
+	@tag.command(case=insensitive=True)
+	async def list(self, ctx):
+		desc = ""
+		for i in tags:
+			desc = desc + i[0] + "\n"
+		
+		if desc == "":		
+			em = discord.Embed(title='Available tags:', description=None ,colour=discord.Colour(0x00FFFF))
+			
+		else:
+			em = discord.Embed(title='Available tags:', description=desc ,colour=discord.Colour(0x00FFFF))
+
+		await ctx.send(embed=em)
+		
+	@tag.command(case_insensitive=True)
+	async def add(self, ctx, tag_name=None, *, tag_info=None):
 		await ctx.trigger_typing()
 		if not ctx.author.guild_permissions.manage_guild:
 			return await ctx.send("You are not allowed to do this")
@@ -86,9 +62,8 @@ class Tag:
 		
 		await ctx.send("The tag already exists")
 		
-	@commands.command(case_insensitive=True)
-	async def tremove(self, ctx, tag=None):
-		"""Removes a tag"""
+	@tag.command(case_insensitive=True)
+	async def remove(self, ctx, tag=None):
 		await ctx.trigger_typing()
 		if not ctx.author.guild_permissions.manage_guild:
 			return await ctx.send("You are not allowed to do this")
@@ -102,9 +77,11 @@ class Tag:
 				found = i
 				
 		if found is not None:
-			tags.remove(i)
+			tags.remove(found)
 			return await ctx.send("The tag has been removed")
 		
 		await ctx.send("The tag has not been found")
+		
+		
 def setup(bot):
     bot.add_cog(Tag(bot))
