@@ -42,13 +42,15 @@ class Tag:
 	@commands.command(case_insensitive=True)
 	async def tag(self, ctx, tag=None):
 		"""Return a tag's content"""
+		await ctx.trigger_typing()
 		if tag is None:
 			return await ctx.send('Please provide a tag name')
 
 		if tag == 'list':
-			em = discord.Embed(title='Available tags:', colour=discord.Colour.blue())
+			desc = ""
 			for i in tags:
-				em.add_field(name=i[0], inline=False)
+				desc = desc + i + "\n"
+			em = discord.Embed(title='Available tags:', description=desc ,colour=discord.Colour.blue())
 
 			return await ctx.send(embed=em)
 
