@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 
-tags=[['tst', 'this is a test'], ['tst2', 'this is another test']]
+tags=[]
 #Hierarcy
 """[['tag name', 'tag info'], ['other tag name', 'other tag info']]"""
 
