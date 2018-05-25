@@ -46,7 +46,7 @@ class Tag:
 			return await ctx.send('Please provide a tag name')
 
 		if tag == 'list':
-			em = discord.Embed(title='Available tags:', colour=discord.Colour.light_blue())
+			em = discord.Embed(title='Available tags:', colour=discord.Colour.blue())
 			for i in tags:
 				em.add_field(name=i[0], inline=False)
 
