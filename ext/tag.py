@@ -1,5 +1,5 @@
 """
-===
+=== 
 
 MIT License
 
@@ -36,19 +36,18 @@ tags=[]
 """[['tag name', 'tag info'], ['other tag name', 'other tag info']]"""
 
 class Tag:
-    def __init__(self, bot):
-        self.bot = bot
+	def __init__(self, bot):
+		self.bot = bot
 
-    @commands.command(case_insensitive=True)
-    async def tag(self, ctx, tag=None):
-        """Return a tag's content"""
-        if tag is None:
-	    return await ctx.send('Please provide a tag name')
-
-        found = None
-	for i in tags:
-	    if i[0] == tag:
-                found = i[1]
+	@commands.command(case_insensitive=True)
+	async def tag(self, ctx, tag=None):
+		"""Return a tag's content"""
+		if tag is None:
+			return await ctx.send('Please provide a tag name')
+        	found = None
+		for i in tags:
+	    		if i[0] == tag:
+                		found = i[1]
 
 	if found is None:
             return await ctx.send('No tag found')
