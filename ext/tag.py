@@ -11,7 +11,7 @@ class Tag:
 		self.bot = bot
 
 	@commands.group(case_insensitive=True)
-	async def tag(self, ctx, *, arg=None):
+	async def tag(self, ctx, *, tag=None):
 		"""Run help tag for more info"""
 		if ctx.invoked_subcommand is None:
 			await ctx.trigger_typing()
