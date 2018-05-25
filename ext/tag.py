@@ -43,10 +43,10 @@ class Tag:
 	async def tag(self, ctx, *, arg=None):
 		"""Return a tag's content"""
 		await ctx.trigger_typing()
-		if tag is None:
-			return await ctx.send('Please provide a argument. Do `help tag` for more help')
+		if arg is None:
+			return await ctx.send('Please provide a argument. Do `help tag` for more info')
 
-		if tag == 'list':
+		if arg == 'list':
 			desc = ""
 			for i in tags:
 				desc = desc + i[0] + "\n"
@@ -61,7 +61,7 @@ class Tag:
 				found = i[1]
 
 		if found is None:
-			return await ctx.send('No tag found')
+			return await ctx.send('Tag not found')
 
 		await ctx.send(found)
 		
@@ -71,6 +71,9 @@ class Tag:
 		await ctx.trigger_typing()
 		if not ctx.author.guild_permissions.manage_guild:
 			return await ctx.send("You are not allowed to do this")
+		
+		if tag_name is None or tag_info is None:
+			return await ctx.send("Please provide a tag name and the tag info. Do `help tag` for more info")
 		
 		exists = False
 		for i in tags:
@@ -89,6 +92,9 @@ class Tag:
 		await ctx.trigger_typing()
 		if not ctx.author.guild_permissions.manage_guild:
 			return await ctx.send("You are not allowed to do this")
+
+		if tag is None:
+			return await ctx.send("Please provide a tag name and the tag info. Do `help tag` for more info")
 		
 		found = None
 		for i in tags:
