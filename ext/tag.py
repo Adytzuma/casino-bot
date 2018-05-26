@@ -4,16 +4,14 @@ import json
 import aiofiles
 import asyncio
 
-async def load():
-	async with aiofiles.open("./resources/tags.json", "r") as fp:
-		json_data = await fp.read()
-		tags = json.loads(json_data)
-	
-
 class Tag:
-	def __init__(self, bot):
+	async def __init__(self, bot):
 		self.bot = bot
-
+		async with aiofiles.open("./resources/tags.json", "r") as fp:
+			json_data = await fp.read()
+			global tags
+			tags = json.loads(json_data)
+			
 	@commands.group(case_insensitive=True)
 	async def tag(self, ctx):
 		"""Run help tag for more info"""
@@ -101,5 +99,4 @@ class Tag:
 		
 		
 def setup(bot):
-	bot.add_cog(Tag(bot))
-	asyncio.get_event_loop().run_until_complete(load())
+	bot.add_cog(await Tag(bot))
