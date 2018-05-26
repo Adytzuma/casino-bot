@@ -99,4 +99,4 @@ class Tag:
 		
 		
 def setup(bot):
-	bot.add_cog(await Tag(bot))
+	bot.add_cog(Tag(bot))
