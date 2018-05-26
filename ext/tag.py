@@ -101,5 +101,5 @@ class Tag:
 		
 		
 def setup(bot):
-    bot.add_cog(Tag(bot))
+	bot.add_cog(Tag(bot))
 	asyncio.get_event_loop().run_until_complete(load())
