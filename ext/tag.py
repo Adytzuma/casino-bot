@@ -4,15 +4,18 @@ import json
 import aiofiles
 import asyncio
 
+async with aiofiles.open("./resources/tags.json", "r") as fp:
+		json_data = await fp.read()
+		global tags
+		tags = json.loads(json_data)
+
 class Tag:
 	def __init__(self, bot):
 		self.bot = bot
-		async def load():
-			async with aiofiles.open("./resources/tags.json", "r") as fp:
-				json_data = await fp.read()
-				global tags
-				tags = json.loads(json_data)
-		await load()
+		with open("./resources/tags.json", "r") as fp:
+			json_data = await fp.read()
+			global tags
+			tags = json.loads(json_data)
 			
 	@commands.group(case_insensitive=True)
 	async def tag(self, ctx):
