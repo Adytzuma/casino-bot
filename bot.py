@@ -1,4 +1,4 @@
-import discord
+﻿import discord
 from discord.ext import commands
 from asyncio import sleep
 from os import listdir, getcwd
@@ -58,10 +58,13 @@ async def on_ready():
 	
 @bot.event
 async def on_command_error(ctx, error):
+	print(error)
+	print(type(error))
+	await ctx.send("Ups. An unespected error has been raised, the error has been reported to the developers and will be fixed soon :smile:"
 	error = error.__cause__ or error
 	tb = traceback.format_exception(type(error), error, error.__traceback__, limit=2, chain=False)
 	tb = ''.join(tb)
-	fmt = '**`Error in command {}`**\n\n**{}:**:\n```py\n{}\n```'.format(ctx.command, type(error).__name__, tb)
+	fmt = '**`Error in command {}`**\n\n**{}:**\n```py\n{}\n```'.format(ctx.command, type(error).__name__, tb)
 	await bot.get_channel(446291887524020224).send(fmt) 
 
 
