@@ -2,10 +2,12 @@ import discord
 from discord.ext import commands
 import json
 import aiofiles
+import asyncio
 
-async with aiofiles.open("resources/tags.json", "r") as fp:
-	json_data = await fp.read()
-	tags = json.loads(json_data)
+async def load():
+	async with aiofiles.open("resources/tags.json", "r") as fp:
+		json_data = await fp.read()
+		tags = json.loads(json_data)
 	
 
 class Tag:
@@ -100,3 +102,4 @@ class Tag:
 		
 def setup(bot):
     bot.add_cog(Tag(bot))
+	asyncio.get_event_loop().run_until_complete(load())
