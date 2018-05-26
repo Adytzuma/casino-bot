@@ -5,7 +5,7 @@ import aiofiles
 import asyncio
 
 async def load():
-	async with aiofiles.open("resources/tags.json", "r") as fp:
+	async with aiofiles.open("./resources/tags.json", "r") as fp:
 		json_data = await fp.read()
 		tags = json.loads(json_data)
 	
@@ -66,7 +66,7 @@ class Tag:
 		if not exists:
 			tags.append([tag_name, tag_info])
 			
-			async with aiofiles.open("resources/tags.json", "w") as fp:
+			async with aiofiles.open("./resources/tags.json", "w") as fp:
 				json_data = json.dumps(tags)
 				await fp.write(json_data)
 				
@@ -91,7 +91,7 @@ class Tag:
 				
 		if found is not None:
 			del tags[found]
-			async with aiofiles.open("resources/tags.json", "w") as fp:
+			async with aiofiles.open("./resources/tags.json", "w") as fp:
 				json_data = json.dumps(tags)
 				await fp.write(json_data)
 				
