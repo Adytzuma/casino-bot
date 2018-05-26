@@ -60,7 +60,7 @@ async def on_ready():
 async def on_command_error(ctx, error):
 	print(error)
 	print(type(error))
-	await ctx.send("Ups. An unespected error has been raised, the error has been reported to the developers and will be fixed soon :smile:"
+	await ctx.send("Ups. An unespected error has been raised, the error has been reported to the developers and will be fixed soon :smile:")
 	error = error.__cause__ or error
 	tb = traceback.format_exception(type(error), error, error.__traceback__, limit=2, chain=False)
 	tb = ''.join(tb)
