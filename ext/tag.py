@@ -64,7 +64,7 @@ class Tag:
 		if not exists:
 			tags.update({tag_name : tag_info})
 			
-			async with aiofiles.open("./resources/tags.json", "w") as fp:
+			async with aiofiles.open("ext/resources/tags.json", "w") as fp:
 				json_data = json.dumps(tags)
 				await fp.write(json_data)
 				
@@ -89,7 +89,7 @@ class Tag:
 				
 		if found is not None:
 			del tags[found]
-			async with aiofiles.open("./resources/tags.json", "w") as fp:
+			async with aiofiles.open("ext/resources/tags.json", "w") as fp:
 				json_data = json.dumps(tags)
 				await fp.write(json_data)
 				
