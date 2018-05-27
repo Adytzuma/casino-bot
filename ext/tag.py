@@ -7,7 +7,7 @@ import asyncio
 class Tag:
 	def __init__(self, bot):
 		self.bot = bot
-		with open("resources/tags.json", "r") as fp:
+		with open("ext/resources/tags.json", "r") as fp:
 			json_data = fp.read()
 			global tags
 			tags = json.loads(json_data)
