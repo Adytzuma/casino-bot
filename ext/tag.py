@@ -62,7 +62,7 @@ class Tag:
 				exists = True
 				
 		if not exists:
-			tags.append([tag_name, tag_info])
+			tags.update({tag_name : tag_info})
 			
 			async with aiofiles.open("./resources/tags.json", "w") as fp:
 				json_data = json.dumps(tags)
