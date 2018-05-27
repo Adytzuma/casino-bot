@@ -12,13 +12,8 @@ class Tag:
 			global tags
 			tags = json.loads(json_data)
 			
-	@commands.group(case_insensitive=True)
-	async def tag(self, ctx):
-		"""Run help tag for more info"""
-		pass
-			
-	@tag.command(case_insensitive=True)
-	async def get(self, ctx, tag=None):
+	@commands.group(case_insensitive=True, invoke_without_command=True)
+	async def tag(self, ctx, tag=None):
 		"""Gets a tag"""
 		await ctx.trigger_typing()
 		if tag is None:
@@ -30,7 +25,7 @@ class Tag:
 			return await ctx.send('Tag not found')
 
 		await ctx.send(found)
-		
+			
 	@tag.command(case_insensitive=True)
 	async def list(self, ctx):
 		"""Lists available tags"""
