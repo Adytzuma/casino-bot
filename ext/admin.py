@@ -104,7 +104,7 @@ class Admin():
         await ctx.send('Enter code to execute or evaluate. `exit()` or `quit` to exit.')
         
         def check(msg):
-            return msg.content.startswith('>')) and msg.author.id in admin_perm_id
+            return msg.content.startswith('>') and msg.author.id in admin_perm_id
         
         while True:
             _error = False
