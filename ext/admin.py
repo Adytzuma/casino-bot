@@ -57,7 +57,10 @@ class Admin():
             exec(to_compile, env)
         except SyntaxError as e:
             await ctx.send(self.get_syntax_error(e))
-            await ctx.message.add_reaction('⚠')
+			try:
+				await ctx.message.add_reaction('⚠')
+			except:
+				pass
             return
         func = env['func']
         try:
@@ -99,9 +102,13 @@ class Admin():
             return
         self.sessions.add(msg.channel.id)
         await ctx.send('Enter code to execute or evaluate. `exit()` or `quit` to exit.')
+		
+		def check(msg):
+			return msg.content.startswith('>')) and msg.author.id in admin_perm_id
+		
         while True:
             _error = False
-            response = await self.bot.wait_for('message', check=(lambda m: m.content.startswith('>')))
+            response = await self.bot.wait_for('message', check=check)
             cleaned = self.cleanup_code(response.content)
             if cleaned in ('quit', 'exit', 'exit()'):
                 await ctx.send('Exiting.')
