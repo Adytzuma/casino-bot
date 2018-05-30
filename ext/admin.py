@@ -57,10 +57,10 @@ class Admin():
             exec(to_compile, env)
         except SyntaxError as e:
             await ctx.send(self.get_syntax_error(e))
-			try:
-				await ctx.message.add_reaction('⚠')
-			except:
-				pass
+            try:
+                await ctx.message.add_reaction('⚠')
+            except:
+                pass
             return
         func = env['func']
         try:
