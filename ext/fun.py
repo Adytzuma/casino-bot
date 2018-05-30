@@ -26,7 +26,7 @@ class Fun():
             pass
 
         def check(msg):
-            return ctx.guild.id == msg.guild.id
+            return ctx.guild.id == msg.guild.id and ctx.author == user
 
         async def infect_task(self):
             await ctx.channel.send(((
