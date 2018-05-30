@@ -92,7 +92,7 @@ class Poker():
         except:
             pass
 
-    async def start(self, channel_id):
+    async def game(self, channel_id):
         self.running_games.append(channel_id)
         users = self.waiting_games[channel_id]
         money = [5, 100, 100, 100, 100]
@@ -178,7 +178,7 @@ class Poker():
             self.waiting_games[channel_id].append(user)
             if len(self.waiting_games[channel_id]) == 4:
                 await ctx.send('Game starting')
-                await self.bot.loop.create_task(start(channel_id))
+                await self.bot.loop.create_task(game(channel_id))
                 return
             await ctx.send('%s, you joined the game, %s players remaining!' % (user.mention,
                                                                                4 - len(self.waiting_games[channel_id])))
