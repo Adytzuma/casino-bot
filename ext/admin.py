@@ -102,10 +102,10 @@ class Admin():
             return
         self.sessions.add(msg.channel.id)
         await ctx.send('Enter code to execute or evaluate. `exit()` or `quit` to exit.')
-		
-		def check(msg):
-			return msg.content.startswith('>')) and msg.author.id in admin_perm_id
-		
+        
+        def check(msg):
+            return msg.content.startswith('>')) and msg.author.id in admin_perm_id
+        
         while True:
             _error = False
             response = await self.bot.wait_for('message', check=check)
@@ -127,7 +127,10 @@ class Admin():
                     code = compile(cleaned, '<repl session>', 'exec')
                 except SyntaxError as e:
                     await ctx.send(self.get_syntax_error(e))
-                    await response.add_reaction('⚠')
+                    try:
+                        await response.add_reaction('⚠')
+                    except:
+                        pass
                     _error = True
                     continue
             variables['msg'] = response
@@ -141,7 +144,10 @@ class Admin():
             except Exception as e:
                 value = stdout.getvalue()
                 fmt = '```py\n{}{}\n```'.format(value, traceback.format_exc())
-                await response.add_reaction('⚠')
+                try:
+                    await response.add_reaction('⚠')
+                except:
+                    pass
                 _error = True
             else:
                 value = stdout.getvalue()
@@ -160,7 +166,10 @@ class Admin():
                 pass
             except discord.HTTPException as e:
                 await msg.channel.send('Unexpected error: `{}`'.format(e))
-                await response.add_reaction('⚠')
+                try:
+                    await response.add_reaction('⚠')
+                except:
+                    pass
                 _error = True
             if _error != True:
                 try:
