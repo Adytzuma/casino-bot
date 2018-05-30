@@ -11,8 +11,8 @@ class General():
     async def ping(self, ctx):
         'Returns Pong'
         t = await ctx.send('Pong!')
-        ms = (t.created_at - ctx.message.created_at).total_seconds() * 1000
-        await t.edit(new_content='Ping time: {}ms'.format(int(ms)), content='Ping time: {}ms'.format(int(ms)))
+        msg = (t.created_at - ctx.message.created_at).total_seconds() * 1000
+        await t.edit(content=':newspaper:Responce time: {}ms\n:cloud:Discord latency: {}ms'.format(int(msg), int(self.bot.latency * 1000))
 
     @commands.command()
     async def github(self, ctx):
