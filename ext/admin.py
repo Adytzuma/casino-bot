@@ -1,4 +1,4 @@
-from discord
+import discord
 from contextlib
 import discord
 import traceback

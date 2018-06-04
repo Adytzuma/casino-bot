@@ -8,7 +8,7 @@ from shared import collections, string, fuzzy, commands
 
 class General():
     def __init__(self, bot):
-		bot.remove_command('help')
+        bot.remove_command('help')
         self.bot = bot
 
     @commands.command()
