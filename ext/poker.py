@@ -121,7 +121,8 @@ class Poker():
 				
 				
 		def emoji_check1(self, reaction, user):
-			return str(reaction.emoji) in self.emojis["actions"]
+			return str(reaction.emoji) in self.emojis["actions"] and m == msg
+		
 		for rn in range(1, 5):
 			await self.alert("Round {} has started".format(rn), users)
 
