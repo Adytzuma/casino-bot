@@ -9,6 +9,7 @@ import math
 import asyncio
 import inspect
 import textwrap
+from discomaton.factories import bookbinding
 
 global admin_perm_id
 admin_perm_id = [377812572784820226]
@@ -75,102 +76,6 @@ class Admin():
 			binder.add(traceback.format_exc())
 		finally:
 			binder.start()
-
-
-	@commands.check(is_owner)
-	@commands.command()
-	async def repl(self, ctx):
-		'Starts a repl session'
-		msg = ctx.message
-		variables = {
-			'ctx': ctx,
-			'bot': self.bot,
-			'msg': msg,
-			'server': msg.guild,
-			'channel': msg.channel,
-			'author': msg.author,
-			'_': None,
-		}
-		if msg.channel.id in self.sessions:
-			await ctx.send('Already running a REPL session in this channel. Exit it with `quit`.')
-			return
-		self.sessions.add(msg.channel.id)
-		await ctx.send('Enter code to execute or evaluate. `exit()` or `quit` to exit.')
-		
-		def check(msg):
-			return msg.content.startswith('>') and msg.author.id in admin_perm_id
-		
-		while True:
-			_error = False
-			response = await self.bot.wait_for('message', check=check)
-			cleaned = self.cleanup_code(response.content)
-			if cleaned in ('quit', 'exit', 'exit()'):
-				await ctx.send('Exiting.')
-				self.sessions.remove(msg.channel.id)
-				return
-			executor = exec
-			if cleaned.count('\n') == 0:
-				try:
-					code = compile(cleaned, '<repl session>', 'eval')
-				except SyntaxError:
-					pass
-				else:
-					executor = eval
-			if executor is exec:
-				try:
-					code = compile(cleaned, '<repl session>', 'exec')
-				except SyntaxError as e:
-					await ctx.send(self.get_syntax_error(e))
-					try:
-						await response.add_reaction('⚠')
-					except:
-						pass
-					_error = True
-					continue
-			variables['msg'] = response
-			fmt = None
-			stdout = io.StringIO()
-			try:
-				with redirect_stdout(stdout):  # single statement, potentially 'eval'
-					result = executor(code, variables)
-					if inspect.isawaitable(result):
-						result = await result
-			except Exception as e:
-				value = stdout.getvalue()
-				fmt = '```py\n{}{}\n```'.format(value, traceback.format_exc())
-				try:
-					await response.add_reaction('⚠')
-				except:
-					pass
-				_error = True
-			else:
-				value = stdout.getvalue()
-				if result is not None:
-					fmt = '```py\n{}{}\n```'.format(value, result)
-					variables['_'] = result
-				elif value:
-					fmt = '```py\n{}\n```'.format(value)
-			try:
-				if fmt is not None:
-					if len(fmt) > 2000:
-						await msg.channel.send('Content too big to be printed.')
-					else:
-						await msg.channel.send(fmt)
-			except discord.Forbidden:
-				pass
-			except discord.HTTPException as e:
-				await msg.channel.send('Unexpected error: `{}`'.format(e))
-				try:
-					await response.add_reaction('⚠')
-				except:
-					pass
-				_error = True
-			if _error != True:
-				try:
-					await response.add_reaction('✅')
-				except:
-					pass
-
-
+			
 def setup(bot):
 	bot.add_cog(Admin(bot))
