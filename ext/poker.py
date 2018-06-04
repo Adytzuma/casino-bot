@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from random import randint
+import asyncio
 
 """To do"""
 #Check for Royal Flush												(Not done - Not started)
@@ -117,7 +118,10 @@ class Poker():
 			for c in range(1, 5):
 				cards[u].append(cards[0][0])
 				cards[0].remove(cards[0][0])
-
+				
+				
+		def emoji_check1(self, reaction, user):
+			return str(reaction.emoji) in self.emojis["actions"]
 		for rn in range(1, 5):
 			await self.alert("Round {} has started".format(rn), users)
 
@@ -159,9 +163,10 @@ class Poker():
 							else:
 								await msg.add_reaction(r)
 						try:
-							rct = await self.bot.wait_for('reaction_add', timeout=60)
-							rct = rct.emoji
-						except:
+							rtc, user = await self.bot.wait_for('reaction_add', timeout=60, check=emoji_check1)
+							rct = str(rct.emoji)
+							
+						except asyncio.TimeoutError:
 							#Exit
 							rct = '\u'
 
