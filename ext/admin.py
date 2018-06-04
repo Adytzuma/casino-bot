@@ -1,5 +1,5 @@
-from discord.ext import commands
-from contextlib import redirect_stdout
+from discord
+from contextlib
 import discord
 import traceback
 import io
@@ -18,28 +18,15 @@ admin_perm_id = [377812572784820226]
 class Admin():
 	def __init__(self, bot):
 		self.bot = bot
-		self._last_result = None
-		self.sessions = set()
 
 	def is_owner(ctx):
 		if ctx.author.id in admin_perm_id:
 			return True
 		return False
 
-	def cleanup_code(self, content):
-		'Automatically removes code blocks from the code.'
-		if content.startswith('```') and content.endswith('```'):  # remove ```py\n```
-			return '\n'.join(content.split('\n')[1:(-1)])
-		return content.strip('> \n')
-
-	def get_syntax_error(self, e):  # remove `foo`
-		if e.text is None:
-			return '```py\n{0.__class__.__name__}: {0}\n```'.format(e)
-		return '```py\n{0.text}{1:>{0.offset}}\n{2}: {0}```'.format(e, '^', type(e).__name__)
-
 	@commands.check(is_owner)
-	@commands.command(name='exec')
-	async def _eval(self, ctx, *, body: str):
+	@commands.command()
+	async def exec(self, ctx, *, command):
 		'Execute or evaluate code in python'
 		binder = bookbinding.StringBookBinder(ctx, max_lines=50,
 											  prefix='```python',
