@@ -30,6 +30,7 @@ class Admin():
 		'Automatically removes code blocks from the code.'
 		if content.startswith('```') and content.endswith('```'):  # remove ```py\n```
 			return '\n'.join(content.split('\n')[1:(-1)])
+		return content
 			
 	@commands.check(is_owner)
 	@commands.command(name="exec") 
