@@ -25,7 +25,11 @@ class Admin():
 		if ctx.author.id in admin_perm_id:
 			return True
 		return False
-
+	def cleanup_code(self, content):
+		'Automatically removes code blocks from the code.'
+		if content.startswith('```') and content.endswith('```'):  # remove ```py\n```
+			return '\n'.join(content.split('\n')[1:(-1)])
+			
 	@commands.check(is_owner)
 	@commands.command() 
 	async def exec(self, ctx, *, command):
@@ -33,6 +37,7 @@ class Admin():
 		binder = bookbinding.StringBookBinder(ctx, max_lines=50,
 											  prefix='```python',
 											  suffix='```')
+		command = self.cleanup_code(command)
 
 		try:
 			binder.add_line('# Output:')
