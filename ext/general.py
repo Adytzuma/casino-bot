@@ -3,7 +3,7 @@ from discord.ext import commands
 import asyncio
 import typing
 from cached_property import cached_property
-
+import discomaton
 from shared import collections, string, fuzzy, commands
 
 
@@ -465,10 +465,10 @@ class General():
 
 		return None
 
-		@commands.command(brief='Shows credits')
-		async def credits(ctx):
-			em = discord.Embed(title="Casino Credits", description=""""Bot creator:<@!377812572784820226>\nSpecial thanks:\nThanks to everyone on the `Sebi Bot Tutorial` server for always helping me out with all of my problems, specially to @Espy and @Dusty.P for always being there to help and sharing code with me that I later used on this bot and @sebi for writing the tutorial that I used to learn how to write the bot.""", colour=discord.Colour.light_grey())
-			await ctx.send(embed=em)
+	@commands.command(brief='Shows credits')
+	async def credits(ctx):
+		em = discord.Embed(title="Casino Credits", description=""""Bot creator:<@!377812572784820226>\nSpecial thanks:\nThanks to everyone on the `Sebi Bot Tutorial` server for always helping me out with all of my problems, specially to @Espy and @Dusty.P for always being there to help and sharing code with me that I later used on this bot and @sebi for writing the tutorial that I used to learn how to write the bot.""", colour=discord.Colour.light_grey())
+		await ctx.send(embed=em)
 			
 def setup(bot):
 	bot.add_cog(General(bot))
