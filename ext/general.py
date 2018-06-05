@@ -59,7 +59,7 @@ class General():
 
 	@commands.command(brief='Shows credits')
 	async def credits(self, ctx):
-		em = discord.Embed(title="Casino Credits", description=""""Bot creator:<@!377812572784820226>\nSpecial thanks:\nThanks to everyone on the `Sebi Bot Tutorial` server for always helping me out with all of my problems, specially to @Espy and @Dusty.P for always being there to help and sharing code with me that I later used on this bot and @sebi for writing the tutorial that I used to learn how to write the bot.""", colour=discord.Colour.light_grey())
+		em = discord.Embed(title="Casino Credits", description=""""Bot creator: <@!377812572784820226>\nSpecial thanks:\nThanks to everyone on the `Sebi Bot Tutorial` server for always helping me out with all of my problems, specially to <@!351794468870946827> and <@!387871282756190208> for always being there to help and sharing code with me that I later used on this bot and <@!242887101018931200> for writing the tutorial that I used to learn how to write the bot.""", colour=discord.Colour.light_grey())
 		await ctx.send(embed=em)
 			
 def setup(bot):
