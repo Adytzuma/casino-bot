@@ -11,6 +11,7 @@ import asyncio
 import inspect
 import textwrap
 from discomaton.factories import bookbinding
+import async_timeout
 
 global admin_perm_id
 admin_perm_id = [377812572784820226]
