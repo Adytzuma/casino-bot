@@ -2,4 +2,4 @@ git+https://github.com/Rapptz/discord.py@rewrite
 aiohttp>=3.2.1
 pillow
 aiofiles
-cached_property
+cached_property 
