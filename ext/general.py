@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 import typing
-import cached_property
+from cached_property import cached_property
 
 from shared import collections, string, fuzzy, commands
 
