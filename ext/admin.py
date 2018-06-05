@@ -25,27 +25,36 @@ class Admin():
 		if ctx.author.id in admin_perm_id:
 			return True
 		return False
+		
 	def cleanup_code(self, content):
 		'Automatically removes code blocks from the code.'
 		if content.startswith('```') and content.endswith('```'):  # remove ```py\n```
 			return '\n'.join(content.split('\n')[1:(-1)])
 			
 	@commands.check(is_owner)
-	@commands.command() 
-	async def exec(self, ctx, *, command):
+	@commands.command(name="exec") 
+	async def _eval(self, ctx, *, command):
 		'Execute or evaluate code in python'
 		binder = bookbinding.StringBookBinder(ctx, max_lines=50,
 											  prefix='```python',
 											  suffix='```')
 		command = self.cleanup_code(command)
-
+		env = {
+			'bot': self.bot,
+			'ctx': ctx,
+			'channel': ctx.channel,
+			'author': ctx.author,
+			'server': ctx.guild,
+			'msg': ctx.message,
+		}
+		
 		try:
 			binder.add_line('# Output:')
 			if command.count('\n') == 0:
 				with async_timeout.timeout(10):
 					if command.startswith('await '):
 						command = command[6:]
-					result = eval(command)
+					result = eval(command, env)
 					if inspect.isawaitable(result):
 						binder.add_line(
 							f'# automatically awaiting result {result}')
@@ -62,7 +71,7 @@ class Admin():
 												  for line
 												  in command.split('\n')) +
 										'\n')
-								exec(wrapped_command)
+								exec(wrapped_command, env)
 								result = await (locals()['_aexec'](ctx))
 						binder.add(output_stream.getvalue())
 						binder.add('# Returned ' + str(result))
