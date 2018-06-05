@@ -1,4 +1,4 @@
-import discord.ext import commands
+from discord.ext import commands
 import discord
 import contextlib
 import discord
