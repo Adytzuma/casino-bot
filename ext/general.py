@@ -105,7 +105,7 @@ class General():
 		for i in range(0, len(commands), 12):
 			embed_page = discord.Embed(
 				title='Casino commands',
-				colour=discord.Colour.grey())
+				colour=discord.Colour.light_grey())
 			# embed_page.set_thumbnail(url=ctx.bot.user.avatar_url)
 
 			next_commands = commands[i:i + 12]
@@ -467,7 +467,7 @@ class General():
 
 		@commands.command(brief='Shows credits')
 		async def credits(ctx):
-			em = discord.Embed(title="Casino Credits", description=""""Bot creator:<@!377812572784820226>\nSpecial thanks:\nThanks to everyone on the `Sebi Bot Tutorial` server for always helping me out with all of my problems, specially to @Espy and @Dusty.P for always being there to help and sharing code with me that I later used on this bot and @sebi for writing the tutorial that I used to learn how to write the bot.""", colour=discord.Colour.grey())
+			em = discord.Embed(title="Casino Credits", description=""""Bot creator:<@!377812572784820226>\nSpecial thanks:\nThanks to everyone on the `Sebi Bot Tutorial` server for always helping me out with all of my problems, specially to @Espy and @Dusty.P for always being there to help and sharing code with me that I later used on this bot and @sebi for writing the tutorial that I used to learn how to write the bot.""", colour=discord.Colour.light_grey())
 			await ctx.send(embed=em)
 			
 def setup(bot):
