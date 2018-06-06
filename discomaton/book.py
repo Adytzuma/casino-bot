@@ -135,7 +135,7 @@ def default_buttons() -> typing.List[Button]:
         assert len(explanation), 'No buttons?'
 
         help_embed = discord.Embed(
-            title='Discomaton Pagination for Neko²',
+            title='Discomaton Pagination for Casino',
             description=f'@{whom.name}#{whom.discriminator}! Here are the '
                         'basics for using this control:',
             colour=random.randint(0, 0xFFFFFF))
