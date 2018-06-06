@@ -686,11 +686,7 @@ class AbstractBooklet(AbstractIterableMachine,
                 timeout=self.timeout)
 
             await flush_future
-            try:
-                      await (await self.root_resp).remove_reaction(reaction, user)
-            except:
-                      pass
-           
+            await (await self.root_resp).remove_reaction(reaction, user)
             await self.buttons[reaction.emoji](self, reaction, user)
 
         except asyncio.TimeoutError:
