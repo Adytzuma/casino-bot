@@ -3,6 +3,7 @@ from discord.ext import commands
 import asyncio
 import aiohttp, os, traceback
 from PIL import Image
+import time
 
 
 class Fun():
@@ -29,14 +30,15 @@ class Fun():
 			return ctx.guild.id == msg.guild.id and msg.author.id == user.id
 
 		async def infect_task(self):
-			await ctx.channel.send(((
-				('`' + user.name) + '` has been infected with ') + str(emoji)) + ' for **one** hour')
-			while True:
+			await ctx.channel.send(((('`' + user.name) + '` has been infected with ') + str(emoji)) + ' for **one** hour')
+			start = time.monotonic()
+			while time.monotonic() - start < (60*60):
 				m = await self.bot.wait_for('message', check=check)
 				try:
 					await m.add_reaction(emoji)
 				except:
 					pass
+			del self.infections[str(user) + ';' + str(ctx.guild.id)]
 
 		inf = self.infections.get((str(user) + ';') + str(ctx.guild.id), None)
 		if inf is not None:
@@ -49,12 +51,6 @@ class Fun():
 			return
 		infection = self.bot.loop.create_task(infect_task(self))
 		self.infections.update({str(user) + ';' + str(ctx.guild.id): infection})
-		await asyncio.sleep(60 * 60)
-		try:
-			infection.cancel()
-			del self.infections[str(user) + ';' + str(ctx.guild.id)]
-		except:
-			pass
 
 	@commands.command()
 	async def heal(self, ctx, user: discord.Member = None):
