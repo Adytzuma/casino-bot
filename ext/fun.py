@@ -31,7 +31,7 @@ class Fun():
 				m = await self.bot.wait_for('message', check=check)
 				try:
 					await m.add_reaction(emoji)
-				except:
+				except (discord.Forbidden, discord.HTTPException, discord.NotFound, discord.InvalidArgument):
 					pass
 			del self.infections[str(user.id) + ';' + str(ctx.guild.id)]
 
