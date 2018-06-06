@@ -24,21 +24,19 @@ class Admin():
 	def is_owner(ctx):
 		if ctx.author.id in admin_perm_id:
 			return True
-		return False				
+		return False
+def cleanup_code(self, content):
+	'Automatically removes code blocks from the code.'
+	if content.startswith('```') and content.endswith('```'):  # remove ```py\n```
+		return '\n'.join(content.split('\n')[1:(-1)])
+	return content 
 
 	@commands.check(is_owner)
 	@commands.command() 
 	async def exec(self, ctx, *, command):
 		'Execute or evaluate code in python'
 		binder = bookbinding.StringBookBinder(ctx, max_lines=50,prefix='```py', suffix='```')
-		env = {
-			'bot': self.bot,
-			'ctx': ctx,
-			'channel': ctx.channel,
-			'author': ctx.author,
-			'server': ctx.guild,
-			'msg': ctx.message,
-		}
+		command = self.cleanup_code(command)
 		
 		try:
 			binder.add_line('# Output:')
@@ -60,8 +58,7 @@ class Admin():
 								wrapped_command = (
 										'async def _aexec(ctx):\n' +
 										'\n'.join(f'	{line}'
-												  for line
-												  in command.split('\n')) +
+												  for line in command.split('\n')) +
 										'\n')
 								exec(wrapped_command, env)
 								result = await (locals()['_aexec'](ctx))
