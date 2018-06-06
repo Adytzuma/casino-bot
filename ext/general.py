@@ -1,10 +1,6 @@
 import discord
 from discord.ext import commands
 import asyncio
-import typing
-from cached_property import cached_property
-import discomaton
-from shared import collections, string, fuzzy, commands
 
 
 class General():
