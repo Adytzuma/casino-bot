@@ -19,13 +19,7 @@ class Fun():
 		if (user is None) or (emoji is None):
 			await ctx.send('Please provide a user and a emoji. Do `c!help infect` for more info')
 			return
-		emoji_stripped = self.bot.get_emoji(int(emoji.split(':')[2].strip('>'))) if '<:' in emoji or '<a:' in emoji else emoji 
-		
-		try:
-			int(emoji_stripped)
-			emoji = discord.utils.get(ctx.bot.emojis, id=emoji_stripped)
-		except Exception as e:
-			pass
+		emoji = self.bot.get_emoji(int(emoji.split(':')[2].strip('>'))) if '<:' in emoji or '<a:' in emoji else emoji 
 
 		def check(msg):
 			return ctx.guild.id == msg.guild.id and msg.author.id == user.id
