@@ -45,7 +45,7 @@ class Admin():
 				with async_timeout.timeout(10):
 					if command.startswith('await '):
 						command = command[6:]
-					result = eval(command, env)
+					result = eval(command)
 					if inspect.isawaitable(result):
 						binder.add_line(
 							f'# automatically awaiting result {result}')
@@ -61,7 +61,7 @@ class Admin():
 										'\n'.join(f'	{line}'
 												  for line in command.split('\n')) +
 										'\n')
-								exec(wrapped_command, env)
+								exec(wrapped_command)
 								result = await (locals()['_aexec'](ctx))
 						binder.add(output_stream.getvalue())
 						binder.add('# Returned ' + str(result))
