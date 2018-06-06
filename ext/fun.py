@@ -10,7 +10,7 @@ class Fun():
         self.bot = bot
         self.infections = {  #Infections
         }
-        '\n\t\t{"user;server.id" : infection_task}\n\t\t'
+        """{"user;server.id" : infection_task}"""
 
     @commands.command()
     async def infect(self, ctx, user: discord.Member = None, emoji=None):
@@ -21,7 +21,7 @@ class Fun():
         emoji_stripped = emoji.strip('<>').split(':')[(-1)]
         try:
             int(emoji_stripped)
-            emoji = discord.utils.get(self.bot.emojis, id=emoji_stripped)
+            emoji = discord.utils.get(ctx.bot.emojis, id=emoji_stripped)
         except Exception as e:
             pass
 
@@ -86,7 +86,7 @@ class Fun():
             await asyncio.sleep(time_to_wait)
             await msg.edit(content=(user.mention + ('\t' * int(edits * spaces))) + ':left_facing_fist:')
             if edits == 0:
-                await msg.edit(content=':boom: <----- This is you' + user.mention)
+                await msg.edit(content=':boom: <----- This is you ' + user.mention)
 
     @commands.command()
     async def blurpify(self, ctx, user: discord.Member = None):
