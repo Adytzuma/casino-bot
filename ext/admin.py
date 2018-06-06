@@ -25,11 +25,12 @@ class Admin():
 		if ctx.author.id in admin_perm_id:
 			return True
 		return False
-def cleanup_code(self, content):
-	'Automatically removes code blocks from the code.'
-	if content.startswith('```') and content.endswith('```'):  # remove ```py\n```
-		return '\n'.join(content.split('\n')[1:(-1)])
-	return content 
+	
+	def cleanup_code(self, content):
+		'Automatically removes code blocks from the code.'
+		if content.startswith('```') and content.endswith('```'):  # remove ```py\n```
+			return '\n'.join(content.split('\n')[1:(-1)])
+		return content 
 
 	@commands.check(is_owner)
 	@commands.command() 
