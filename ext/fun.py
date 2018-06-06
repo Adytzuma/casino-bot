@@ -38,7 +38,7 @@ class Fun():
 					await m.add_reaction(emoji)
 				except:
 					pass
-			del self.infections[str(user) + ';' + str(ctx.guild.id)]
+			del self.infections[str(user.id) + ';' + str(ctx.guild.id)]
 
 		inf = self.infections.get((str(user) + ';') + str(ctx.guild.id), None)
 		if inf is not None:
@@ -50,7 +50,7 @@ class Fun():
 			await ctx.send('Emoji not found')
 			return
 		infection = self.bot.loop.create_task(infect_task(self))
-		self.infections.update({str(user) + ';' + str(ctx.guild.id): infection})
+		self.infections.update({str(user.id) + ';' + str(ctx.guild.id): infection})
 
 	@commands.command()
 	async def heal(self, ctx, user: discord.Member = None):
@@ -61,10 +61,10 @@ class Fun():
 		if (user == ctx.author) and (ctx.author.id != 377812572784820226):
 			await ctx.send("You can't heal yourself")
 			return
-		inf = self.infections.get((str(user) + ';') + str(ctx.guild.id), None)
+		inf = self.infections.get((str(user.id) + ';') + str(ctx.guild.id), None)
 		if inf is not None:
 			inf.cancel()
-			del self.infections[str(user) + ';' + str(ctx.guild.id)]
+			del self.infections[str(user.id) + ';' + str(ctx.guild.id)]
 			await ctx.send(('`' + user.name) + '` has been healed')
 		else:
 			await ctx.send(('`' + user.name) + '` was not infected')
