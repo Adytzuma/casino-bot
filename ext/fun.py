@@ -48,12 +48,13 @@ class Fun():
             await ctx.send('Emoji not found')
             return
         infection = self.bot.loop.create_task(infect_task(self))
-        self.infections.update({
-            (str(user) + ';') + str(ctx.guild.id): infection,
-        })
+        self.infections.update({(str(user) + ';') + str(ctx.guild.id): infection})
         await asyncio.sleep(60 * 60)
-        infection.stop()
-        del self.infections[(str(user) + ';') + str(ctx.guild.id)]
+		try:
+			infection.cancel()
+			del self.infections[(str(user) + ';') + str(ctx.guild.id)]
+		except:
+			pass
 
     @commands.command()
     async def heal(self, ctx, user: discord.Member = None):
@@ -66,7 +67,7 @@ class Fun():
             return
         inf = self.infections.get((str(user) + ';') + str(ctx.guild.id), None)
         if inf is not None:
-            inf.stop()
+            inf.cancel()
             del self.infections[(str(user) + ';') + str(ctx.guild.id)]
             await ctx.send(('`' + user.name) + '` has been healed')
         else:
