@@ -52,7 +52,7 @@ class Fun():
             (str(user) + ';') + str(ctx.guild.id): infection,
         })
         await asyncio.sleep(60 * 60)
-        infection.cancel()
+        infection.stop()
         del self.infections[(str(user) + ';') + str(ctx.guild.id)]
 
     @commands.command()
@@ -66,7 +66,7 @@ class Fun():
             return
         inf = self.infections.get((str(user) + ';') + str(ctx.guild.id), None)
         if inf is not None:
-            inf.cancel()
+            inf.stop()
             del self.infections[(str(user) + ';') + str(ctx.guild.id)]
             await ctx.send(('`' + user.name) + '` has been healed')
         else:
