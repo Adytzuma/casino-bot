@@ -60,7 +60,7 @@ async def on_ready():
 async def on_command_error(ctx, error):
 	if isinstance(error, commands.CommandNotFound) or isinstance(error, commands.CheckFailure):
 		return
-	if isinstance(error, commands.commands.errors.BadArgument):
+	if isinstance(error, commands.BadArgument):
 		return await ctx.send("Invalid user")
 	await ctx.send("Ups. An unexpected error has been raised, the error has been reported to the developers and will be fixed soon :smile:")
 	error = error.__cause__ or error
