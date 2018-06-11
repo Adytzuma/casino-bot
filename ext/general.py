@@ -15,7 +15,7 @@ class General():
 		await t.edit(content=':newspaper:Responce time: {}ms\n:cloud:Discord latency: {}ms'.format(int(msg), int(self.bot.latency * 1000)))
 
 	@commands.command()
-	async def github(self, ctx):
+	async def git(self, ctx):
 		'Returns the github URL of the bot'
 		await ctx.send('%s, the link for the source code of this bot is: https://gitlab.com/davfsa/casino-bot/' %
 					   ctx.author.mention)
