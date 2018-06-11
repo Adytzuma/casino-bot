@@ -74,9 +74,9 @@ async def on_command_error(ctx, error):
 async def on_guild_join(server):
     em = discord.Embed(title='Server joined', colour=discord.Colour.green(), timestamp=datetime.utcnow())
     em.set_image(url=server.icon_url)
-    em.add_field(name='Server name:', value=server.name, inline=True)
-    em.add_field(name='Server id:', value=server.id, inline=True)
-    em.add_field(name='Server owner:', value=server.owner.mention, inline=True)
+    em.add_field(name='Server name:', value=server.name, inline=False)
+    em.add_field(name='Server id:', value=server.id, inline=False)
+    em.add_field(name='Server owner:', value=server.owner.mention, inline=False)
     await bot.get_channel(446292018415665152).send(embed=em)
 
 
@@ -84,9 +84,9 @@ async def on_guild_join(server):
 async def on_guild_remove(server):
     em = discord.Embed(title='Server left', colour=discord.Colour.gold(), timestamp=datetime.utcnow())
     em.set_image(url=server.icon_url)
-    em.add_field(name='Server name:', value=server.name, inline=True)
-    em.add_field(name='Server id:', value=server.id, inline=True)
-    em.add_field(name='Server owner:', value=server.owner.mention, inline=True)
+    em.add_field(name='Server name:', value=server.name, inline=False)
+    em.add_field(name='Server id:', value=server.id, inline=False)
+    em.add_field(name='Server owner:', value=server.owner.mention, inline=False)
     await bot.get_channel(446292018415665152).send(embed=em)
 
 
