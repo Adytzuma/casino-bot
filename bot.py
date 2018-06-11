@@ -71,7 +71,7 @@ async def on_command_error(ctx, error):
 
 
 @bot.event
-async def on_guild_join(guild):
+async def on_guild_join(server):
     em = discord.Embed(title='Server joined', colour=discord.Colour.green(), timestamp=datetime.utcnow())
     em.set_image(url=server.icon_url)
     em.add_field(name='Server name:', value=server.name)
@@ -81,7 +81,7 @@ async def on_guild_join(guild):
 
 
 @bot.event
-async def on_guild_remove(guild):
+async def on_guild_remove(server):
     em = discord.Embed(title='Server left', colour=discord.Colour.gold(), timestamp=datetime.utcnow())
     em.set_image(url=server.icon_url)
     em.add_field(name='Server name:', value=server.name)
