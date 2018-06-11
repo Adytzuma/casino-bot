@@ -17,7 +17,7 @@ class General():
 	@commands.command()
 	async def github(self, ctx):
 		'Returns the github URL of the bot'
-		await ctx.send('%s, the link for the source code of this bot is: https://github.com/davfsa/casino-bot/' %
+		await ctx.send('%s, the link for the source code of this bot is: https://gitlab.com/davfsa/casino-bot/' %
 					   ctx.author.mention)
 
 	@commands.command()
@@ -31,6 +31,13 @@ class General():
 		'Sends the invite to add the bot to your server'
 		await ctx.send(
 			'%s, the link to invite the bot is: https://discordapp.com/api/oauth2/authorize?client_id=434057626980974602&permissions=330752&scope=bot'
+			% ctx.author.mention)
+			
+	@commands.command()
+	async def upvote(self, ctx):
+	    'Sends a link to upvote the bot'
+	    await ctx.send(
+			'%s, the link to upvote the bot is: https://discordbots.org/bot/434057626980974602/vote'
 			% ctx.author.mention)
 
 	@commands.command()
