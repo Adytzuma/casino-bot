@@ -61,7 +61,7 @@ async def on_command(ctx):
     if ctx.author.bot is True:
         return
     else:
-        ctx.bot.process_comamnd(ctx.message)
+        ctx.bot.process_comamnds(ctx.message)
 	
 @bot.event
 async def on_command_error(ctx, error):
