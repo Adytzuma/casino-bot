@@ -55,6 +55,13 @@ async def on_ready():
     em = discord.Embed(title='Bot deployed', colour=discord.Colour.green(), timestamp=datetime.utcnow())
     msg = await bot.get_channel(446298417413750786).send(embed=em)
     await msg.add_reaction('✅')
+    
+@bot.event
+async def on_command(ctx):
+    if ctx.author.bot is True:
+        return
+    else:
+        ctx.bot.process_comamnd(ctx.message)
 	
 @bot.event
 async def on_command_error(ctx, error):
