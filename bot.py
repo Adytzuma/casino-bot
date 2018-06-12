@@ -57,11 +57,11 @@ async def on_ready():
     await msg.add_reaction('✅')
     
 @bot.event
-async def on_command(ctx):
-    if ctx.author.bot is True:
+async def on_message(message):
+    if message.author.bot is True:
         return
     else:
-        ctx.bot.process_comamnds(ctx.message)
+        await bot.process_commands(message)
 	
 @bot.event
 async def on_command_error(ctx, error):
