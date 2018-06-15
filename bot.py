@@ -96,6 +96,5 @@ async def on_guild_remove(server):
     em.add_field(name='Server owner:', value=server.owner.mention, inline=True)
     await bot.get_channel(446292018415665152).send(embed=em)
 
-
 bot.loop.create_task(presence())
 bot.run(os.getenv("TOKEN"))
