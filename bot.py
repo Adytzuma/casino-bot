@@ -83,7 +83,7 @@ async def on_guild_join(server):
     em.set_thumbnail(url=server.icon_url)
     em.add_field(name='Server name:', value=server.name, inline=True)
     em.add_field(name='Server id:', value=server.id, inline=True)
-    em.add_field(name='Server owner:', value="<@!" + server.owner.id + ">", inline=True)
+    em.add_field(name='Server owner:', value="<@!" + str(server.owner.id) + ">", inline=True)
     await bot.get_channel(446292018415665152).send(embed=em)
 
 
@@ -93,7 +93,7 @@ async def on_guild_remove(server):
     em.set_thumbnail(url=server.icon_url)
     em.add_field(name='Server name:', value=server.name, inline=True)
     em.add_field(name='Server id:', value=server.id, inline=True)
-    em.add_field(name='Server owner:', value="<@!" + server.owner.id + ">", inline=True)
+    em.add_field(name='Server owner:', value="<@!" + str(server.owner.id) + ">", inline=True)
     await bot.get_channel(446292018415665152).send(embed=em)
 
 bot.loop.create_task(presence())
