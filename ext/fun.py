@@ -17,8 +17,8 @@ class Fun():
 	async def infect(self, ctx, user: discord.Member = None, emoji=None):
 		'Infects a user'
 		if (user is None) or (emoji is None):
-			await ctx.send('Please provide a user and a emoji. Do `c!help infect` for more info')
-			return
+			return await ctx.send('Please provide a user and a emoji. Do `c!help infect` for more info')
+			
 		emoji = self.bot.get_emoji(int(emoji.split(':')[2].strip('>'))) if '<:' in emoji or '<a:' in emoji else emoji 
 
 		def check(msg):
@@ -35,15 +35,15 @@ class Fun():
 					pass
 			del self.infections[str(user.id) + ';' + str(ctx.guild.id)]
 
-		inf = self.infections.get((str(user) + ';') + str(ctx.guild.id), None)
+		inf = self.infections.get((str(user.id) + ';') + str(ctx.guild.id), None)
 		if inf is not None:
-			await ctx.send(('`' + user.name) + '` is already infected')
-			return
+			return await ctx.send(('`' + user.name) + '` is already infected')
+			
 		try:
 			await ctx.message.add_reaction(emoji)
 		except:
-			await ctx.send('Emoji not found')
-			return
+			return await ctx.send('Emoji not found')
+			
 		infection = self.bot.loop.create_task(infect_task(self))
 		self.infections.update({str(user.id) + ';' + str(ctx.guild.id): infection})
 
