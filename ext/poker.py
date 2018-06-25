@@ -1,31 +1,43 @@
+# -*- coding: utf-8 -*-
 from discord.ext import commands
 from random import randint
 import asyncio
+from collections import defaultdict
+from itertools import combinations
 
-# TODO
-# Check for Royal Flush                                              (Not done - Not started)
-# Check for Straight flush                                           (Not done - Not started)
-# Check for Four of a kind                                           (Not done - Not started)
-# Check for Full house                                               (Not done - Not started)
-# Check for Flush                                                    (Not done - Not started)
-# Check for Straight                                                 (Not done - Not started)
-# Check for Three of a kind                                          (Not done - Not started)
-# Check for Double pares                                             (Not done - Not started)
-# Check for Pair                                                     (Not done - Not started)
-# If none is found, then 0 points and name is "Nothing"              (Not done - Not started)
-# Replace "\u" with there corresponding unicode character            (Not done - Not started)
+# MIT License
+#
+# Copyright (c) 2018 Davfsa
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 
 dev_channels = [416161836069814273, 426699644190326785, 441474231176396800, 411586546551095296, 339112602867204097]
 
 
-class Poker():
+class Poker:
     def __init__(self, bot):
         self.bot = bot
         self.waiting_games = {}
         self.running_games = []
+
         self.card_numbers = {
-            1: 'Ace',
             2: 'Two',
             3: 'Three',
             4: 'Four',
@@ -38,18 +50,37 @@ class Poker():
             11: 'Jack',
             12: 'Queen',
             13: 'King',
+            1: 'Ace',
         }
+
         self.card_symbols = {
-            1: 'Spades',
-            2: 'Clubs',
-            3: 'Hearts',
-            4: 'Diamonds',
+            1: 'Hearts',
+            2: 'Spades',
+            3: 'Diamonds',
+            4: 'Clubs',
         }
-        self.emojis = {"actions":['\u', '\u', '\u', '\u', '\u'], "numbers_up1":['\u', '\u', '\u', '\u', '\u', '\u', '\u', '\u', '\u', '\u'], "numbers_up2":['\u', '\u', '\u', '\u']}
+        self.hands = {
+            9:"straight-flush",
+            8:"four-of-a-kind",
+            7:"full-house",
+            6:"flush",
+            5:"straight",
+            4:"three-of-a-kind",
+            3:"two-pairs",
+            2:"one-pair",
+            1:"highest-card"
+        }
+
+        self.emojis = {
+            "actions":['\u', '\u', '\u', '\u', '\u'],
+            "numbers_up1":['\u', '\u', '\u', '\u', '\u', '\u', '\u', '\u', '\u', '\u'],
+            "numbers_up2":['\u', '\u', '\u', '\u']
+        }
+
         self.msgs = {
-            'choose1': '**Current money:**\t%s\n**Current bet:**\t%s\n**Availabe actions:**\n::\tShows your cards \
+            'choose1': '**Current money:**\t%s\n**Current bet:**\t%s\n**Available actions:**\n::\tShows your cards \
             (you will have another action)\n::\tGo in\n::\tRaise bet\n::\tTrash a card\n:x:\tDrop out',
-            'choose2': '**Current money:**\t%s\n**Current bet:**\t%s\n**Availabe actions:**\n::\tShows your cards \
+            'choose2': '**Current money:**\t%s\n**Current bet:**\t%s\n**Available actions:**\n::\tShows your cards \
             (you will have another action)\n::\tGo in\n::\tRaise bet\n:x:\tDrop out',
         }
 
@@ -64,6 +95,13 @@ class Poker():
             return True
         return False
 
+    async def alert(self, info, users):
+        for u in users:
+            try:
+                await u.send(info)
+            except:
+                pass
+
     def get_card(self, num):
         # First number = Symbol
         # Second number = Number
@@ -71,7 +109,6 @@ class Poker():
         # Eg: [5, 3] = Five of Clubs
 
         i = 0
-        nm = ''
         for c in num:
             if i == 0:
                 nm = self.card_numbers[c]
@@ -101,35 +138,125 @@ class Poker():
             deck.append(card)
             cards.remove(card)
 
-    def order(self, cards):
-        # Get number of the cards
-        cards_numbers = []
-        for card in cards:
-            cards_numbers.append(card[0])
+    # Checks
+    def check_straight_flush(self, hand):
+        if self.check_flush(hand) and self.check_straight(hand):
+            return True
+        else:
+            return False
 
-        # Order the numbers
-        ordered_cards_numbers = []
-        for n in range(1, 14):
-            for c in cards_numbers:
-                if c == n:
-                    ordered_cards_numbers.append(c)
-                    break
+    def check_four_of_a_kind(self, hand):
+        values = [i[0] for i in hand]
+        value_counts = defaultdict(lambda: 0)
+        for v in values:
+            value_counts[v] += 1
+        if sorted(value_counts.values()) == [1, 4]:
+            return True
+        return False
 
-        # Order cards
-        ordered_cards = []
-        for num in ordered_cards_numbers:
-            for card in cards:
-                if num == card[0]:
-                    ordered_cards.append(card)
+    def check_full_house(self, hand):
+        values = [i[0] for i in hand]
+        value_counts = defaultdict(lambda: 0)
+        for v in values:
+            value_counts[v] += 1
+        if sorted(value_counts.values()) == [2, 3]:
+            return True
+        return False
 
-        return ordered_cards
+    def check_flush(self, hand):
+        suits = [i[1] for i in hand]
+        if len(set(suits)) == 1:
+            return True
+        else:
+            return False
 
-    async def alert(self, info, users):
-        for u in users:
-            try:
-                await u.send(info)
-            except:
-                pass
+    def check_straight(self, hand):
+        values = [i[0] for i in hand]
+        value_counts = defaultdict(lambda: 0)
+        for v in values:
+            value_counts[v] += 1
+        rank_values = [self.card_numbers[i] for i in values]
+        value_range = max(rank_values) - min(rank_values)
+        if len(set(value_counts.values())) == 1 and (value_range == 4):
+            return True
+        else:
+            # check straight with low Ace
+            if set(values) == {1, 2, 3, 4, 5}:
+                return True
+            return False
+
+    def check_three_of_a_kind(self, hand):
+        values = [i[0] for i in hand]
+        value_counts = defaultdict(lambda: 0)
+        for v in values:
+            value_counts[v] += 1
+        if set(value_counts.values()) == {3, 1}:
+            return True
+        else:
+            return False
+
+    def check_two_pairs(self, hand):
+        values = [i[0] for i in hand]
+        value_counts = defaultdict(lambda: 0)
+        for v in values:
+            value_counts[v] += 1
+        if sorted(value_counts.values()) == [1, 2, 2]:
+            return True
+        else:
+            return False
+
+    def check_pair(self, hand):
+        values = [i[0] for i in hand]
+        value_counts = defaultdict(lambda: 0)
+        for v in values:
+            value_counts[v] += 1
+        if 2 in value_counts.values():
+            return True
+        else:
+            return False
+
+
+    def check_hand(self, hand):
+        if self.check_straight_flush(hand):
+            return 9
+
+        if self.check_four_of_a_kind(hand):
+            return 8
+
+        if self.check_full_house(hand):
+            return 7
+
+        if self.check_flush(hand):
+            return 6
+
+        if self.check_straight(hand):
+            return 5
+
+        if self.check_three_of_a_kind(hand):
+            return 4
+
+        if self.check_two_pairs(hand):
+            return 3
+
+        if self.check_pair(hand):
+            return 2
+
+        return 1
+
+    def get_play(self, cards):
+        hand = cards[:5]
+        deck = cards[5:]
+        best_hand = 0
+        for i in range(6):
+            possible_combos = combinations(hand, 5 - i)
+            for c in possible_combos:
+                current_hand = list(c) + deck[:i]
+                hand_value = self.check_hand(current_hand)
+                if hand_value > best_hand:
+                    best_hand = hand_value
+
+        return [best_hand, self.hands[best_hand]]
+
 
     async def game(self, channel_id):
         self.running_games.append(channel_id)
@@ -182,7 +309,7 @@ class Poker():
                             else:
                                 await msg.add_reaction(r)
 
-                        def check(self, reaction, user):
+                        def check(reaction, user):
                             return reaction.message == msg
 
                         try:
@@ -333,8 +460,7 @@ class Poker():
         # Game finished
         await self.alert("The game has concluded, the points are going to be counted and the winner will be announced, \
         this will take some time, so **please hold on**", users)
-        
-        # Calculate points
+
         # Order cards
         ordered_cards = []
         i = 0
@@ -342,20 +468,22 @@ class Poker():
             if i == 0:
                 i = 1
             else:
-                ordered_cards.append(self.order(card))
+                ordered_cards.append(sorted(card))
 
-        # Checks
-        # Check for flush
+        # Get plays
+        plays = []
+        for hand in ordered_cards:
+            plays.append(self.get_play(hand))
 
-        # Get podium (probably doesnt work)
+        # Get podium
         podium = [[[], ""], [[], ""], [[], ""], [[], ""]]
-#       for point in range(len(points)):
-#           pos = 0
-#           for p in points:
-#               if points[point] < p:
-#                   pos += 1
-#           podium[pos][0].append(users[point])
-#           podium[pos][1] = users_combinations_names[point]
+        for play in range(len(plays)):
+            pos = 0
+            for p in plays:
+                if plays[play] < p:
+                    pos += 1
+            podium[pos][0].append(users[play + 1])
+            podium[pos][1] = plays[play]
 
         content = "**Results:**\n"
         a = 1
@@ -399,7 +527,7 @@ class Poker():
             self.waiting_games[channel_id].append(user)
             if len(self.waiting_games[channel_id]) == 4:
                 await ctx.send('Game starting')
-                await self.bot.loop.create_task(game(channel_id))
+                await self.bot.loop.create_task(self.game(channel_id))
                 return
             await ctx.send('%s, you joined the game, %s players remaining!' % (user.mention, 4 - len(self.waiting_games[channel_id])))
             return
