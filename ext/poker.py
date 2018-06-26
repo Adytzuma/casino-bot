@@ -131,6 +131,7 @@ class Poker:
                 cards.append([num, sym])
 
         # Adds the cards to the deck in a random order
+        deck = []
         for c in cards:
             card = cards[randint(0, len(cards) -1)]
             deck.append(card)
