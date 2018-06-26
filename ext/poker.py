@@ -275,7 +275,7 @@ class Poker:
         for rn in range(1, 5):
             await self.alert("Round {} has started".format(rn), users)
 
-            for t in range(1, len(users) + 1):
+            for t in range(1, len(users)):
                 await users[t].send("It's your turn")
 
                 if t == 0:
@@ -360,7 +360,7 @@ class Poker:
                             for n in num:
                                 msg.add_reaction(n)
 
-                            def check(self, reaction, user):
+                            def check(reaction, user):
                                 return reaction.message == msg
 
                             try:
@@ -389,8 +389,7 @@ class Poker:
                                 else:
                                     money[0] = money[0] + up
                                     await users[t].send("**You made the bet %s$ bigger.**\nYou went in with {}$".format(money[0]))
-                                    await self.alert(users[t].mention + " has increased the bet by {}$".format(up),
-                                                     usrs)
+                                    await self.alert(users[t].mention + " has increased the bet by {}$".format(up))
 
                                     done = True
 
@@ -410,7 +409,7 @@ class Poker:
                             for n in num:
                                 msg.add_reaction(n)
 
-                            def check(self, reaction, user):
+                            def check(reaction, user):
                                 return reaction.message == msg
 
                             try:
@@ -455,7 +454,7 @@ class Poker:
                         (you will not be informed about any actions of this game)")
                         await self.alert(users[t].mention + " dropped out of the game", usrs)
 
-                        users.delete(t)
+                        users.remove(t)
                         done = True
 
                     else:
@@ -466,8 +465,7 @@ class Poker:
             await self.alert("Round {} has concluded".format(rn), users)
 
         # Game finished
-        await self.alert("The game has concluded, the points are going to be counted and the winner will be announced, \
-        this will take some time, so **please hold on**", users)
+        await self.alert("The game has concluded, the points are going to be counted and the winner will be announced, this will take some time, so **please hold on**", users)
 
         # Order cards
         ordered_cards = []
