@@ -83,8 +83,8 @@ class Poker:
         }
 
         self.msgs = {
-            'choose1': '**Current money:**\t%s\n**Current bet:**\t%s\n**Available actions:**\n1) Shows your cards (you will have another action)\n2) Go in\n3) Raise bet\n4) Trash a card\n5) Drop out',
-            'choose2': '**Current money:**\t%s\n**Current bet:**\t%s\n**Available actions:**\n1) Shows your cards (you will have another action)\n2) Go in\n3) Raise bet\n4) Drop out',
+            'choose1': '**Current money:** %s\n**Current bet:** %s\n**Available actions:**\n1) Shows your cards (you will have another action)\n2) Go in\n3) Raise bet\n4) Trash a card\n5) Drop out',
+            'choose2': '**Current money:** %s\n**Current bet:** %s\n**Available actions:**\n1) Shows your cards (you will have another action)\n2) Go in\n3) Raise bet\n4) Drop out',
         }
 
     # Waiting Games Hierarchy
@@ -308,161 +308,160 @@ class Poker:
                     else:
                         select = 'actions2'
 
-                    with self.emojis[select] as a:
-                        for r in a:
-                            if (r == a[3]) and (rn != 1):
+                    a = self.emojis[select]
+                    for r in a:
+                        if (r == a[3]) and (rn != 1):
+                            pass
+                        else:
+                            try:
+                                await msg.add_reaction(r)
+                            except:
                                 pass
-                            else:
-                                try:
-                                    await msg.add_reaction(r)
-                                except:
-                                    pass
 
-                        def check(reaction, user):
-                            return reaction.message == msg
+                    def check(reaction, user):
+                        return reaction.message == msg
 
-                        try:
-                            rtc, user = await self.bot.wait_for('reaction_add', timeout=60, check=check)
-                            rtc = str(rtc.emoji)
+                    try:
+                        rtc, user = await self.bot.wait_for('reaction_add', timeout=60, check=check)
+                        rtc = str(rtc.emoji)
                             
-                        except asyncio.TimeoutError:
-                            # Timeout
-                            rtc = self.emojis_str[5]
+                    except asyncio.TimeoutError:
+                        # Timeout
+                        rtc = self.emojis_str[5]
 
-                        if rtc == a[0]:
-                            # Show cards
-                            await msg.delete()
-                            content = '**Your cards:**\n'
-                            for c in cards[t]:
-                                card = self.get_card(c)
-                                content = content + '\t{}\n'.format(card)
+                    if rtc == a[0]:
+                        # Show cards
+                        await msg.delete()
+                        content = '**Your cards:**\n'
+                        for c in cards[t]:
+                            card = self.get_card(c)
+                            content = content + '\t{}\n'.format(card)
 
-                            await users[t].send(content)
+                        await users[t].send(content)
 
-                        elif rtc == a[1]:
-                            # Go in
-                            await msg.delete()
-                            if money[t + 1] < money[0]:
-                                await users[t].send("You don't have enough money to go in, please leave the game")
+                    elif rtc == a[1]:
+                        # Go in
+                        await msg.delete()
+                        if money[t + 1] < money[0]:
+                            await users[t].send("You don't have enough money to go in, please leave the game")
+                        else:
+                            money[t + 1] = money[t + 1] - money[0]
+                            await users[t].send("You went in with {}$".format(money[0]))
+                            await self.alert(users[t].mention + " has gone in", usrs)
+                            done = True
+
+                    elif rtc == a[2]:
+                        # Raise bet
+                        await msg.delete()
+
+                        msg = await users[t].send("**Current bet:{}$**\nSelect a number to increment the bet by".format(money[0]))
+
+                        with self.emojis["numbers_up"] as num:
+                            for n in num:
+                                msg.add_reaction(n)
+
+                            def check(self, reaction, user):
+                                return reaction.message == msg
+
+                            try:
+                                rtc, user = await self.bot.wait_for('reaction_add', timeout=60, check=check)
+
+                            except asyncio.TimeoutError:
+                                # Timeout
+                                rtc = ''
+
+                            up = 0
+                            for i in range(len(num)):
+                                if rtc.emoji == num[i]:
+                                    up = i + 1
+                                    break
+
+                            if up == 0:
+                                # Invalid emoji
+                                await msg.delete()
+                                await users[t].send("Invalid emoji, try again")
+
                             else:
-                                money[t + 1] = money[t + 1] - money[0]
-                                await users[t].send("You went in with {}$".format(money[0]))
-                                await self.alert(users[t].mention + " has gone in", usrs)
-                                done = True
-
-                        elif rtc == a[2]:
-                            # Raise bet
-                            await msg.delete()
-
-                            msg = await users[t].send("**Current bet:{}$**\nSelect a number to increment the bet by".format(money[0]))
-
-                            with self.emojis["numbers_up"] as num:
-                                for n in num:
-                                    msg.add_reaction(n)
-
-                                def check(self, reaction, user):
-                                    return reaction.message == msg
-
-                                try:
-                                    rtc, user = await self.bot.wait_for('reaction_add', timeout=60, check=check)
-
-                                except asyncio.TimeoutError:
-                                    # Timeout
-                                    rtc = ''
-
-                                up = 0
-                                for i in range(len(num)):
-                                    if rtc.emoji == num[i]:
-                                        up = i + 1
-                                        break
-
-                                if up == 0:
-                                    # Invalid emoji
-                                    await msg.delete()
-                                    await users[t].send("Invalid emoji, try again")
-
+                                # Valid emoji
+                                await msg.delete()
+                                if up + money[0] > money[t + 1]:
+                                    await users[t].send("You don't have enough money for do this")
                                 else:
-                                    # Valid emoji
-                                    await msg.delete()
-                                    if up + money[0] > money[t + 1]:
-                                        await users[t].send("You don't have enough money for do this")
-                                    else:
-                                        money[0] = money[0] + up
-                                        await users[t].send("**You made the bet %s$ bigger.**\nYou went in with {}$".format(money[0]))
-                                        await self.alert(users[t].mention + " has increased the bet by {}$".format(up),
-                                                         usrs)
-
-                                        done = True
-
-                        elif rtc == a[3]:
-                            # Trash a card
-                            await msg.delete()
-                            content = '**Current cards:**\n'
-                            a = 1
-                            for c in cards[t]:
-                                card = self.get_card(c)
-                                content = content + '\t{}. {}\n'.format(a, card)
-                                a += 1
-
-                            msg = await users[t].send(content + "Select the number of the card you want to trash".format(money[0]))
-
-                            with self.emojis["numbers_trash"] as num:
-                                for n in num:
-                                    msg.add_reaction(n)
-
-                                def check(self, reaction, user):
-                                    return reaction.message == msg
-
-                                try:
-                                    rtc, user= await self.bot.wait_for('reaction_add', timeout=60, check=check)
-
-                                except asyncio.TimeoutError:
-                                    # Timeout
-                                    rtc = ''
-
-                                cr = None
-                                for i in range(len(num)):
-                                    if rtc.emoji == num[i]:
-                                        cr = i
-                                        break
-
-                                if cr is None:
-                                    # Invalid emoji
-                                    await msg.delete()
-                                    await users[t].send("Invalid emoji, try again")
-
-                                else:
-                                    # Valid emoji
-                                    await msg.delete()
-
-                                    trashed_card = cards[t + 1][cr]
-                                    added_card = cards[0][0]
-
-                                    cards[t + 1].remove(trashed_card)
-                                    cards[t + 1].append(added_card)
-                                    cards[0].remove(added_card)
-
-                                    await users[t].send("You trashed the **{}** and got the **{}**").format(
-                                        self.get_card(trashed_card), self.get_card(added_card))
-                                    await self.alert(users[t].mention + " trashed a card", usrs)
+                                    money[0] = money[0] + up
+                                    await users[t].send("**You made the bet %s$ bigger.**\nYou went in with {}$".format(money[0]))
+                                    await self.alert(users[t].mention + " has increased the bet by {}$".format(up),
+                                                     usrs)
 
                                     done = True
 
-                        elif rtc == a[4]:
-                            # Drop out
-                            await msg.delete()
+                    elif rtc == a[3]:
+                        # Trash a card
+                        await msg.delete()
+                        content = '**Current cards:**\n'
+                        b = 1
+                        for c in cards[t]:
+                            card = self.get_card(c)
+                            content = content + '\t{}. {}\n'.format(b, card)
+                            b += 1
 
-                            await users[t].send("You dropped out of the game \
-                            (you will not be informed about any actions of this game)")
-                            await self.alert(users[t].mention + " dropped out of the game", usrs)
+                        msg = await users[t].send(content + "Select the number of the card you want to trash".format(money[0]))
 
-                            users.delete(t)
-                            done = True
+                        with self.emojis["numbers_trash"] as num:
+                            for n in num:
+                                msg.add_reaction(n)
 
-                        else:
-                            # Invalid emoji
-                            await msg.delete()
-                            await users[t].send("Invalid emoji, try again")
+                            def check(self, reaction, user):
+                                return reaction.message == msg
+
+                            try:
+                                rtc, user= await self.bot.wait_for('reaction_add', timeout=60, check=check)
+
+                            except asyncio.TimeoutError:
+                                # Timeout
+                                rtc = ''
+
+                            cr = None
+                            for i in range(len(num)):
+                                if rtc.emoji == num[i]:
+                                    cr = i
+                                    break
+
+                            if cr is None:
+                                # Invalid emoji
+                                await msg.delete()
+                                await users[t].send("Invalid emoji, try again")
+                            else:
+                                # Valid emoji
+                                await msg.delete()
+
+                                trashed_card = cards[t + 1][cr]
+                                added_card = cards[0][0]
+                                
+                                cards[t + 1].remove(trashed_card)
+                                cards[t + 1].append(added_card)
+                                cards[0].remove(added_card)
+
+                                await users[t].send("You trashed the **{}** and got the **{}**").format(
+                                    self.get_card(trashed_card), self.get_card(added_card))
+                                await self.alert(users[t].mention + " trashed a card", usrs)
+
+                                done = True
+
+                    elif rtc == a[4]:
+                        # Drop out
+                        await msg.delete()
+
+                        await users[t].send("You dropped out of the game \
+                        (you will not be informed about any actions of this game)")
+                        await self.alert(users[t].mention + " dropped out of the game", usrs)
+
+                        users.delete(t)
+                        done = True
+
+                    else:
+                        # Invalid emoji
+                        await msg.delete()
+                        await users[t].send("Invalid emoji, try again")
 
             await self.alert("Round {} has concluded".format(rn), users)
 
