@@ -306,7 +306,7 @@ class Poker:
                             except:
                                 pass
 
-                    def check(self, reaction, user):
+                    def check(reaction, user):
                         return reaction.message == msg
 
                     try:
@@ -348,7 +348,7 @@ class Poker:
                             for n in num:
                                 msg.add_reaction(n)
 
-                            def check(self, reaction, user):
+                            def check(reaction, user):
                                 return reaction.message == msg
 
                             try:
@@ -397,7 +397,7 @@ class Poker:
                             for n in num:
                                 msg.add_reaction(n)
 
-                            def check(self, reaction, user):
+                            def check(reaction, user):
                                 return reaction.message == msg
 
                             try:
