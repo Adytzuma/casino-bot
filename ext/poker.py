@@ -280,19 +280,19 @@ class Poker:
 
                 if t == 0:
                     usrs = users
-                    usrs.remove(t)
+                    usrs.remove(users[t])
 
                 elif t == 1:
                     usrs = users
-                    usrs.remove(t)
+                    usrs.remove(users[t])
 
                 elif t == 2:
                     usrs = users
-                    usrs.remove(t)
+                    usrs.remove(users[t])
 
                 else:
                     usrs = users
-                    usrs.remove(t)
+                    usrs.remove(users[t])
 
                 await self.alert(users[t].mention + "'s turn. Wait for your turn", usrs)
 
