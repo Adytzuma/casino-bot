@@ -77,7 +77,7 @@ class Poker:
         
         with self.emojis_str as em:
             self.emojis = {
-                "actions1":[em[1], em[2], em[3], em[4], em[5]]
+                "actions1":[em[1], em[2], em[3], em[4], em[5]],
                 "actions2":[em[1], em[2], em[3], None , em[4]],
                 "numbers_up":[em[1], em[2], em[3], em[4], em[5], em[6], em[7], em[8], em[9], em[10]],
                 "numbers_trash":[em[1], em[2], em[3], em[4]]
