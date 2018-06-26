@@ -76,10 +76,10 @@ class Poker:
         }
         
         self.emojis = {
-            "actions1":[emojis_str[1], emojis_str[2], emojis_str[3], emojis_str[4], emojis_str[5]],
-            "actions2":[emojis_str[1], emojis_str[2], emojis_str[3], None , emojis_str[4]],
-            "numbers_up":[emojis_str[1], emojis_str[2], emojis_str[3], emojis_str[4], emojis_str[5], emojis_str[6], emojis_str[7], emojis_str[8], emojis_str[9], emojis_str[10]],
-            "numbers_trash":[emojis_str[1], emojis_str[2], emojis_str[3], emojis_str[4]]
+            "actions1":[self.emojis_str[1], self.emojis_str[2], self.emojis_str[3], self.emojis_str[4], self.emojis_str[5]],
+            "actions2":[self.emojis_str[1], self.emojis_str[2], self.emojis_str[3], None , self.emojis_str[4]],
+            "numbers_up":[self.emojis_str[1], self.emojis_str[2], self.emojis_str[3], self.emojis_str[4], self.emojis_str[5], self.emojis_str[6], self.emojis_str[7], self.emojis_str[8], self.emojis_str[9], self.emojis_str[10]],
+            "numbers_trash":[self.emojis_str[1], self.emojis_str[2], self.emojis_str[3], self.emojis_str[4]]
         }
 
         self.msgs = {
