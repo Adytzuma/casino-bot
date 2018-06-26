@@ -75,13 +75,12 @@ class Poker:
             1:"highest-card"
         }
         
-        with self.emojis_str as em:
-            self.emojis = {
-                "actions1":[em[1], em[2], em[3], em[4], em[5]],
-                "actions2":[em[1], em[2], em[3], None , em[4]],
-                "numbers_up":[em[1], em[2], em[3], em[4], em[5], em[6], em[7], em[8], em[9], em[10]],
-                "numbers_trash":[em[1], em[2], em[3], em[4]]
-            }
+        self.emojis = {
+            "actions1":[emojis_str[1], emojis_str[2], emojis_str[3], emojis_str[4], emojis_str[5]],
+            "actions2":[emojis_str[1], emojis_str[2], emojis_str[3], None , emojis_str[4]],
+            "numbers_up":[emojis_str[1], emojis_str[2], emojis_str[3], emojis_str[4], emojis_str[5], emojis_str[6], emojis_str[7], emojis_str[8], emojis_str[9], emojis_str[10]],
+            "numbers_trash":[emojis_str[1], emojis_str[2], emojis_str[3], emojis_str[4]]
+        }
 
         self.msgs = {
             'choose1': '**Current money:**\t%s\n**Current bet:**\t%s\n**Available actions:**\n1) Shows your cards (you will have another action)\n2) Go in\n3) Raise bet\n4) Trash a card\n5) Drop out',
