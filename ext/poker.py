@@ -275,24 +275,11 @@ class Poker:
         for rn in range(1, 5):
             await self.alert("Round {} has started".format(rn), users)
 
-            for t in range(1, len(users)):
+            for t in range(0, len(users)):
                 await users[t].send("It's your turn")
 
-                if t == 0:
-                    usrs = users
-                    usrs.remove(users[t])
-
-                elif t == 1:
-                    usrs = users
-                    usrs.remove(users[t])
-
-                elif t == 2:
-                    usrs = users
-                    usrs.remove(users[t])
-
-                else:
-                    usrs = users
-                    usrs.remove(users[t])
+                usrs = users
+                usrs.remove(users[t])
 
                 await self.alert(users[t].mention + "'s turn. Wait for your turn", usrs)
 
@@ -389,7 +376,7 @@ class Poker:
                                 else:
                                     money[0] = money[0] + up
                                     await users[t].send("**You made the bet %s$ bigger.**\nYou went in with {}$".format(money[0]))
-                                    await self.alert(users[t].mention + " has increased the bet by {}$".format(up))
+                                    await self.alert(users[t].mention + " has increased the bet by {}$".format(up), usrs)
 
                                     done = True
 
