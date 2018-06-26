@@ -37,6 +37,10 @@ class Poker:
         self.waiting_games = {}
         self.running_games = []
 
+        self.emojis_str = [None]
+        for i in range(1, 11):
+            self.emojis_str.append(str(i) + '\N{COMBINING ENCLOSING KEYCAP}')
+
         self.card_numbers = {
             2: 'Two',
             3: 'Three',
@@ -70,18 +74,18 @@ class Poker:
             2:"one-pair",
             1:"highest-card"
         }
-
-        self.emojis = {
-            "actions":['\u', '\u', '\u', '\u', '\u'],
-            "numbers_up1":['\u', '\u', '\u', '\u', '\u', '\u', '\u', '\u', '\u', '\u'],
-            "numbers_up2":['\u', '\u', '\u', '\u']
-        }
+        
+        with self.emojis_str as em:
+            self.emojis = {
+                "actions1":[em[1], em[2], em[3], em[4], em[5]]
+                "actions2":[em[1], em[2], em[3], None , em[4]],
+                "numbers_up":[em[1], em[2], em[3], em[4], em[5], em[6], em[7], em[8], em[9], em[10]],
+                "numbers_trash":[em[1], em[2], em[3], em[4]]
+            }
 
         self.msgs = {
-            'choose1': '**Current money:**\t%s\n**Current bet:**\t%s\n**Available actions:**\n::\tShows your cards \
-            (you will have another action)\n::\tGo in\n::\tRaise bet\n::\tTrash a card\n:x:\tDrop out',
-            'choose2': '**Current money:**\t%s\n**Current bet:**\t%s\n**Available actions:**\n::\tShows your cards \
-            (you will have another action)\n::\tGo in\n::\tRaise bet\n:x:\tDrop out',
+            'choose1': '**Current money:**\t%s\n**Current bet:**\t%s\n**Available actions:**\n1) Shows your cards (you will have another action)\n2) Go in\n3) Raise bet\n4) Trash a card\n5) Drop out',
+            'choose2': '**Current money:**\t%s\n**Current bet:**\t%s\n**Available actions:**\n1) Shows your cards (you will have another action)\n2) Go in\n3) Raise bet\n4) Drop out',
         }
 
     # Waiting Games Hierarchy
@@ -301,13 +305,21 @@ class Poker:
                         msg = await users[t].send(self.msgs['choose2'] %(money[t + 1], money[0]))
                     else:
                         msg = await users[t].send(self.msgs['choose1'] %(money[t + 1], money[0]))
+                    
+                    if rn == 1:
+                        select = 'actions1'
+                    else:
+                        select = 'actions2'
 
-                    with self.emojis["choose"] as a:
+                    with self.emojis[select] as a:
                         for r in a:
                             if (r == a[3]) and (rn != 1):
                                 pass
                             else:
-                                await msg.add_reaction(r)
+                                try:
+                                    await msg.add_reaction(r)
+                                except:
+                                    pass
 
                         def check(reaction, user):
                             return reaction.message == msg
@@ -385,7 +397,7 @@ class Poker:
 
                                         done = True
 
-                        elif rtc == a[3] and rn == 1:
+                        elif rtc == a[3]:
                             # Trash a card
                             await msg.delete()
                             content = '**Current cards:**\n'
