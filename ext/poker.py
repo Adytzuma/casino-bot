@@ -330,7 +330,7 @@ class Poker:
                             
                         except asyncio.TimeoutError:
                             # Timeout
-                            rtc = '\u'
+                            rtc = self.emojis_str[5]
 
                         if rtc == a[0]:
                             # Show cards
