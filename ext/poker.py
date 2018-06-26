@@ -266,7 +266,7 @@ class Poker:
         users = self.waiting_games[channel_id]
         money = [5, 100, 100, 100, 100]
         cards = [self.generate_deck(), [], [], [], []]
-        self.waiting_games.remove(channel_id)
+        del self.waiting_games[channel_id]
 
         # Deal 4 cards per player
         for u in range(1, 5):
@@ -538,7 +538,7 @@ class Poker:
             self.waiting_games[channel_id].append(user)
             if len(self.waiting_games[channel_id]) == 4:
                 await ctx.send('Game starting')
-                await self.bot.loop.create_task(self.game(channel_id))
+                await self.game(channel_id)
                 return
             await ctx.send('%s, you joined the game, %s players remaining!' % (user.mention, 4 - len(self.waiting_games[channel_id])))
             return
