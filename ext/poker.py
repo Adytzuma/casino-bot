@@ -140,6 +140,8 @@ class Poker:
             card = cards[randint(0, len(cards))]
             deck.append(card)
             cards.remove(card)
+        
+        return deck
 
     # Checks
     def check_straight_flush(self, hand):
