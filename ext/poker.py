@@ -266,7 +266,7 @@ class Poker:
         users = self.waiting_games[channel_id]
         money = [5, 100, 100, 100, 100]
         cards = [self.generate_deck(), [], [], [], []]
-        del self.waiting_games[channel_id]
+        self.waiting_games.remove(channel_id)
 
         # Deal 4 cards per player
         for u in range(1, 5):
