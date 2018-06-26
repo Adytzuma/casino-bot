@@ -122,11 +122,6 @@ class Poker:
         return nm + ' of ' + sym
 
     def generate_deck(self):
-        # Generates a empty deck
-        deck = []
-        for i in range(52):
-            deck.append('')
-
         # Generates a deck with all possible cards
         symbols = self.card_symbols
         numbers = self.card_numbers
@@ -137,7 +132,7 @@ class Poker:
 
         # Adds the cards to the deck in a random order
         for c in cards:
-            card = cards[randint(0, len(cards))]
+            card = cards[randint(0, len(cards) -1)]
             deck.append(card)
             cards.remove(card)
         
