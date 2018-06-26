@@ -93,7 +93,7 @@ class Poker:
     # Running Games Hierarchy
     """[Channel id]"""
 
-    def is_testing_channel(self, ctx):
+    def is_testing_channel(ctx):
         if ctx.channel.id in dev_channels:
             return True
         return False
