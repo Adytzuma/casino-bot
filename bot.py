@@ -103,7 +103,7 @@ async def on_command_error(ctx, error):
 	binder.add_line('Error in command {}'.format(ctx.command))
 	binder.add_line(type(error).__name__)
     
-	error_string = ''.join(traceback.format_exc(type(error), error, error.__traceback__))
+	error_string = ''.join(traceback.format_exception(type(error), error, error.__traceback__))
 	for line in error_string.split('\n'):
 		pag.add_line(line)
 
