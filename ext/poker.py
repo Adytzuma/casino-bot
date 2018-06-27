@@ -308,7 +308,7 @@ class Poker:
                             pass
 
                     def check(reaction, user):
-                        return reaction.message.id == msg.id and user.id != self.bot.id
+                        return reaction.message.id == msg.id and user.id != self.bot.user.id
 
                     try:
                         rtc, user = await self.bot.wait_for('reaction_add', timeout=60, check=check)
