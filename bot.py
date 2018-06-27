@@ -95,14 +95,18 @@ async def on_command_error(ctx, error):
 		return await ctx.send("Invalid user")
 
 	await ctx.send("Ups. An unexpected error has been raised, the error has been reported to the developers and will be fixed soon :smile:")
-	error = error.__cause__ or error
-	tb = traceback.format_exception(type(error), error, error.__traceback__)
 	context = (ctx.message, bot.get_channel(446291887524020224), bot)
 
 	binder = bookbinding.StringBookBinder(context, max_lines=50, prefix='```py', suffix='```')
+	
+    error = error.__cause__ or error
 	binder.add_line('Error in command {}'.format(ctx.command))
 	binder.add_line(type(error).__name__)
-	binder.add(tb)
+    
+	error_string = ''.join(traceback.format_exc(type(error), error, error.__traceback__))
+	for line in error_string.split('\n'):
+		pag.add_line(line)
+
 	binder.start() 
 
 
