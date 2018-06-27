@@ -105,7 +105,7 @@ async def on_command_error(ctx, error):
     
 	error_string = ''.join(traceback.format_exception(type(error), error, error.__traceback__))
 	for line in error_string.split('\n'):
-		pag.add_line(line)
+		binder.add_line(line)
 
 	binder.start() 
 
