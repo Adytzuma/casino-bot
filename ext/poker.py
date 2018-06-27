@@ -64,15 +64,15 @@ class Poker:
             4: 'Clubs',
         }
         self.hands = {
-            9:"straight-flush",
-            8:"four-of-a-kind",
-            7:"full-house",
-            6:"flush",
-            5:"straight",
-            4:"three-of-a-kind",
-            3:"two-pairs",
-            2:"one-pair",
-            1:"highest-card"
+            9:"Straight flush",
+            8:"Four of a kind",
+            7:"Full house",
+            6:"Flush",
+            5:"Straight",
+            4:"Three of a kind",
+            3:"Two pairs",
+            2:"One pair",
+            1:"Highest-card"
         }
         
         self.emojis = {
@@ -271,6 +271,9 @@ class Poker:
         cards = [self.generate_deck(), [], [], [], []]
         del self.waiting_games[channel_id]
 
+        def check(reaction, user):
+            return reaction.message.id == msg.id
+
         # Deal 4 cards per player
         for u in range(1, 5):
             for c in range(1, 6):
@@ -310,9 +313,6 @@ class Poker:
                             except:
                                 pass
 
-                    def check(reaction, user):
-                        return reaction.message == msg
-
                     try:
                         rtc, user = await self.bot.wait_for('reaction_add', timeout=60, check=check)
                         rtc = str(rtc.emoji)
@@ -351,9 +351,6 @@ class Poker:
                         with self.emojis["numbers_up"] as num:
                             for n in num:
                                 msg.add_reaction(n)
-
-                            def check(reaction, user):
-                                return reaction.message == msg
 
                             try:
                                 rtc, user = await self.bot.wait_for('reaction_add', timeout=60, check=check)
@@ -400,9 +397,6 @@ class Poker:
                         with self.emojis["numbers_trash"] as num:
                             for n in num:
                                 msg.add_reaction(n)
-
-                            def check(reaction, user):
-                                return reaction.message == msg
 
                             try:
                                 rtc, user= await self.bot.wait_for('reaction_add', timeout=60, check=check)
