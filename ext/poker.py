@@ -4,7 +4,6 @@ from random import randint
 import asyncio
 from collections import defaultdict
 from itertools import combinations
-from copy import deepcopy
 
 # MIT License
 #
@@ -259,6 +258,11 @@ class Poker:
 
         return [best_hand, self.hands[best_hand]]
 
+    def copy(self, list):
+        copied_list = []
+        for i in list:
+            copied_list.append(i)
+        return copied_list
 
     async def game(self, channel_id):
         self.running_games.append(channel_id)
@@ -279,7 +283,7 @@ class Poker:
             for t in range(0, len(users)):
                 await users[t].send("It's your turn")
 
-                usrs = deepcopy(users)
+                usrs = copy(users)
                 usrs.remove(users[t])
 
                 await self.alert(str(users[t]) + "'s turn. Wait for your turn", usrs)
