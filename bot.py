@@ -99,7 +99,7 @@ async def on_command_error(ctx, error):
 
 	binder = bookbinding.StringBookBinder(context, max_lines=50, prefix='```py', suffix='```')
 	
-    error = error.__cause__ or error
+	error = error.__cause__ or error
 	binder.add_line('Error in command {}'.format(ctx.command))
 	binder.add_line(type(error).__name__)
     
