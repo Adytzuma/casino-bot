@@ -107,7 +107,7 @@ async def on_command_error(ctx, error):
 	for line in error_string.split('\n'):
 		binder.add_line(line)
 
-	binder.start() 
+	binder.start()
 
 
 @bot.event
