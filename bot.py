@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+
 from asyncio import sleep
 from os import listdir, getcwd
 from os.path import isfile, join
@@ -8,6 +9,7 @@ from contextlib import redirect_stdout
 import io
 import os
 from datetime import datetime
+from discomaton.factories import bookbinding
 
 # MIT License
 #
@@ -97,7 +99,7 @@ async def on_command_error(ctx, error):
 	tb = traceback.format_exception(type(error), error, error.__traceback__)
 	context = (ctx.message, bot.get_channel(446291887524020224), bot)
 
-	binder = bookbinding.StringBookBinder(context, max_lines=50 prefix='```py', suffix='```')
+	binder = bookbinding.StringBookBinder(context, max_lines=50, prefix='```py', suffix='```')
 	binder.add_line('Error in command {}'.format(ctx.command))
 	binder.add_line(type(error).__name__)
 	binder.add(tb)
