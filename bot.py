@@ -80,12 +80,12 @@ async def on_ready():
     msg = await bot.get_channel(446298417413750786).send(embed=em)
     await msg.add_reaction('✅')
     
-@bot.event
-async def on_message(message):
-    if message.author.bot is True:
-        return
-    else:
-        await bot.process_commands(message)
+#@bot.event
+#async def on_message(message):
+#    if message.author.bot is True:
+#        return
+#    else:
+#        await bot.process_commands(message)
 	
 @bot.event
 async def on_command_error(ctx, error):
