@@ -271,9 +271,6 @@ class Poker:
         cards = [self.generate_deck(), [], [], [], []]
         del self.waiting_games[channel_id]
 
-        def check(reaction, user):
-            return reaction.message.id == msg.id
-
         # Deal 4 cards per player
         for u in range(1, 5):
             for c in range(1, 6):
@@ -305,13 +302,13 @@ class Poker:
 
                     a = self.emojis[select]
                     for r in a:
-                        if (r == a[3]) and (rn != 1):
+                        try:
+                            await msg.add_reaction(r)
+                        except:
                             pass
-                        else:
-                            try:
-                                await msg.add_reaction(r)
-                            except:
-                                pass
+
+                    def check(reaction, user):
+                        return reaction.message.id == msg.id and user.id != ctx.bot.id
 
                     try:
                         rtc, user = await self.bot.wait_for('reaction_add', timeout=60, check=check)
@@ -436,11 +433,10 @@ class Poker:
                         # Drop out
                         await msg.delete()
 
-                        await users[t].send("You dropped out of the game \
-                        (you will not be informed about any actions of this game)")
+                        await users[t].send("You dropped out of the game (you will not be informed about any actions of this game)")
                         await self.alert(users[t].mention + " dropped out of the game", usrs)
 
-                        users.remove(t)
+                        users.remove(users[t])
                         done = True
 
                     else:
