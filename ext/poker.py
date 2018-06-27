@@ -283,7 +283,7 @@ class Poker:
             for t in range(0, len(users)):
                 await users[t].send("It's your turn")
 
-                usrs = copy(users)
+                usrs = self.copy(users)
                 usrs.remove(users[t])
 
                 await self.alert(str(users[t]) + "'s turn. Wait for your turn", usrs)
