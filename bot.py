@@ -95,7 +95,7 @@ async def on_command_error(ctx, error):
 		return await ctx.send("Invalid user")
 
 	await ctx.send("Ups. An unexpected error has been raised, the error has been reported to the developers and will be fixed soon :smile:")
-	context = (ctx.message, bot.get_channel(446291887524020224), bot)
+	context = (ctx.message, bot.get_channel(446291887524020224), ctx.bot)
 
 	binder = bookbinding.StringBookBinder(context, max_lines=50, prefix='```py', suffix='```')
 	
