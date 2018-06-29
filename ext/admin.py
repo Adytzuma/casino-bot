@@ -119,7 +119,7 @@ class Superuser:
                 # noinspection PyBroadException
                 try:
                     exec(func)
-                    result = await locals()['aexec'](ctx, ctx.bot, ctx.bot.db_pool)
+                    result = await locals()['aexec'](ctx, ctx.bot)
                 except BaseException as ex:
                     traceback.print_exc()
                     result = type(ex)
