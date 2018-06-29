@@ -345,39 +345,39 @@ class Poker:
 
                         msg = await users[t].send("**Current bet:{}$**\nSelect a number to increment the bet by".format(money[0]))
 
-                        with self.emojis["numbers_up"] as num:
-                            for n in num:
-                                msg.add_reaction(n)
+                        num = self.emojis["numbers_up"]
+                        for n in num:
+                            msg.add_reaction(n)
 
-                            try:
-                                rtc, user = await self.bot.wait_for('reaction_add', timeout=60, check=check)
+                        try:
+                            rtc, user = await self.bot.wait_for('reaction_add', timeout=60, check=check)
 
-                            except asyncio.TimeoutError:
-                                # Timeout
-                                rtc = ''
+                        except asyncio.TimeoutError:
+                            # Timeout
+                            rtc = ''
 
-                            up = 0
-                            for i in range(len(num)):
-                                if rtc.emoji == num[i]:
-                                    up = i + 1
-                                    break
+                        up = 0
+                        for i in range(len(num)):
+                            if rtc.emoji == num[i]:
+                                up = i + 1
+                                break
 
-                            if up == 0:
-                                # Invalid emoji
-                                await msg.delete()
-                                await users[t].send("Invalid emoji, try again")
+                        if up == 0:
+                            # Invalid emoji
+                            await msg.delete()
+                            await users[t].send("Invalid emoji, try again")
 
+                        else:
+                            # Valid emoji
+                            await msg.delete()
+                            if up + money[0] > money[t + 1]:
+                                await users[t].send("You don't have enough money for do this")
                             else:
-                                # Valid emoji
-                                await msg.delete()
-                                if up + money[0] > money[t + 1]:
-                                    await users[t].send("You don't have enough money for do this")
-                                else:
-                                    money[0] = money[0] + up
-                                    await users[t].send("**You made the bet %s$ bigger.**\nYou went in with {}$".format(money[0]))
-                                    await self.alert(users[t].mention + " has increased the bet by {}$".format(up), usrs)
+                                money[0] = money[0] + up
+                                await users[t].send("**You made the bet %s$ bigger.**\nYou went in with {}$".format(money[0]))
+                                await self.alert(users[t].mention + " has increased the bet by {}$".format(up), usrs)
 
-                                    done = True
+                                done = True
 
                     elif rtc == a[3]:
                         # Trash a card
@@ -391,43 +391,43 @@ class Poker:
 
                         msg = await users[t].send(content + "Select the number of the card you want to trash".format(money[0]))
 
-                        with self.emojis["numbers_trash"] as num:
-                            for n in num:
-                                msg.add_reaction(n)
+                        num = self.emojis["numbers_trash"]
+                        for n in num:
+                            msg.add_reaction(n)
 
-                            try:
-                                rtc, user= await self.bot.wait_for('reaction_add', timeout=60, check=check)
+                        try:
+                            rtc, user= await self.bot.wait_for('reaction_add', timeout=60, check=check)
 
-                            except asyncio.TimeoutError:
-                                # Timeout
-                                rtc = ''
+                        except asyncio.TimeoutError:
+                            # Timeout
+                            rtc = ''
 
-                            cr = None
-                            for i in range(len(num)):
-                                if rtc.emoji == num[i]:
-                                    cr = i
-                                    break
+                        cr = None
+                        for i in range(len(num)):
+                            if rtc.emoji == num[i]:
+                                cr = i
+                                break
 
-                            if cr is None:
-                                # Invalid emoji
-                                await msg.delete()
-                                await users[t].send("Invalid emoji, try again")
-                            else:
-                                # Valid emoji
-                                await msg.delete()
+                        if cr is None:
+                            # Invalid emoji
+                            await msg.delete()
+                            await users[t].send("Invalid emoji, try again")
+                        else:
+                            # Valid emoji
+                            await msg.delete()
 
-                                trashed_card = cards[t + 1][cr]
-                                added_card = cards[0][0]
+                            trashed_card = cards[t + 1][cr]
+                            added_card = cards[0][0]
                                 
-                                cards[t + 1].remove(trashed_card)
-                                cards[t + 1].append(added_card)
-                                cards[0].remove(added_card)
+                            cards[t + 1].remove(trashed_card)
+                            cards[t + 1].append(added_card)
+                            cards[0].remove(added_card)
 
-                                await users[t].send("You trashed the **{}** and got the **{}**").format(
-                                    self.get_card(trashed_card), self.get_card(added_card))
-                                await self.alert(users[t].mention + " trashed a card", usrs)
+                            await users[t].send("You trashed the **{}** and got the **{}**").format(
+                                self.get_card(trashed_card), self.get_card(added_card))
+                            await self.alert(users[t].mention + " trashed a card", usrs)
 
-                                done = True
+                            done = True
 
                     elif rtc == a[4]:
                         # Drop out
