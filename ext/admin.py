@@ -152,7 +152,7 @@ class Superuser:
     @sudo_group.command()
     async def logout(self, ctx):
         """Makes the bot log out."""
-		await ctx.message.add_reaction()
+		await ctx.message.add_reaction('\N{OK HAND SIGN}')
         await ctx.bot.logout()
 
 def setup(bot):
