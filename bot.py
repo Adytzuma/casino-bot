@@ -3,9 +3,7 @@ from discord.ext import commands
 
 from asyncio import sleep
 from os import listdir, getcwd
-from os.path import isfile, join
 import traceback
-from contextlib import redirect_stdout
 import io
 import os
 from datetime import datetime
@@ -37,14 +35,13 @@ bot = commands.Bot(command_prefix='c!')
 
 
 async def ext_reload(bot):
-    #Imports modules
+    # Imports modules
     path = getcwd() + '/ext/'
     files = []
-	
+    
     for f in listdir(path):
         if f.endswith('.py'):
             files.append('ext.' + f.replace('.py', ''))
-    msgs = []
     for i in files:
         try:
             exec('bot.unload_extension("%s")' % i)
@@ -53,7 +50,8 @@ async def ext_reload(bot):
             stdout = io.StringIO()
             value = stdout.getvalue()
             msg = await bot.get_channel(446291887524020224).send((
-                ':warning:**There was a problem while loading the extension `%s`, please check the error and fix**:warning:'
+                ':warning:**There was a problem while loading the extension `%s`, '
+                'please check the error and fix**:warning:'
                 % i) + '\nError:```py\n{}{}\n```'.format(value, traceback.format_exc()))
             await msg.add_reaction('❌')
 
@@ -64,10 +62,13 @@ async def presence():
         a = 0
         for i in bot.guilds:
             for u in i.members:
-                if u.bot == False:
+                if u.bot is False:
                     a = a + 1
 
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='%s users | %s servers' % (a, len(bot.guilds))))
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='%s users | '
+                                                                                                     '%s servers' % 
+                                                                                                     (a, len(bot.guilds)
+                                                                                                      )))
         await sleep(30)
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name='c!help'))
         await sleep(30)
@@ -79,6 +80,7 @@ async def on_ready():
     em = discord.Embed(title='Bot deployed', colour=discord.Colour.green(), timestamp=datetime.utcnow())
     msg = await bot.get_channel(446298417413750786).send(embed=em)
     await msg.add_reaction('✅')
+
     
 @bot.event
 async def on_message(message):
@@ -86,29 +88,31 @@ async def on_message(message):
         return
     else:
         await bot.process_commands(message)
-	
+    
+
 @bot.event
 async def on_command_error(ctx, error):
-	if isinstance(error, commands.CommandNotFound) or isinstance(error, commands.CheckFailure):
-		return
-	if isinstance(error, commands.BadArgument):
-		return await ctx.send("Invalid user")
+    if isinstance(error, commands.CommandNotFound) or isinstance(error, commands.CheckFailure):
+        return
+    if isinstance(error, commands.BadArgument):
+        return await ctx.send("Invalid user")
 
     channel = bot.get_channel(446291887524020224)
-	await ctx.send("Ups. An unexpected error has been raised, the error has been reported to the developer and will be fixed soon :smile:")
-	context = (ctx.message, channel, ctx.bot)
+    await ctx.send("Ups. An unexpected error has been raised, the error has been reported to the developer and will be "
+                   "fixed soon :smile:")
+    context = (ctx.message, channel, ctx.bot)
 
-	binder = bookbinding.StringBookBinder(context, max_lines=50, prefix='```py', suffix='```', only_author=False)
-	
-	error = error.__cause__ or error
+    binder = bookbinding.StringBookBinder(context, max_lines=50, prefix='```py', suffix='```', only_author=False)
+    
+    error = error.__cause__ or error
     fmt = '**`Error in command {}`**\n\n**{}:**'.format(ctx.command, type(error).__name__)
     
-	error_string = ''.join(traceback.format_exception(type(error), error, error.__traceback__))
-	for line in error_string.split('\n'):
-		binder.add_line(line)
+    error_string = ''.join(traceback.format_exception(type(error), error, error.__traceback__))
+    for line in error_string.split('\n'):
+        binder.add_line(line)
     
     await channel.send(fmt)
-	binder.start()
+    binder.start()
 
 
 @bot.event
