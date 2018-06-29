@@ -7,7 +7,7 @@ import traceback
 import io
 import os
 from datetime import datetime
-from discomaton.factories import bookbinding
+from pag import factory
 
 # MIT License
 #
@@ -102,7 +102,7 @@ async def on_command_error(ctx, error):
                    "fixed soon :smile:")
     context = (ctx.message, channel, ctx.bot)
 
-    binder = bookbinding.StringBookBinder(context, max_lines=50, prefix='```py', suffix='```', only_author=False)
+    binder = factory.StringNavigatorFactory(context, max_lines=50, prefix='```py', suffix='```', only_author=False)
     
     error = error.__cause__ or error
     fmt = '**`Error in command {}`**\n\n**{}:**'.format(ctx.command, type(error).__name__)
