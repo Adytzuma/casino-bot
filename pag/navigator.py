@@ -333,6 +333,8 @@ class BaseNavigator(abc.ABC, Generic[PageT]):
             message = discord.utils.get(self._messages, id=message.id)
             if message is not None:
                 self._messages.remove(message)
+            if self._messages and self._messages[0].id == message.id:
+                self.__task.cancel()
 
     async def __handle_reaction(self, reaction, user):
         """Dispatches a reaction."""
@@ -349,7 +351,15 @@ class BaseNavigator(abc.ABC, Generic[PageT]):
         """Formats the page number."""
         return f'[{self.page_number}/{len(self)}]\n'
 
-    async def start(self):
+    def start(self):
+        self.__task = self.loop.create_task(self._run())
+        @self.__task.add_done_callback
+        def on_done(_):
+            del self.__task
+            
+        return self.__task    
+        
+    async def _run(self):
         """Runs the main logic loop for the navigator."""
         if self._is_ready.is_set():
             raise RuntimeError('Already running this navigator.')
