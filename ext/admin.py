@@ -24,7 +24,7 @@ from pag import factory
 
 sudo = [377812572784820226]
 
-class Superuser:
+class Admin:
     """
     Owner-only hidden exec command.
     """
@@ -111,7 +111,7 @@ class Superuser:
             with contextlib.redirect_stderr(serr):
                 nl = '\n'
                 func = (
-                    'async def aexec(ctx, bot, redis):\n'
+                    'async def aexec(ctx, bot):\n'
                     f'{nl.join(" " * 4 + line for line in code.split(nl))}'
                 )
 
@@ -160,4 +160,4 @@ class Superuser:
 
 def setup(bot):
     """Add the cog to the bot."""
-    bot.add_cog(Superuser())
+    bot.add_cog(Admin())
