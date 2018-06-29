@@ -313,6 +313,9 @@ async def lock_unlock(_btn: Button, _react: discord.Reaction, _user: discord.Use
                                                    or m.nick == m_content
                                                    or (m_content.isdigit() and int(m_content) == m.id),
                                          root.guild.members)
+                    if not member:
+                        raise BadArgument
+                        
                     if member.bot:
                         await _btn.owner.send('Cannot transfer to a bot.',
                                               delete_after=10, add_to_list=False)
