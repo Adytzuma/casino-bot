@@ -80,12 +80,12 @@ async def on_ready():
     msg = await bot.get_channel(446298417413750786).send(embed=em)
     await msg.add_reaction('✅')
     
-#@bot.event
-#async def on_message(message):
-#    if message.author.bot is True:
-#        return
-#    else:
-#        await bot.process_commands(message)
+@bot.event
+async def on_message(message):
+    if message.author.bot is True:
+        return
+    else:
+        await bot.process_commands(message)
 	
 @bot.event
 async def on_command_error(ctx, error):
@@ -94,19 +94,20 @@ async def on_command_error(ctx, error):
 	if isinstance(error, commands.BadArgument):
 		return await ctx.send("Invalid user")
 
-	await ctx.send("Ups. An unexpected error has been raised, the error has been reported to the developers and will be fixed soon :smile:")
-	context = (ctx.message, bot.get_channel(446291887524020224), ctx.bot)
+    channel = bot.get_channel(446291887524020224)
+	await ctx.send("Ups. An unexpected error has been raised, the error has been reported to the developer and will be fixed soon :smile:")
+	context = (ctx.message, channel, ctx.bot)
 
-	binder = bookbinding.StringBookBinder(context, max_lines=50, prefix='```py', suffix='```')
+	binder = bookbinding.StringBookBinder(context, max_lines=50, prefix='```py', suffix='```', only_author=False)
 	
 	error = error.__cause__ or error
-	binder.add_line('Error in command {}'.format(ctx.command))
-	binder.add_line(type(error).__name__)
+    fmt = '**`Error in command {}`**\n\n**{}:**'.format(ctx.command, type(error).__name__)
     
 	error_string = ''.join(traceback.format_exception(type(error), error, error.__traceback__))
 	for line in error_string.split('\n'):
 		binder.add_line(line)
-
+    
+    await channel.send(fmt)
 	binder.start()
 
 
