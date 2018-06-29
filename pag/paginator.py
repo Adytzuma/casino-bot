@@ -32,7 +32,7 @@ __all__ = 'Paginator',
 import collections
 from typing import List
 
-from nekozilla.tools import properties
+from tools import properties
 
 # Marks the intent for a page break.
 _PAGE_BREAK = object()
