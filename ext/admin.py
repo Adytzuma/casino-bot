@@ -28,11 +28,11 @@ class Superuser:
     """
     Owner-only hidden exec command.
     """
-    async def has_perm(self, ctx):
+    async def has_perm(ctx):
         return ctx.author.id in sudo
 
     
-    @commands.has_perm()
+    @commands.check(has_perm)
     @commands.group(name='sudo', invoke_without_command=True)
     async def sudo_group(self, ctx):
         pass
