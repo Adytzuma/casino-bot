@@ -336,7 +336,7 @@ class Poker:
                         else:
                             money[t + 1] = money[t + 1] - money[0]
                             await users[t].send("You went in with {}$".format(money[0]))
-                            await self.alert(users[t].mention + " has gone in", usrs)
+                            await self.alert(str(users[t]) + " has gone in", usrs)
                             done = True
 
                     elif rtc == a[2]:
@@ -375,7 +375,7 @@ class Poker:
                             else:
                                 money[0] = money[0] + up
                                 await users[t].send("**You made the bet %s$ bigger.**\nYou went in with {}$".format(money[0]))
-                                await self.alert(users[t].mention + " has increased the bet by {}$".format(up), usrs)
+                                await self.alert(str(users[t]) + " has increased the bet by {}$".format(up), usrs)
 
                                 done = True
 
@@ -425,7 +425,7 @@ class Poker:
 
                             await users[t].send("You trashed the **{}** and got the **{}**").format(
                                 self.get_card(trashed_card), self.get_card(added_card))
-                            await self.alert(users[t].mention + " trashed a card", usrs)
+                            await self.alert(str(users[t]) + " trashed a card", usrs)
 
                             done = True
 
@@ -434,7 +434,7 @@ class Poker:
                         await msg.delete()
 
                         await users[t].send("You dropped out of the game (you will not be informed about any actions of this game)")
-                        await self.alert(users[t].mention + " dropped out of the game", usrs)
+                        await self.alert(str(users[t]) + " dropped out of the game", usrs)
 
                         users.remove(users[t])
                         done = True
@@ -483,19 +483,19 @@ class Poker:
                 pass
 
             elif len(u) == 1:
-                content = content + "In position number {} is {} with a {}\n".format(a, u[0].mention, r)
+                content = content + "In position number {} is {} with a {}\n".format(a, str(u[0]), r)
                 a += 1
 
             elif len(u) == 2:
-                content = content + "In position number {} are {} and {} with a {}\n".format(a, u[0].mention, u[1].mention, r)
+                content = content + "In position number {} are {} and {} with a {}\n".format(a, str(u[0]), str(u[1]), r)
                 a += 1
 
             elif len(u) == 3:
-                content = content + "In position number {} are {}, {} and {} with a {}\n".format(a, u[0].mention, u[1].mention, u[2].mention, r)
+                content = content + "In position number {} are {}, {} and {} with a {}\n".format(a, str(u[0]), str(u[1]), str(u[2]), r)
                 a += 1
 
             else:
-                content = content + "In position number {} are {}, {}, {} and {} with a {}\n".format(a, u[0].mention, u[1].mention, u[2].mention, u[3].mention, r)
+                content = content + "In position number {} are {}, {}, {} and {} with a {}\n".format(a, str(u[0]), str(u[1]), str(u[2]), str(u[3]), r)
                 a += 1
 
         await self.alert(content, users)
