@@ -1,5 +1,5 @@
 git+https://github.com/Rapptz/discord.py@rewrite
-git+https://gitlab.com/neko404notfound/libneko
+# git+https://gitlab.com/neko404notfound/libneko
 pillow
 aiofiles
 cached_property 
