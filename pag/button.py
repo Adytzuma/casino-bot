@@ -37,7 +37,7 @@ from typing import Any, Callable
 import discord
 from discord.ext import commands
 
-from tools import funcmods, search
+from nekozilla.tools import funcmods, search
 
 # Navigator object owning the button instance.
 from . import navigator
@@ -307,15 +307,14 @@ async def lock_unlock(_btn: Button, _react: discord.Reaction, _user: discord.Use
                     return
                 else:
                     # noinspection PyProtectedMember
-                    root = _btn.owner._root
+                    root = _btn.owner.root_message
                     member = search.find(lambda m: m.mention == m_content
                                                    or m.name == m_content
                                                    or m.nick == m_content
                                                    or (m_content.isdigit() and int(m_content) == m.id),
-                                         root.guild.members)
+                                         root.guild.members) 
                     if not member:
                         raise commands.BadArgument
-                        
                     if member.bot:
                         await _btn.owner.send('Cannot transfer to a bot.',
                                               delete_after=10, add_to_list=False)
@@ -361,7 +360,7 @@ async def lock_unlock_invoke_if(b, _, u):
 @lock_unlock.proto_display_if
 async def lock_unlock_display_if(btn):
     # noinspection PyProtectedMember
-    return btn.owner._root.guild is not None
+    return btn.owner.root_message.guild is not None
 
 
 def default_buttons():
