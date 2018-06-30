@@ -20,7 +20,7 @@ import traceback
 import discord
 from discord.ext import commands
 
-from pag import factory
+from libneko.pag import factory
 
 sudo = [377812572784820226]
 
