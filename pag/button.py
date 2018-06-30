@@ -37,7 +37,7 @@ from typing import Any, Callable
 import discord
 from discord.ext import commands
 
-from nekozilla.tools import funcmods, search
+from tools import funcmods, search
 
 # Navigator object owning the button instance.
 from . import navigator
