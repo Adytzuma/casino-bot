@@ -102,7 +102,7 @@ async def on_command_error(ctx, error):
                    "fixed soon :smile:")
     context = (ctx.message, channel, ctx.bot)
 
-    binder = factory.StringNavigatorFactory(context, max_lines=50, prefix='```py', suffix='```', only_author=False)
+    binder = factory.StringNavigatorFactory(context, max_lines=50, prefix='```py', suffix='```')
     
     error = error.__cause__ or error
     fmt = '**`Error in command {}`**\n\n**{}:**'.format(ctx.command, type(error).__name__)
