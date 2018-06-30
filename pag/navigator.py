@@ -37,11 +37,11 @@ __all__ = (
     'CancelIteration',
 )
 
-
-import abc
+from abc import abstractmethod
 import asyncio
 import collections
 import enum
+import sys
 import traceback
 from typing import Generic, Sequence, TypeVar, Union, Optional, TYPE_CHECKING
 
@@ -52,6 +52,8 @@ from discord.ext import commands
 # Stops looped lookups failing.
 if TYPE_CHECKING:
     from . button import Button
+
+from . import abc
 
 
 PageT = TypeVar('PageT')
@@ -123,7 +125,7 @@ class FakeContext:
         return self.message.channel
 
 
-class BaseNavigator(abc.ABC, Generic[PageT]):
+class BaseNavigator(abc.PagABC, Generic[PageT]):
     """
     Navigation for a set of pages, given a set of button objects to display as reactions.
 
@@ -161,7 +163,7 @@ class BaseNavigator(abc.ABC, Generic[PageT]):
             The inactive timeout period.
         invoked_by:
             The original invoking message.
-        _root:
+        root_message:
             The root message. This is only used internally and by derived implementations.
 
     Notes:
@@ -214,6 +216,8 @@ class BaseNavigator(abc.ABC, Generic[PageT]):
             self.timeout = timeout
             self.invoked_by = ctx.message
 
+            super().__init__()
+
     def create_future(self, coro):
         """Creates a task and mutes any errors to single lines."""
         t = self.loop.create_task(coro)
@@ -239,8 +243,17 @@ class BaseNavigator(abc.ABC, Generic[PageT]):
     def __len__(self):
         return len(self.pages)
 
+    def __repr__(self):
+        return f'<{type(self).__name__} ' + ' '.join(k + "=" + repr(getattr(self, k)) for k in dir(self))
+
+    __str__ = __repr__
+
+    def memory_usage(self) -> int:
+        """Gets the rough number of bytes being used to store the pages in memory."""
+        return sum(sys.getsizeof(p, 0) for p in self.pages)
+
     @property
-    def _root(self):
+    def root_message(self):
         return self._messages[0]
 
     async def send(self, *args, **kwargs):
@@ -254,8 +267,8 @@ class BaseNavigator(abc.ABC, Generic[PageT]):
 
         return m
 
-    @_root.setter
-    def _root(self, message):
+    @root_message.setter
+    def root_message(self, message):
         if not self._messages:
             self._messages = [message]
         else:
@@ -306,15 +319,15 @@ class BaseNavigator(abc.ABC, Generic[PageT]):
         """Allow anyone to use the control."""
         self.owner = None
 
-    async def __on_reaction_add(self, reaction, user):
+    async def _on_reaction_add(self, reaction, user):
         """Sends a reaction addition event."""
 
         if self._is_ready.is_set() and self._messages:
-            if reaction.message.id != self._root.id:
+            if reaction.message.id != self.root_message.id:
                 return
 
             # Update our state!
-            self._root = reaction.message
+            self.root_message = reaction.message
 
             not_me = user != self.bot.user
 
@@ -327,22 +340,24 @@ class BaseNavigator(abc.ABC, Generic[PageT]):
             if not_me and valid_button and is_in_whitelist:
                 await self._event_queue.put((reaction, user))
 
-    async def __on_message_delete(self, message):
+    # @print_result
+    async def _on_message_delete(self, message):
         """Sends a message deletion event for any message we made in this navigator."""
+        if self._messages and self._messages[0].id == message.id:
+            self.__task.cancel()
+
         if self._is_ready.is_set():
             message = discord.utils.get(self._messages, id=message.id)
             if message is not None:
                 self._messages.remove(message)
-            if self._messages and self._messages[0].id == message.id:
-                self.__task.cancel()
 
-    async def __handle_reaction(self, reaction, user):
+    async def _handle_reaction(self, reaction, user):
         """Dispatches a reaction."""
         emoji = reaction.emoji
         # noinspection PyUnresolvedReferences
         await self.buttons[emoji].invoke(reaction, user)
 
-    @abc.abstractmethod
+    @abstractmethod
     async def _edit_page(self):
         """Logic for changing whatever is on Discord to display the correct value."""
         ...
@@ -352,115 +367,118 @@ class BaseNavigator(abc.ABC, Generic[PageT]):
         return f'[{self.page_number}/{len(self)}]\n'
 
     def start(self):
+        """
+        Returns an ensured task that can be optionally awaited.
+        """
+        # noinspection PyAttributeOutsideInit
         self.__task = self.loop.create_task(self._run())
+
         @self.__task.add_done_callback
         def on_done(_):
             del self.__task
-            
-        return self.__task    
+
+        return self.__task
         
     async def _run(self):
         """Runs the main logic loop for the navigator."""
         if self._is_ready.is_set():
             raise RuntimeError('Already running this navigator.')
 
-        self.bot.listen('on_message_delete')(self.__on_message_delete)
-        self.bot.listen('on_reaction_add')(self.__on_reaction_add)
+        self.bot.listen('on_message_delete')(self._on_message_delete)
+        self.bot.listen('on_reaction_add')(self._on_reaction_add)
 
         try:
             async def produce_page():
                 # Initialise the first page.
-                self._root = await self.send('Loading...')
+                self.root_message = await self.send('Loading...')
                 self.create_future(self._edit_page())
-                return self._root
+                return self.root_message
 
             await produce_page()
 
             self._is_finished.clear()
             self._is_ready.set()
 
-            try:
-                while True:
-                    # Ensure the reactions are all correct. If they are not, then
-                    # attempt to adjust them.
+            while True:
+                # Ensure the reactions are all correct. If they are not, then
+                # attempt to adjust them.
+                try:
+                    # Refresh the root message state
+                    # self.__root = await self.channel.get_message(self.__root.id)
                     try:
-                        # Refresh the root message state
-                        # self.__root = await self.channel.get_message(self.__root.id)
-                        try:
-                            root = self._root
-                        except IndexError:
-                            root = await produce_page()
+                        root = self.root_message
+                    except IndexError:
+                        root = await produce_page()
 
-                        current_reacts = root.reactions
-                        expected_reacts = [
-                            b.emoji
-                            for b in self.buttons.values()
-                            if await b.should_show()
-                        ]
+                    current_reacts = root.reactions
+                    expected_reacts = [
+                        b.emoji
+                        for b in self.buttons.values()
+                        if await b.should_show()
+                    ]
 
-                        for react in current_reacts:
-                            # If the current react doesn't match the one at the list head,
-                            # then we assume it should not be here, so we remove it. If we
-                            # have got to the end of our targets list, we assume everything
-                            # else is garbage, and thus we delete it.
-                            if not expected_reacts or react.emoji != expected_reacts[0]:
-                                async for user in react.users():
+                    for react in current_reacts:
+                        # If the current react doesn't match the one at the list head,
+                        # then we assume it should not be here, so we remove it. If we
+                        # have got to the end of our targets list, we assume everything
+                        # else is garbage, and thus we delete it.
+                        if not expected_reacts or react.emoji != expected_reacts[0]:
+                            async for user in react.users():
+                                self.create_future(root.remove_reaction(react, user))
+
+                        # If there are still targets left to check and the current
+                        # reaction is the next target, remove all reacts that are not by
+                        # me.
+                        elif react.emoji == expected_reacts[0]:
+                            expected_reacts.pop(0)
+                            async for user in react.users():
+                                # Ignore our own react. We want to keep that.
+                                if user != self.bot.user:
                                     self.create_future(root.remove_reaction(react, user))
 
-                            # If there are still targets left to check and the current
-                            # reaction is the next target, remove all reacts that are not by
-                            # me.
-                            elif react.emoji == expected_reacts[0]:
-                                expected_reacts.pop(0)
-                                async for user in react.users():
-                                    # Ignore our own react. We want to keep that.
-                                    if user != self.bot.user:
-                                        self.create_future(root.remove_reaction(react, user))
+                except discord.Forbidden:
+                    # If we can't update them, just continue.
+                    pass
+                else:
+                    # If we did not validate all targets by now, we know they are
+                    # missing and should be added
+                    if expected_reacts:
+                        try:
+                            for r in expected_reacts:
+                                await self.root_message.add_reaction(r)
+                        except discord.Forbidden:
+                            await self.channel.send('I lack the ADD_REACTIONS permission.')
+                            raise CancelIteration(CancelAction.REMOVE_ALL_MESSAGES)
+                        except discord.NotFound:
+                            raise CancelIteration(CancelAction.REMOVE_NON_ROOT_MESSAGES)
+                # Get next event, or wait.
+                # This is essentially a polling pipe between the event captures
+                # and the handlers. I could have used wait_for, but that encouraged
+                # spaghetti code in the old paginator. This is more modular and
+                # easy to understand.
+                # This is required to enable us to intercept signals sent via
+                # exceptions.
+                with async_timeout.timeout(self.timeout):
+                    reaction, user = await self._event_queue.get()
+                    await self._handle_reaction(reaction, user)
 
-                    except discord.Forbidden:
-                        # If we can't update them, just continue.
-                        pass
-                    else:
-                        # If we did not validate all targets by now, we know they are
-                        # missing and should be added
-                        if expected_reacts:
-                            try:
-                                for r in expected_reacts:
-                                    await self._root.add_reaction(r)
-                            except Exception:
-                                await self.channel.send('I lack the ADD_REACTIONS permission.')
-                                raise CancelIteration(CancelAction.REMOVE_ALL_MESSAGES)
-                    # Get next event, or wait.
-                    # This is essentially a polling pipe between the event captures
-                    # and the handlers. I could have used wait_for, but that encouraged
-                    # spaghetti code in the old paginator. This is more modular and
-                    # easy to understand.
-                    # This is required to enable us to intercept signals sent via
-                    # exceptions.
-                    with async_timeout.timeout(self.timeout):
-                        reaction, user = await self._event_queue.get()
-                        await self.__handle_reaction(reaction, user)
+                if self._should_refresh:
+                    self.create_future(self._edit_page())
+                    self._should_refresh.reset()
 
-                    if self._should_refresh:
-                        self.create_future(self._edit_page())
-                        self._should_refresh.reset()
-
-            except (asyncio.TimeoutError, discord.NotFound):
-                raise CancelIteration(CancelAction.REMOVE_NON_ROOT_MESSAGES
-                                      | CancelAction.REMOVE_REACTS)
-
-        except CancelIteration as ex:
+        except (asyncio.TimeoutError, asyncio.CancelledError, discord.NotFound, CancelIteration) as ex:
             # Request to shut down the navigator.
-            r = ex.requested_behaviour
+            r = ex.requested_behaviour if isinstance(ex, CancelIteration) \
+                                       else CancelAction.REMOVE_NON_ROOT_MESSAGES | CancelAction.REMOVE_REACTS
 
             if r & CancelAction.REMOVE_ROOT_MESSAGE:
                 try:
-                    await self._root.delete()
+                    await self.root_message.delete()
                 except (discord.NotFound, discord.Forbidden, IndexError, ValueError):
                     pass
             elif r & CancelAction.REMOVE_REACTS:
                 try:
-                    await self._root.clear_reactions()
+                    await self.root_message.clear_reactions()
                 except (discord.NotFound, discord.Forbidden, IndexError, ValueError):
                     pass
 
@@ -482,12 +500,12 @@ class BaseNavigator(abc.ABC, Generic[PageT]):
 
             # Remove the listeners.
             try:
-                self.bot.remove_listener(self.__on_message_delete)
+                self.bot.remove_listener(self._on_message_delete)
             except Exception as ex:
                 traceback.print_exception(type(ex), ex, ex.__traceback__)
 
             try:
-                self.bot.remove_listener(self.__on_reaction_add)
+                self.bot.remove_listener(self._on_reaction_add)
             except Exception as ex:
                 traceback.print_exception(type(ex), ex, ex.__traceback__)
 
@@ -505,7 +523,7 @@ class StringNavigator(BaseNavigator[str]):
         if len(content) + len(page_header) <= 2000:
             content = page_header + content
 
-        await self._root.edit(content=content)
+        await self.root_message.edit(content=content)
 
 
 class EmbedNavigator(BaseNavigator[discord.Embed]):
@@ -517,4 +535,4 @@ class EmbedNavigator(BaseNavigator[discord.Embed]):
         page_header = self.format_page_number()
         content = self.current_page
 
-        await self._root.edit(content=page_header, embed=content)
+        await self.root_message.edit(content=page_header, embed=content)
