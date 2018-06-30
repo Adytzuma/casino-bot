@@ -62,13 +62,14 @@ class StringNavigatorFactory(Paginator):
 
         return StringNavigator(ctx, self.pages, buttons=buttons, timeout=timeout, initial_page=initial_page)
 
-    async def start(self,
-                    ctx: Union[commands.Context, FakeContext],
-                    buttons: Sequence[Button] = None,
-                    *,
-                    timeout: float = 300,
-                    initial_page: int = 0):
+    def start(self,
+              ctx: Union[commands.Context, FakeContext],
+              buttons: Sequence[Button] = None,
+              *,
+              timeout: float = 300,
+              initial_page: int = 0):
         """
         Same as performing ``.build(...).start()``
         """
-        return await self.build(ctx, buttons, timeout=timeout, initial_page=initial_page).start()
+        return self.build(ctx, buttons, timeout=timeout, initial_page=initial_page).start()
+
