@@ -298,51 +298,51 @@ class Poker2:
             await message.channel.send('\n'.join(messages))
     
     # Create commands for people to see them in the help command
-    @command.commands(brief = 'Starts a new game, allowing players to join')
+    @commands.command(brief = 'Starts a new game, allowing players to join')
     async def newgame(self, ctx):
         pass
     
-    @command.commands(brief = 'Lets you join a game that is about to begin')
+    @commands.command(brief = 'Lets you join a game that is about to begin')
     async def join(self, ctx):
         pass
     
-    @command.commands(brief = 'Begins a game after all players have joined')
+    @commands.command(brief = 'Begins a game after all players have joined')
     async def start(self, ctx):
         pass
     
-    @command.commands(brief = 'Deals the hole cards to all the players')
+    @commands.command(brief = 'Deals the hole cards to all the players')
     async def deal(self, ctx):
         pass
     
-    @command.commands(brief = 'Matches the current bet')
+    @commands.command(brief = 'Matches the current bet')
     async def call(self, ctx):
         pass
     
-    @command.commands(brief = 'Starts a new game, allowing players to join')
+    @commands.command(brief = 'Starts a new game, allowing players to join')
     async def _raise(self, ctx):
         pass
     
-    @command.commands(brief = 'Bet no money')
+    @commands.command(brief = 'Bet no money')
     async def check(self, ctx):
         pass
     
-    @command.commands(brief = 'Discard your hand and forfeit the pot')
+    @commands.command(brief = 'Discard your hand and forfeit the pot')
     async def fold(self, ctx):
         pass
     
-    @group.commands(brief = 'Show the list of options and their current values')
+    @group.command(brief = 'Show the list of options and their current values')
     async def options(self, ctx):
         pass
     
-    @options.commands(brief = 'Set the value of an option')
+    @options.command(brief = 'Set the value of an option')
     async def set(self, ctx):
         pass
     
-    @command.commands(brief = 'Shows how many chips each player has left')
+    @commands.command(brief = 'Shows how many chips each player has left')
     async def count(self, ctx):
         pass
     
-    @command.commands(name = 'all-in', brief = 'Bets the entirety of your remaining chips')
+    @commands.command(name = 'all-in', brief = 'Bets the entirety of your remaining chips')
     async def allin(self, ctx):
         pass
 
