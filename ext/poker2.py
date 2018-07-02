@@ -242,33 +242,33 @@ class Poker2:
         else:
             return game.all_in()
     
-    Command = namedtuple("Command", ["description", "action"])
+    Commandd = namedtuple("Command", ["description", "action"])
     
     # The commands avaliable to the players
-    commands: Dict[str, Command] = {
-        'c!newgame': Command('Starts a new game, allowing players to join',
+    commandds: Dict[str, Commandd] = {
+        'c!newgame': Commandd('Starts a new game, allowing players to join',
                             new_game),
-        'c!join':    Command('Lets you join a game that is about to begin',
+        'c!join':    Commandd('Lets you join a game that is about to begin',
                             join_game),
-        'c!start':   Command('Begins a game after all players have joined',
+        'c!start':   Commandd('Begins a game after all players have joined',
                             start_game),
-        'c!deal':    Command('Deals the hole cards to all the players',
+        'c!deal':    Commandd('Deals the hole cards to all the players',
                             deal_hand),
-        'c!call':    Command('Matches the current bet',
+        'c!call':    Commandd('Matches the current bet',
                             call_bet),
-        'c!raise':   Command('Increase the size of current bet',
+        'c!raise':   Commandd('Increase the size of current bet',
                             raise_bet),
-        'c!check':   Command('Bet no money',
+        'c!check':   Commandd('Bet no money',
                             check),
-        'c!fold':    Command('Discard your hand and forfeit the pot',
+        'c!fold':    Commandd('Discard your hand and forfeit the pot',
                             fold_hand),
-        'c!options': Command('Show the list of options and their current values',
+        'c!options': Commandd('Show the list of options and their current values',
                             show_options),
         'c!options set':     Command('Set the value of an option',
                             set_option),
-        'c!count':   Command('Shows how many chips each player has left',
+        'c!count':   Commandd('Shows how many chips each player has left',
                             chip_count),
-        'c!all-in':  Command('Bets the entirety of your remaining chips',
+        'c!all-in':  Commandd('Bets the entirety of your remaining chips',
                             all_in),
     }
     
@@ -283,10 +283,10 @@ class Poker2:
         if message.channel.is_private:
             return
     
-        command = message.content.split()[0]
-        if command[0] == 'c!':
+        _command = message.content.split()[0]
+        if _command[0] == 'c!':
             game = games.setdefault(message.channel, Game())
-            messages = commands[command][1](game, message)
+            messages = commandds[commandd][1](game, message)
     
             # The messages to send to the channel and the messages to send to the
             # players individually must be done seperately, so we check the messages
