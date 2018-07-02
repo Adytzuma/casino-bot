@@ -8,8 +8,8 @@ from utils.game import Game, GAME_OPTIONS, GameState
 
 
 class Poker2:
-    def __init__(self):
-        pass
+    def __init__(self, bot):
+        self.bot = bot
     
     games: Dict[discord.TextChannel, Game] = {}
     
@@ -286,7 +286,7 @@ class Poker2:
     
     async def on_message(self, message):
         # Ignore messages sent by the bot itself
-        if message.author == client.user:
+        if message.author == bot.user:
             return
         # Ignore empty messages
         if len(message.content.split()) == 0:
@@ -310,10 +310,10 @@ class Poker2:
             # to the channel to see if hands were just dealt, and if so, we tell the
             # players what their hands are.
             if command == '!deal' and messages[0] == 'The hands have been dealt!':
-                await game.tell_hands(client)
+                await game.tell_hands(bot)
     
             await message.channel.send('\n'.join(messages))
 
 def setup(bot):
-    bot.add_cog(Poker2())
+    bot.add_cog(Poker2(bot))
 
