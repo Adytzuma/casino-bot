@@ -82,7 +82,7 @@ async def on_ready():
     await msg.add_reaction('✅')
 
     
-@bot.event
+@bot.listener
 async def on_message(message):
     if message.author.bot is True:
         return
