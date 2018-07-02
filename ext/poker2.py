@@ -11,7 +11,7 @@ class Poker2:
     def __init__(self):
         pass
     
-    games: Dict[discord.Channel, Game] = {}
+    games: Dict[discord.TextChannel, Game] = {}
     
     # Starts a new game if one hasn't been started yet, returning an error message
     # if a game has already been started. Returns the messages the bot should say
