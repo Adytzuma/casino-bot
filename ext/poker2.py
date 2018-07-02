@@ -1,216 +1,319 @@
 from collections import namedtuple
-from enum import Enum
-from functools import total_ordering
-from itertools import combinations
-from typing import List, Tuple
-import random
+import os
+from typing import Dict, List
 
-SUITS = ('♠', '♥', '♦', '♣')
+import discord
 
-RankInfo = namedtuple('RankInfo', ['name', 'plural', 'value'])
+from utils.game import Game, GAME_OPTIONS, GameState
 
-RANK_INFO = {
-    "2":  RankInfo("deuce", "deuces", 0),
-    "3":  RankInfo("three", "threes", 1),
-    "4":  RankInfo("four",  "fours",  2),
-    "5":  RankInfo("five",  "fives",  3),
-    "6":  RankInfo("six",   "sixes",  4),
-    "7":  RankInfo("seven", "sevens", 5),
-    "8":  RankInfo("eight", "eights", 6),
-    "9":  RankInfo("nine",  "nines",  7),
-    "10": RankInfo("ten",   "tens",   8),
-    "J":  RankInfo("jack",  "jacks",  9),
-    "Q":  RankInfo("queen", "queens", 10),
-    "K":  RankInfo("king",  "kings",  11),
-    "A":  RankInfo("ace",   "aces",   12),
-}
 
-# An enumeration for ranking poker hands
-@total_ordering
-class HandRanking(Enum):
-    HIGH_CARD = 1
-    PAIR = 2
-    TWO_PAIR = 3
-    THREE_OF_KIND = 4
-    STRAIGHT = 5
-    FLUSH = 6
-    FULL_HOUSE = 7
-    FOUR_OF_KIND = 8
-    STRAIGHT_FLUSH = 9
-    # Royal flush is just a special case of the straight flush
-
-    def __lt__(self, other):
-        return self.value < other.value
-
-# A simple class representing a card
-@total_ordering
-class Card:
-    def __init__(self, suit: str, rank: str) -> None:
-        self.suit = suit
-        self.rank = rank
-
-    # When comparing two cards, suit doesn't matter, just the rank of the card
-    def __lt__(self, other):
-        return RANK_INFO[self.rank].value < RANK_INFO[other.rank].value
-
-    def __eq__(self, other):
-        return self.rank == other.rank
-
-    def __str__(self) -> str:
-        return self.suit + self.rank
-
-    @property
-    def name(self) -> str:
-        return RANK_INFO[self.rank].name
-
-    @property
-    def plural(self) -> str:
-        return RANK_INFO[self.rank].plural
-
-# A class for representing a 5-card hand, and allowing for the easy comparison
-# of hands
-@total_ordering
-class Hand:
-    def __init__(self, cards: List[Card]) -> None:
-        # Sort the cards first thing to make hands easier to compare
-        self.cards = sorted(cards)
-
-        # Gets a list of the duplicated cards (pairs, three-of-a-kinds, etc)
-        dups = self.get_dups()
-
-        # At this point, we determine the ranking of the hand
-        if self.is_flush():
-            if self.is_straight():
-                self.rank = HandRanking.STRAIGHT_FLUSH
-            else:
-                self.rank = HandRanking.FLUSH
-        elif self.is_straight():
-            self.rank = HandRanking.STRAIGHT
-        elif dups:
-            if len(dups) == 2:
-                if len(dups[1]) == 3:
-                    self.rank = HandRanking.FULL_HOUSE
-                else:
-                    self.rank = HandRanking.TWO_PAIR
-            else:
-                if len(dups[0]) == 4:
-                    self.rank = HandRanking.FOUR_OF_KIND
-                elif len(dups[0]) == 3:
-                    self.rank = HandRanking.THREE_OF_KIND
-                else:
-                    self.rank = HandRanking.PAIR
-            self.rearrange_dups(dups)
-        else:
-            self.rank = HandRanking.HIGH_CARD
-
-    def __lt__(self, other):
-        if self.rank < other.rank:
-            return True
-        if self.rank > other.rank:
-            return False
-        for self_card, other_card in zip(self.cards[::-1], other.cards[::-1]):
-            if self_card < other_card:
-                return True
-            elif self_card > other_card:
-                return False
-        return False
-
-    def __eq__(self, other):
-        if self.rank != other.rank:
-            return False
-        for self_card, other_card in zip(self.cards, other.cards):
-            if self_card != other_card:
-                return False
-        return True
-
-    def __str__(self):
-        if self.rank == HandRanking.HIGH_CARD:
-            return self.cards[4].name + " high"
-        elif self.rank == HandRanking.PAIR:
-            return "pair of " + self.cards[4].plural
-        elif self.rank == HandRanking.TWO_PAIR:
-            return "two pair, " + self.cards[4].plural + " and " + self.cards[2].plural
-        elif self.rank == HandRanking.THREE_OF_KIND:
-            return "three of a kind, " + self.cards[4].plural
-        elif self.rank == HandRanking.STRAIGHT:
-            return self.cards[4].name + "-high straight"
-        elif self.rank == HandRanking.FLUSH:
-            return self.cards[4].name + "-high flush"
-        elif self.rank == HandRanking.FULL_HOUSE:
-            return "full house, " + self.cards[4].plural + " over " + self.cards[1].plural
-        elif self.rank == HandRanking.FOUR_OF_KIND:
-            return "four of a kind, " + self.cards[4].plural
-        elif self.rank == HandRanking.STRAIGHT_FLUSH:
-            if self.cards[4].rank == 'A':
-                return "royal flush"
-            else:
-                return self.cards[4].name + "-high straight flush"
-
-    # Rearrange the duplicated cards in the hand so that comparing two hands
-    # with the same ranking is easier
-    # This moves duplicated cards to the end of the hand
-    def rearrange_dups(self, dups: List[List[Card]]) -> None:
-        flat_dups = [card for cards in dups for card in cards]
-        for dup in flat_dups:
-            self.cards.pop(self.cards.index(dup))
-        self.cards += flat_dups
-
-    # Returns whether the hand is a straight
-    def is_straight(self) -> bool:
-        ranks = [RANK_INFO[card.rank].value for card in self.cards]
-        # Check to see if each card is exactly one better than the previous card
-        for i in range(1, 5):
-            if ranks[i - 1] != ranks[i] - 1:
-                break
-        else:
-            # If we've reached this point, each card was exactly one rank
-            # higher than the previous card.
-            return True
-        # Check for the special case of an ace-low straight
-        if ranks == [0, 1, 2, 3, 12]:
-            self.cards = [self.cards[-1]] + self.cards[:-1]
-            return True
-        return False
-
-    # Returns whether a hand is a flush, meaning all the cards are the same suit
-    def is_flush(self) -> bool:
-        suit = self.cards[0].suit
-        for card in self.cards[1:]:
-            if card.suit != suit:
-                return False
-        return True
-
-    # Returns a list of the pairs, three-of-a-kinds and four-of-a-kinds in the hand
-    def get_dups(self) -> List[List[Card]]:
-        dups: List[List[Card]] = []
-        cur_dup: List[Card] = [self.cards[0]]
-        for card in self.cards[1:]:
-            if cur_dup[0] != card:
-                if len(cur_dup) > 1:
-                    dups.append(cur_dup)
-                cur_dup = [card]
-            else:
-                cur_dup.append(card)
-        if len(cur_dup) > 1:
-            dups.append(cur_dup)
-        # For full houses, make it so the three-of-a-kind is always second in
-        # the list of duplicates
-        if len(dups) == 2 and len(dups[0]) > len(dups[1]):
-            dups[0], dups[1] = dups[1], dups[0]
-        return dups
-
-# Returns the best possible 5-card hand that can be made from the five
-# community cards and a player's two hole cards
-def best_possible_hand(public: List[Card], private: Tuple[Card, Card]) -> Hand:
-    return max(Hand(list(hand))
-               for hand in combinations(tuple(public) + private, 5))
-
-# A class for representing a simple, randomized deck that can be drawn from
-class Deck:
+class Poker2:
     def __init__(self):
-        self.cards = [Card(suit, rank) for suit in SUITS
-                                       for rank in RANK_INFO]
-        random.shuffle(self.cards)
+        pass
+    
+    games: Dict[discord.Channel, Game] = {}
+    
+    # Starts a new game if one hasn't been started yet, returning an error message
+    # if a game has already been started. Returns the messages the bot should say
+    def new_game(self, game: Game, message: discord.Message) -> List[str]:
+        if game.state == GameState.NO_GAME:
+            game.new_game()
+            game.add_player(message.author)
+            game.state = GameState.WAITING
+            return [f"A new game has been started by {message.author.name}!",
+                    "Message !join to join the game."]
+        else:
+            messages = ["There is already a game in progress, "
+                        "you can't start a new game."]
+            if game.state == GameState.WAITING:
+                messages.append("It still hasn't started yet, so you can still "
+                                "message !join to join that game.")
+            return messages
+    
+    # Has a user try to join a game about to begin, giving an error if they've
+    # already joined or the game can't be joined. Returns the list of messages the
+    # bot should say
+    def join_game(self, game: Game, message: discord.Message) -> List[str]:
+        if game.state == GameState.NO_GAME:
+            return ["No game has been started yet for you to join.",
+                    "Message !newgame to start a new game."]
+        elif game.state != GameState.WAITING:
+            return [f"The game is already in progress, {message.author.name}.",
+                    "You're not allowed to join right now."]
+        elif game.add_player(message.author):
+            return [f"{message.author.name} has joined the game!",
+                    "Message !join to join the game, "
+                    "or !start to start the game."]
+        else:
+            return [f"You've already joined the game {message.author.name}!"]
+    
+    # Starts a game, so long as one hasn't already started, and there are enough
+    # players joined to play. Returns the messages the bot should say.
+    def start_game(self, game: Game, message: discord.Message) -> List[str]:
+        if game.state == GameState.NO_GAME:
+            return ["Message !newgame if you would like to start a new game."]
+        elif game.state != GameState.WAITING:
+            return [f"The game has already started, {message.author.name}.",
+                    "It can't be started twice."]
+        elif not game.is_player(message.author):
+            return [f"You are not a part of that game yet, {message.author.name}.",
+                    "Please message !join if you are interested in playing."]
+        elif len(game.players) < 2:
+            return ["The game must have at least two players before "
+                    "it can be started."]
+        else:
+            return game.start()
+    
+    # Deals the hands to the players, saying an error message if the hands have
+    # already been dealt, or the game hasn't started. Returns the messages the bot
+    # should say
+    def deal_hand(self, game: Game, message: discord.Message) -> List[str]:
+        if game.state == GameState.NO_GAME:
+            return ["No game has been started for you to deal. "
+                    "Message !newgame to start one."]
+        elif game.state == GameState.WAITING:
+            return ["You can't deal because the game hasn't started yet."]
+        elif game.state != GameState.NO_HANDS:
+            return ["The cards have already been dealt."]
+        elif game.dealer.user != message.author:
+            return [f"You aren't the dealer, {message.author.name}.",
+                    f"Please wait for {game.dealer.user.name} to !deal."]
+        else:
+            return game.deal_hands()
+    
+    # Handles a player calling a bet, giving an appropriate error message if the
+    # user is not the current player or betting hadn't started. Returns the list of
+    # messages the bot should say.
+    def call_bet(self, game: Game, message: discord.Message) -> List[str]:
+        if game.state == GameState.NO_GAME:
+            return ["No game has been started yet. Message !newgame to start one."]
+        elif game.state == GameState.WAITING:
+            return ["You can't call any bets because the game hasn't started yet."]
+        elif not game.is_player(message.author):
+            return ["You can't call, because you're not playing, "
+                    f"{message.author.name}."]
+        elif game.state == GameState.NO_HANDS:
+            return ["You can't call any bets because the hands haven't been "
+                    "dealt yet."]
+        elif game.current_player.user != message.author:
+            return [f"You can't call {message.author.name}, because it's "
+                    f"{game.current_player.user.name}'s turn."]
+        else:
+            return game.call()
+    
+    # Has a player check, giving an error message if the player cannot check.
+    # Returns the list of messages the bot should say.
+    def check(self, game: Game, message: discord.Message) -> List[str]:
+        if game.state == GameState.NO_GAME:
+            return ["No game has been started yet. Message !newgame to start one."]
+        elif game.state == GameState.WAITING:
+            return ["You can't check because the game hasn't started yet."]
+        elif not game.is_player(message.author):
+            return ["You can't check, because you're not playing, "
+                    f"{message.author.name}."]
+        elif game.state == GameState.NO_HANDS:
+            return ["You can't check because the hands haven't been dealt yet."]
+        elif game.current_player.user != message.author:
+            return [f"You can't check, {message.author.name}, because it's "
+                    f"{game.current_player.user.name}'s turn."]
+        elif game.current_player.cur_bet != game.cur_bet:
+            return [f"You can't check, {message.author.name} because you need to "
+                    f"put in ${game.cur_bet - game.current_player.cur_bet} to "
+                    "call."]
+        else:
+            return game.check()
+    
+    # Has a player raise a bet, giving an error message if they made an invalid
+    # raise, or if they cannot raise. Returns the list of messages the bot will say
+    def raise_bet(self, game: Game, message: discord.Message) -> List[str]:
+        if game.state == GameState.NO_GAME:
+            return ["No game has been started yet. Message !newgame to start one."]
+        elif game.state == GameState.WAITING:
+            return ["You can't raise because the game hasn't started yet."]
+        elif not game.is_player(message.author):
+            return ["You can't raise, because you're not playing, "
+                    f"{message.author.name}."]
+        elif game.state == GameState.NO_HANDS:
+            return ["You can't raise because the hands haven't been dealt yet."]
+        elif game.current_player.user != message.author:
+            return [f"You can't raise, {message.author.name}, because it's "
+                    f"{game.current_player.name}'s turn."]
+    
+        tokens = message.content.split()
+        if len(tokens) < 2:
+            return [f"Please follow !raise with the amount that you would "
+                    "like to raise it by."]
+        try:
+            amount = int(tokens[1])
+            if game.cur_bet >= game.current_player.max_bet:
+                return ["You don't have enough money to raise the current bet "
+                        f"of ${game.cur_bet}."]
+            elif game.cur_bet + amount > game.current_player.max_bet:
+                return [f"You don't have enough money to raise by ${amount}.",
+                        "The most you can raise it by is "
+                        f"${game.current_player.max_bet - game.cur_bet}."]
+            return game.raise_bet(amount)
+        except ValueError:
+            return ["Please follow !raise with an integer. "
+                    f"'{tokens[1]}' is not an integer."]
+    
+    # Has a player fold their hand, giving an error message if they cannot fold
+    # for some reason. Returns the list of messages the bot should say
+    def fold_hand(self, game: Game, message: discord.Message) -> List[str]:
+        if game.state == GameState.NO_GAME:
+            return ["No game has been started yet. "
+                    "Message !newgame to start one."]
+        elif game.state == GameState.WAITING:
+            return ["You can't fold yet because the game hasn't started yet."]
+        elif not game.is_player(message.author):
+            return ["You can't fold, because you're not playing, "
+                    f"{message.author.name}."]
+        elif game.state == GameState.NO_HANDS:
+            return ["You can't fold yet because the hands haven't been dealt yet."]
+        elif game.current_player.user != message.author:
+            return [f"You can't fold {message.author.name}, because it's "
+                    f"{game.current_player.name}'s turn."]
+        else:
+            return game.fold()
+    
+    # Returns a list of messages that the bot should say in order to tell the
+    # players the list of available commands.
+    def show_help(self, game: Game, message: discord.Message) -> List[str]:
+        longest_command = len(max(commands, key=len))
+        help_lines = []
+        for command, info in sorted(commands.items()):
+            spacing = ' ' * (longest_command - len(command) + 2)
+            help_lines.append(command + spacing + info[0])
+        return ['```' + '\n'.join(help_lines) + '```']
+    
+    # Returns a list of messages that the bot should say in order to tell the
+    # players the list of settable options.
+    def show_options(self, game: Game, message: discord.Message) -> List[str]:
+        longest_option = len(max(game.options, key=len))
+        longest_value = max([len(str(val)) for key, val in game.options.items()])
+        option_lines = []
+        for option in GAME_OPTIONS:
+            name_spaces = ' ' * (longest_option - len(option) + 2)
+            val_spaces = ' ' * (longest_value - len(str(game.options[option])) + 2)
+            option_lines.append(option + name_spaces + str(game.options[option])
+                                + val_spaces + GAME_OPTIONS[option].description)
+        return ['```' + '\n'.join(option_lines) + '```']
+    
+    # Sets an option to player-specified value. Says an error message if the player
+    # tries to set a nonexistent option or if the option is set to an invalid value
+    # Returns the list of messages the bot should say.
+    def set_option(self, game: Game, message: discord.Message) -> List[str]:
+        tokens = message.content.split()
+        if len(tokens) == 2:
+            return ["You must specify a new value after the name of an option "
+                    "when using the !set command."]
+        elif len(tokens) == 1:
+            return ["You must specify an option and value to set when using "
+                    "the !set command."]
+        elif tokens[1] not in GAME_OPTIONS:
+            return [f"'{tokens[1]}' is not an option. Message !options to see "
+                    "the list of options."]
+        try:
+            val = int(tokens[2])
+            if val < 0:
+                return [f"Cannot set {tokens[1]} to a negative value!"]
+            game.options[tokens[1]] = val
+            return [f"The {tokens[1]} is now set to {tokens[2]}."]
+        except ValueError:
+            return [f"{tokens[1]} must be set to an integer, and '{tokens[2]}'"
+                    " is not a valid integer."]
+    
+    # Returns a list of messages that the bot should say to tell the players of
+    # the current chip standings.
+    def chip_count(self, game: Game, message: discord.Message) -> List[str]:
+        if game.state in (GameState.NO_GAME, GameState.WAITING):
+            return ["You can't request a chip count because the game "
+                    "hasn't started yet."]
+        return [f"{player.user.name} has ${player.balance}."
+                for player in game.players]
+    
+    # Handles a player going all-in, returning an error message if the player
+    # cannot go all-in for some reason. Returns the list of messages for the bot
+    # to say.
+    def all_in(self, game: Game, message: discord.Message) -> List[str]:
+        if game.state == GameState.NO_GAME:
+            return ["No game has been started yet. Message !newgame to start one."]
+        elif game.state == GameState.WAITING:
+            return ["You can't go all in because the game hasn't started yet."]
+        elif not game.is_player(message.author):
+            return ["You can't go all in, because you're not playing, "
+                    f"{message.author.name}."]
+        elif game.state == GameState.NO_HANDS:
+            return ["You can't go all in because the hands haven't "
+                    "been dealt yet."]
+        elif game.current_player.user != message.author:
+            return [f"You can't go all in, {message.author.name}, because "
+                    f"it's {game.current_player.user.name}'s turn."]
+        else:
+            return game.all_in()
+    
+    Command = namedtuple("Command", ["description", "action"])
+    
+    # The commands avaliable to the players
+    commands: Dict[str, Command] = {
+        '!newgame': Command('Starts a new game, allowing players to join.',
+                            new_game),
+        '!join':    Command('Lets you join a game that is about to begin',
+                            join_game),
+        '!start':   Command('Begins a game after all players have joined',
+                            start_game),
+        '!deal':    Command('Deals the hole cards to all the players',
+                            deal_hand),
+        '!call':    Command('Matches the current bet',
+                            call_bet),
+        '!raise':   Command('Increase the size of current bet',
+                            raise_bet),
+        '!check':   Command('Bet no money',
+                            check),
+        '!fold':    Command('Discard your hand and forfeit the pot',
+                            fold_hand),
+        '!help':    Command('Show the list of commands',
+                            show_help),
+        '!options': Command('Show the list of options and their current values',
+                            show_options),
+        '!set':     Command('Set the value of an option',
+                            set_option),
+        '!count':   Command('Shows how many chips each player has left',
+                            chip_count),
+        '!all-in':  Command('Bets the entirety of your remaining chips',
+                            all_in),
+    }
+    
+    async def on_message(self, message):
+        # Ignore messages sent by the bot itself
+        if message.author == client.user:
+            return
+        # Ignore empty messages
+        if len(message.content.split()) == 0:
+            return
+        # Ignore private messages
+        if message.channel.is_private:
+            return
+    
+        command = message.content.split()[0]
+        if command[0] == '!':
+            if command not in commands:
+                await message.channel.send(f"{message.content} is not a valid command. "
+                                     "Message !help to see the list of commands.")
+                return
+    
+            game = games.setdefault(message.channel, Game())
+            messages = commands[command][1](game, message)
+    
+            # The messages to send to the channel and the messages to send to the
+            # players individually must be done seperately, so we check the messages
+            # to the channel to see if hands were just dealt, and if so, we tell the
+            # players what their hands are.
+            if command == '!deal' and messages[0] == 'The hands have been dealt!':
+                await game.tell_hands(client)
+    
+            await message.channel.send('\n'.join(messages))
 
-    def draw(self) -> Card:
-        return self.cards.pop()
+def setup(bot):
+    bot.add_cog(Poker2())
+
