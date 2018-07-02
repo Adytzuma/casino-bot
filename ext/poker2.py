@@ -177,16 +177,6 @@ class Poker2:
             return game.fold()
     
     # Returns a list of messages that the bot should say in order to tell the
-    # players the list of available commands.
-    def show_help(self, game: Game, message: discord.Message) -> List[str]:
-        longest_command = len(max(commands, key=len))
-        help_lines = []
-        for command, info in sorted(commands.items()):
-            spacing = ' ' * (longest_command - len(command) + 2)
-            help_lines.append(command + spacing + info[0])
-        return ['```' + '\n'.join(help_lines) + '```']
-    
-    # Returns a list of messages that the bot should say in order to tell the
     # players the list of settable options.
     def show_options(self, game: Game, message: discord.Message) -> List[str]:
         longest_option = len(max(game.options, key=len))
@@ -256,37 +246,35 @@ class Poker2:
     
     # The commands avaliable to the players
     commands: Dict[str, Command] = {
-        '!newgame': Command('Starts a new game, allowing players to join.',
+        'c!newgame': Command('Starts a new game, allowing players to join',
                             new_game),
-        '!join':    Command('Lets you join a game that is about to begin',
+        'c!join':    Command('Lets you join a game that is about to begin',
                             join_game),
-        '!start':   Command('Begins a game after all players have joined',
+        'c!start':   Command('Begins a game after all players have joined',
                             start_game),
-        '!deal':    Command('Deals the hole cards to all the players',
+        'c!deal':    Command('Deals the hole cards to all the players',
                             deal_hand),
-        '!call':    Command('Matches the current bet',
+        'c!call':    Command('Matches the current bet',
                             call_bet),
-        '!raise':   Command('Increase the size of current bet',
+        'c!raise':   Command('Increase the size of current bet',
                             raise_bet),
-        '!check':   Command('Bet no money',
+        'c!check':   Command('Bet no money',
                             check),
-        '!fold':    Command('Discard your hand and forfeit the pot',
+        'c!fold':    Command('Discard your hand and forfeit the pot',
                             fold_hand),
-        '!help':    Command('Show the list of commands',
-                            show_help),
-        '!options': Command('Show the list of options and their current values',
+        'c!options': Command('Show the list of options and their current values',
                             show_options),
-        '!set':     Command('Set the value of an option',
+        'c!options set':     Command('Set the value of an option',
                             set_option),
-        '!count':   Command('Shows how many chips each player has left',
+        'c!count':   Command('Shows how many chips each player has left',
                             chip_count),
-        '!all-in':  Command('Bets the entirety of your remaining chips',
+        'c!all-in':  Command('Bets the entirety of your remaining chips',
                             all_in),
     }
     
     async def on_message(self, message):
         # Ignore messages sent by the bot itself
-        if message.author == bot.user:
+        if message.author == self.bot.user:
             return
         # Ignore empty messages
         if len(message.content.split()) == 0:
@@ -296,12 +284,7 @@ class Poker2:
             return
     
         command = message.content.split()[0]
-        if command[0] == '!':
-            if command not in commands:
-                await message.channel.send(f"{message.content} is not a valid command. "
-                                     "Message !help to see the list of commands.")
-                return
-    
+        if command[0] == 'c!':
             game = games.setdefault(message.channel, Game())
             messages = commands[command][1](game, message)
     
@@ -309,10 +292,59 @@ class Poker2:
             # players individually must be done seperately, so we check the messages
             # to the channel to see if hands were just dealt, and if so, we tell the
             # players what their hands are.
-            if command == '!deal' and messages[0] == 'The hands have been dealt!':
-                await game.tell_hands(bot)
+            if command == 'c!deal' and messages[0] == 'The hands have been dealt!':
+                await game.tell_hands(self.bot)
     
             await message.channel.send('\n'.join(messages))
+    
+    # Create commands for people to see them in the help command
+    @command.commands(brief = 'Starts a new game, allowing players to join')
+    async def newgame(self, ctx):
+        pass
+    
+    @command.commands(brief = 'Lets you join a game that is about to begin')
+    async def join(self, ctx):
+        pass
+    
+    @command.commands(brief = 'Begins a game after all players have joined')
+    async def start(self, ctx):
+        pass
+    
+    @command.commands(brief = 'Deals the hole cards to all the players')
+    async def deal(self, ctx):
+        pass
+    
+    @command.commands(brief = 'Matches the current bet')
+    async def call(self, ctx):
+        pass
+    
+    @command.commands(brief = 'Starts a new game, allowing players to join')
+    async def _raise(self, ctx):
+        pass
+    
+    @command.commands(brief = 'Bet no money')
+    async def check(self, ctx):
+        pass
+    
+    @command.commands(brief = 'Discard your hand and forfeit the pot')
+    async def fold(self, ctx):
+        pass
+    
+    @group.commands(brief = 'Show the list of options and their current values')
+    async def options(self, ctx):
+        pass
+    
+    @options.commands(brief = 'Set the value of an option')
+    async def set(self, ctx):
+        pass
+    
+    @command.commands(brief = 'Shows how many chips each player has left')
+    async def count(self, ctx):
+        pass
+    
+    @command.commands(name = 'all-in', brief = 'Bets the entirety of your remaining chips')
+    async def allin(self, ctx):
+        pass
 
 def setup(bot):
     bot.add_cog(Poker2(bot))
