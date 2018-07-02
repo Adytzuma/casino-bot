@@ -264,7 +264,7 @@ class Poker2:
                             fold_hand),
         'c!options': Commandd('Show the list of options and their current values',
                             show_options),
-        'c!options set':     Command('Set the value of an option',
+        'c!options set':     Commandd('Set the value of an option',
                             set_option),
         'c!count':   Commandd('Shows how many chips each player has left',
                             chip_count),
