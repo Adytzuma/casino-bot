@@ -347,7 +347,7 @@ class Poker:
 
                         num = self.emojis["numbers_up"]
                         for n in num:
-                            msg.add_reaction(n)
+                            await msg.add_reaction(n)
 
                         try:
                             rtc, user = await self.bot.wait_for('reaction_add', timeout=60, check=check)
@@ -393,7 +393,7 @@ class Poker:
 
                         num = self.emojis["numbers_trash"]
                         for n in num:
-                            msg.add_reaction(n)
+                            await msg.add_reaction(n)
 
                         try:
                             rtc, user= await self.bot.wait_for('reaction_add', timeout=60, check=check)
