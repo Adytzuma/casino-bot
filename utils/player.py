@@ -2,7 +2,7 @@ from typing import Tuple
 
 import discord
 
-from poker import Card
+from .poker import Card
 
 # A class that contains information on an individual player
 class Player:
