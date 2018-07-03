@@ -319,7 +319,7 @@ class Tekas_Hold_em:
     async def call(self, ctx):
         pass
     
-    @commands.command(brief = 'Starts a new game, allowing players to join')
+    @commands.command(name = 'raise', brief = 'Starts a new game, allowing players to join')
     async def _raise(self, ctx):
         pass
     
