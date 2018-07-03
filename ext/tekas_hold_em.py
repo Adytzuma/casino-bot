@@ -9,9 +9,40 @@ from utils.game import Game, GAME_OPTIONS, GameState
 
 games: Dict[discord.TextChannel, Game] = {}
 
+Commandd = namedtuple("Command", ["description", "action"])
+    
+# The commands avaliable to the players
+commandds: Dict[str, Commandd] = {
+    'c!newgame': Commandd('Starts a new game, allowing players to join',
+                        new_game),
+    'c!join':    Commandd('Lets you join a game that is about to begin',
+                        join_game),
+    'c!start':   Commandd('Begins a game after all players have joined',
+                        start_game),
+    'c!deal':    Commandd('Deals the hole cards to all the players',
+                        deal_hand),
+    'c!call':    Commandd('Matches the current bet',
+                        call_bet),
+    'c!raise':   Commandd('Increase the size of current bet',
+                        raise_bet),
+    'c!check':   Commandd('Bet no money',
+                        check),
+    'c!fold':    Commandd('Discard your hand and forfeit the pot',
+                        fold_hand),
+    'c!options': Commandd('Show the list of options and their current values',
+                        show_options),
+    'c!set':     Commandd('Set the value of an option',
+                        set_option),
+    'c!count':   Commandd('Shows how many chips each player has left',
+                        chip_count),
+    'c!all-in':  Commandd('Bets the entirety of your remaining chips',
+                        all_in),
+}
+
 class Tekas_Hold_em:
     def __init__(self, bot):
         self.bot = bot
+        self.commandds = 
     
     # Starts a new game if one hasn't been started yet, returning an error message
     # if a game has already been started. Returns the messages the bot should say
@@ -241,36 +272,7 @@ class Tekas_Hold_em:
                     f"it's {game.current_player.user.name}'s turn."]
         else:
             return game.all_in()
-            
-    Commandd = namedtuple("Command", ["description", "action"])
-    
-    # The commands avaliable to the players
-    commandds: Dict[str, Commandd] = {
-        'c!newgame': Commandd('Starts a new game, allowing players to join',
-                            new_game),
-        'c!join':    Commandd('Lets you join a game that is about to begin',
-                            join_game),
-        'c!start':   Commandd('Begins a game after all players have joined',
-                            start_game),
-        'c!deal':    Commandd('Deals the hole cards to all the players',
-                            deal_hand),
-        'c!call':    Commandd('Matches the current bet',
-                            call_bet),
-        'c!raise':   Commandd('Increase the size of current bet',
-                            raise_bet),
-        'c!check':   Commandd('Bet no money',
-                            check),
-        'c!fold':    Commandd('Discard your hand and forfeit the pot',
-                            fold_hand),
-        'c!options': Commandd('Show the list of options and their current values',
-                            show_options),
-        'c!set':     Commandd('Set the value of an option',
-                            set_option),
-        'c!count':   Commandd('Shows how many chips each player has left',
-                            chip_count),
-        'c!all-in':  Commandd('Bets the entirety of your remaining chips',
-                            all_in),
-    }
+
     
     async def on_message(self, message):
         # Ignore messages sent by the bot itself
