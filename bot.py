@@ -34,7 +34,7 @@ from libneko.pag import factory
 bot = commands.Bot(command_prefix='c!')
 
 
-async def ext_reload(bot):
+async def ext_load(bot):
     # Imports modules
     path = getcwd() + '/ext/'
     files = []
@@ -44,7 +44,6 @@ async def ext_reload(bot):
             files.append('ext.' + f.replace('.py', ''))
     for i in files:
         try:
-            exec('bot.unload_extension("%s")' % i)
             exec('bot.load_extension("%s")' % i)
         except Exception as e:
             stdout = io.StringIO()
@@ -76,7 +75,7 @@ async def presence():
 
 @bot.event
 async def on_ready():
-    await ext_reload(bot)
+    await ext_load(bot)
     em = discord.Embed(title='Bot deployed', colour=discord.Colour.green(), timestamp=datetime.utcnow())
     msg = await bot.get_channel(446298417413750786).send(embed=em)
     await msg.add_reaction('✅')
@@ -100,8 +99,6 @@ async def on_command_error(ctx, error):
     channel = bot.get_channel(446291887524020224)
     await ctx.send("Ups. An unexpected error has been raised, the error has been reported to the developer and will be "
                    "fixed soon :smile:")
-    context = (ctx.message, channel, ctx.bot)
-
     binder = factory.StringNavigatorFactory(max_lines=50, prefix='```py', suffix='```')
     
     error = error.__cause__ or error
@@ -112,7 +109,7 @@ async def on_command_error(ctx, error):
         binder.add_line(line)
     
     await channel.send(fmt)
-    binder.start(context)
+    binder.start(ctx)
 
 
 @bot.event
