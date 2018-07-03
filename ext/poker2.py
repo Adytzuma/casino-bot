@@ -265,7 +265,7 @@ class Tekas_Hold_em:
                             fold_hand),
         'c!options': Commandd('Show the list of options and their current values',
                             show_options),
-        'c!options set':     Commandd('Set the value of an option',
+        'c!set':     Commandd('Set the value of an option',
                             set_option),
         'c!count':   Commandd('Shows how many chips each player has left',
                             chip_count),
@@ -331,11 +331,11 @@ class Tekas_Hold_em:
     async def fold(self, ctx):
         pass
     
-    @commands.group(brief = 'Show the list of options and their current values')
+    @commands.command(brief = 'Show the list of options and their current values')
     async def options(self, ctx):
         pass
     
-    @options.command(brief = 'Set the value of an option')
+    @commands.command(brief = 'Set the value of an option')
     async def set(self, ctx):
         pass
     
