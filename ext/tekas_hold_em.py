@@ -42,7 +42,6 @@ commandds: Dict[str, Commandd] = {
 class Tekas_Hold_em:
     def __init__(self, bot):
         self.bot = bot
-        self.commandds = 
     
     # Starts a new game if one hasn't been started yet, returning an error message
     # if a game has already been started. Returns the messages the bot should say
