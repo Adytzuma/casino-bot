@@ -331,7 +331,7 @@ class Tekas_Hold_em:
     async def fold(self, ctx):
         pass
     
-    @group.command(brief = 'Show the list of options and their current values')
+    @commands.group(brief = 'Show the list of options and their current values')
     async def options(self, ctx):
         pass
     
