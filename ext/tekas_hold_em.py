@@ -241,10 +241,11 @@ class Tekas_Hold_em:
                     f"it's {game.current_player.user.name}'s turn."]
         else:
             return game.all_in()
-    
+            
     Commandd = namedtuple("Command", ["description", "action"])
     
     # The commands avaliable to the players
+    global commandds
     commandds: Dict[str, Commandd] = {
         'c!newgame': Commandd('Starts a new game, allowing players to join',
                             new_game),
@@ -281,9 +282,10 @@ class Tekas_Hold_em:
             return
     
         _command = message.content.split()[0]
-        if _command[0] + _command[1] == 'c!':
+        if message.content.startswith('c!'):
+            if _command not in commands:
             game = games.setdefault(message.channel, Game())
-            messages = commandds[commandd][1](game, message)
+            messages = commandds[_command][1](game, message)
     
             # The messages to send to the channel and the messages to send to the
             # players individually must be done seperately, so we check the messages
