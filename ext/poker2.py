@@ -280,9 +280,6 @@ class Tekas_Hold_em:
         # Ignore empty messages
         if len(message.content.split()) == 0:
             return
-        # Ignore private messages
-        if message.channel.is_private:
-            return
     
         _command = message.content.split()[0]
         if _command[0] == 'c!':
