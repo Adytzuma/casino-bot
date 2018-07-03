@@ -284,6 +284,7 @@ class Tekas_Hold_em:
         _command = message.content.split()[0]
         if message.content.startswith('c!'):
             if _command not in commands:
+                return
             game = games.setdefault(message.channel, Game())
             messages = commandds[_command][1](game, message)
     
