@@ -245,7 +245,6 @@ class Tekas_Hold_em:
     Commandd = namedtuple("Command", ["description", "action"])
     
     # The commands avaliable to the players
-    global commandds
     commandds: Dict[str, Commandd] = {
         'c!newgame': Commandd('Starts a new game, allowing players to join',
                             new_game),
