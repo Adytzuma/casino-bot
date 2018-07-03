@@ -502,7 +502,7 @@ class Poker:
 
     @commands.check(is_testing_channel)
     @commands.command(brief='Join a poker game on a channel')
-    async def join(self, ctx):
+    async def join1(self, ctx):
         channel_id = ctx.channel.id
         user = ctx.author
         if channel_id in self.running_games:
