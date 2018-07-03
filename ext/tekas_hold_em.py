@@ -39,10 +39,6 @@ commandds: Dict[str, Commandd] = {
                         all_in),
 }
 
-class Tekas_Hold_em:
-    def __init__(self, bot):
-        self.bot = bot
-    
     # Starts a new game if one hasn't been started yet, returning an error message
     # if a game has already been started. Returns the messages the bot should say
     def new_game(self, game: Game, message: discord.Message) -> List[str]:
@@ -272,6 +268,10 @@ class Tekas_Hold_em:
         else:
             return game.all_in()
 
+
+class Tekas_Hold_em:
+    def __init__(self, bot):
+        self.bot = bot
     
     async def on_message(self, message):
         # Ignore messages sent by the bot itself
