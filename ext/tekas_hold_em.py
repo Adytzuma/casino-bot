@@ -11,7 +11,7 @@ games: Dict[discord.TextChannel, Game] = {}
 
 # Starts a new game if one hasn't been started yet, returning an error message
 # if a game has already been started. Returns the messages the bot should say
-def new_game(self, game: Game, message: discord.Message) -> List[str]:
+def new_game(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
         game.new_game()
         game.add_player(message.author)
@@ -29,7 +29,7 @@ def new_game(self, game: Game, message: discord.Message) -> List[str]:
 # Has a user try to join a game about to begin, giving an error if they've
 # already joined or the game can't be joined. Returns the list of messages the
 # bot should say
-def join_game(self, game: Game, message: discord.Message) -> List[str]:
+def join_game(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
         return ["No game has been started yet for you to join.",
                 "Message !newgame to start a new game."]
@@ -45,7 +45,7 @@ def join_game(self, game: Game, message: discord.Message) -> List[str]:
 
 # Starts a game, so long as one hasn't already started, and there are enough
 # players joined to play. Returns the messages the bot should say.
-def start_game(self, game: Game, message: discord.Message) -> List[str]:
+def start_game(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
         return ["Message !newgame if you would like to start a new game."]
     elif game.state != GameState.WAITING:
@@ -63,7 +63,7 @@ def start_game(self, game: Game, message: discord.Message) -> List[str]:
 # Deals the hands to the players, saying an error message if the hands have
 # already been dealt, or the game hasn't started. Returns the messages the bot
 # should say
-def deal_hand(self, game: Game, message: discord.Message) -> List[str]:
+def deal_hand(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
         return ["No game has been started for you to deal. "
                 "Message !newgame to start one."]
@@ -80,7 +80,7 @@ def deal_hand(self, game: Game, message: discord.Message) -> List[str]:
 # Handles a player calling a bet, giving an appropriate error message if the
 # user is not the current player or betting hadn't started. Returns the list of
 # messages the bot should say.
-def call_bet(self, game: Game, message: discord.Message) -> List[str]:
+def call_bet(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
         return ["No game has been started yet. Message !newgame to start one."]
     elif game.state == GameState.WAITING:
@@ -99,7 +99,7 @@ def call_bet(self, game: Game, message: discord.Message) -> List[str]:
 
 # Has a player check, giving an error message if the player cannot check.
 # Returns the list of messages the bot should say.
-def check(self, game: Game, message: discord.Message) -> List[str]:
+def check(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
         return ["No game has been started yet. Message !newgame to start one."]
     elif game.state == GameState.WAITING:
@@ -121,7 +121,7 @@ def check(self, game: Game, message: discord.Message) -> List[str]:
 
 # Has a player raise a bet, giving an error message if they made an invalid
 # raise, or if they cannot raise. Returns the list of messages the bot will say
-def raise_bet(self, game: Game, message: discord.Message) -> List[str]:
+def raise_bet(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
         return ["No game has been started yet. Message !newgame to start one."]
     elif game.state == GameState.WAITING:
@@ -155,7 +155,7 @@ def raise_bet(self, game: Game, message: discord.Message) -> List[str]:
     
 # Has a player fold their hand, giving an error message if they cannot fold
 # for some reason. Returns the list of messages the bot should say
-def fold_hand(self, game: Game, message: discord.Message) -> List[str]:
+def fold_hand(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
         return ["No game has been started yet. "
                 "Message !newgame to start one."]
@@ -174,7 +174,7 @@ def fold_hand(self, game: Game, message: discord.Message) -> List[str]:
 
 # Returns a list of messages that the bot should say in order to tell the
 # players the list of settable options.
-def show_options(self, game: Game, message: discord.Message) -> List[str]:
+def show_options(game: Game, message: discord.Message) -> List[str]:
     longest_option = len(max(game.options, key=len))
     longest_value = max([len(str(val)) for key, val in game.options.items()])
     option_lines = []
@@ -188,7 +188,7 @@ def show_options(self, game: Game, message: discord.Message) -> List[str]:
 # Sets an option to player-specified value. Says an error message if the player
 # tries to set a nonexistent option or if the option is set to an invalid value
 # Returns the list of messages the bot should say.
-def set_option(self, game: Game, message: discord.Message) -> List[str]:
+def set_option(game: Game, message: discord.Message) -> List[str]:
     tokens = message.content.split()
     if len(tokens) == 2:
         return ["You must specify a new value after the name of an option "
@@ -211,7 +211,7 @@ def set_option(self, game: Game, message: discord.Message) -> List[str]:
 
 # Returns a list of messages that the bot should say to tell the players of
 # the current chip standings.
-def chip_count(self, game: Game, message: discord.Message) -> List[str]:
+def chip_count(game: Game, message: discord.Message) -> List[str]:
     if game.state in (GameState.NO_GAME, GameState.WAITING):
         return ["You can't request a chip count because the game "
                 "hasn't started yet."]
@@ -221,7 +221,7 @@ def chip_count(self, game: Game, message: discord.Message) -> List[str]:
 # Handles a player going all-in, returning an error message if the player
 # cannot go all-in for some reason. Returns the list of messages for the bot
 # to say.
-def all_in(self, game: Game, message: discord.Message) -> List[str]:
+def all_in(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
         return ["No game has been started yet. Message !newgame to start one."]
     elif game.state == GameState.WAITING:
