@@ -291,7 +291,7 @@ class Tekas_Hold_em:
             # players individually must be done seperately, so we check the messages
             # to the channel to see if hands were just dealt, and if so, we tell the
             # players what their hands are.
-            if command == 'c!deal' and messages[0] == 'The hands have been dealt!':
+            if _command == 'c!deal' and messages[0] == 'The hands have been dealt!':
                 await game.tell_hands(self.bot)
     
             await message.channel.send('\n'.join(messages))
