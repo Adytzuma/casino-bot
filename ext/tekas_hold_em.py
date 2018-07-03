@@ -7,12 +7,11 @@ from discord.ext import commands
 
 from utils.game import Game, GAME_OPTIONS, GameState
 
+games: Dict[discord.TextChannel, Game] = {}
 
 class Tekas_Hold_em:
     def __init__(self, bot):
         self.bot = bot
-    
-    games: Dict[discord.TextChannel, Game] = {}
     
     # Starts a new game if one hasn't been started yet, returning an error message
     # if a game has already been started. Returns the messages the bot should say
