@@ -3,11 +3,12 @@ import os
 from typing import Dict, List
 
 import discord
+from discord.ext import commands
 
 from utils.game import Game, GAME_OPTIONS, GameState
 
 
-class Poker2:
+class Tekas_Hold_em:
     def __init__(self, bot):
         self.bot = bot
     
@@ -347,5 +348,5 @@ class Poker2:
         pass
 
 def setup(bot):
-    bot.add_cog(Poker2(bot))
+    bot.add_cog(Tekas_Hold_em(bot))
 
