@@ -17,13 +17,13 @@ def new_game(game: Game, message: discord.Message) -> List[str]:
         game.add_player(message.author)
         game.state = GameState.WAITING
         return [f"A new game has been started by {message.author.name}!",
-                "Message !join to join the game."]
+                "Message c!join to join the game."]
     else:
         messages = ["There is already a game in progress, "
                     "you can't start a new game."]
         if game.state == GameState.WAITING:
             messages.append("It still hasn't started yet, so you can still "
-                            "message !join to join that game.")
+                            "message c!join to join that game.")
         return messages
     
 # Has a user try to join a game about to begin, giving an error if they've
@@ -32,14 +32,14 @@ def new_game(game: Game, message: discord.Message) -> List[str]:
 def join_game(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
         return ["No game has been started yet for you to join.",
-                "Message !newgame to start a new game."]
+                "Message c!newgame to start a new game."]
     elif game.state != GameState.WAITING:
         return [f"The game is already in progress, {message.author.name}.",
                 "You're not allowed to join right now."]
     elif game.add_player(message.author):
         return [f"{message.author.name} has joined the game!",
-                "Message !join to join the game, "
-                "or !start to start the game."]
+                "Message c!join to join the game, "
+                "or c!start to start the game."]
     else:
         return [f"You've already joined the game {message.author.name}!"]
 
@@ -47,13 +47,13 @@ def join_game(game: Game, message: discord.Message) -> List[str]:
 # players joined to play. Returns the messages the bot should say.
 def start_game(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
-        return ["Message !newgame if you would like to start a new game."]
+        return ["Message c!newgame if you would like to start a new game."]
     elif game.state != GameState.WAITING:
         return [f"The game has already started, {message.author.name}.",
                 "It can't be started twice."]
     elif not game.is_player(message.author):
         return [f"You are not a part of that game yet, {message.author.name}.",
-                "Please message !join if you are interested in playing."]
+                "Please message c!join if you are interested in playing."]
     elif len(game.players) < 2:
         return ["The game must have at least two players before "
                 "it can be started."]
@@ -66,14 +66,14 @@ def start_game(game: Game, message: discord.Message) -> List[str]:
 def deal_hand(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
         return ["No game has been started for you to deal. "
-                "Message !newgame to start one."]
+                "Message c!newgame to start one."]
     elif game.state == GameState.WAITING:
         return ["You can't deal because the game hasn't started yet."]
     elif game.state != GameState.NO_HANDS:
         return ["The cards have already been dealt."]
     elif game.dealer.user != message.author:
         return [f"You aren't the dealer, {message.author.name}.",
-                f"Please wait for {game.dealer.user.name} to !deal."]
+                f"Please wait for {game.dealer.user.name} to c!deal."]
     else:
         return game.deal_hands()
 
@@ -82,7 +82,7 @@ def deal_hand(game: Game, message: discord.Message) -> List[str]:
 # messages the bot should say.
 def call_bet(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
-        return ["No game has been started yet. Message !newgame to start one."]
+        return ["No game has been started yet. Message c!newgame to start one."]
     elif game.state == GameState.WAITING:
         return ["You can't call any bets because the game hasn't started yet."]
     elif not game.is_player(message.author):
@@ -101,7 +101,7 @@ def call_bet(game: Game, message: discord.Message) -> List[str]:
 # Returns the list of messages the bot should say.
 def check(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
-        return ["No game has been started yet. Message !newgame to start one."]
+        return ["No game has been started yet. Message c!newgame to start one."]
     elif game.state == GameState.WAITING:
         return ["You can't check because the game hasn't started yet."]
     elif not game.is_player(message.author):
@@ -123,7 +123,7 @@ def check(game: Game, message: discord.Message) -> List[str]:
 # raise, or if they cannot raise. Returns the list of messages the bot will say
 def raise_bet(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
-        return ["No game has been started yet. Message !newgame to start one."]
+        return ["No game has been started yet. Message c!newgame to start one."]
     elif game.state == GameState.WAITING:
         return ["You can't raise because the game hasn't started yet."]
     elif not game.is_player(message.author):
@@ -137,7 +137,7 @@ def raise_bet(game: Game, message: discord.Message) -> List[str]:
                 
     tokens = message.content.split()
     if len(tokens) < 2:
-        return [f"Please follow !raise with the amount that you would "
+        return [f"Please follow c!raise with the amount that you would "
                 "like to raise it by."]
     try:
         amount = int(tokens[1])
@@ -150,7 +150,7 @@ def raise_bet(game: Game, message: discord.Message) -> List[str]:
                     f"${game.current_player.max_bet - game.cur_bet}."]
         return game.raise_bet(amount)
     except ValueError:
-        return ["Please follow !raise with an integer. "
+        return ["Please follow c!raise with an integer. "
                 f"'{tokens[1]}' is not an integer."]
     
 # Has a player fold their hand, giving an error message if they cannot fold
@@ -158,7 +158,7 @@ def raise_bet(game: Game, message: discord.Message) -> List[str]:
 def fold_hand(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
         return ["No game has been started yet. "
-                "Message !newgame to start one."]
+                "Message c!newgame to start one."]
     elif game.state == GameState.WAITING:
         return ["You can't fold yet because the game hasn't started yet."]
     elif not game.is_player(message.author):
@@ -195,9 +195,9 @@ def set_option(game: Game, message: discord.Message) -> List[str]:
                 "when using the !set command."]
     elif len(tokens) == 1:
         return ["You must specify an option and value to set when using "
-                "the !set command."]
+                "the c!set command."]
     elif tokens[1] not in GAME_OPTIONS:
-        return [f"'{tokens[1]}' is not an option. Message !options to see "
+        return [f"'{tokens[1]}' is not an option. Message c!options to see "
                 "the list of options."]
     try:
         val = int(tokens[2])
@@ -223,7 +223,7 @@ def chip_count(game: Game, message: discord.Message) -> List[str]:
 # to say.
 def all_in(game: Game, message: discord.Message) -> List[str]:
     if game.state == GameState.NO_GAME:
-        return ["No game has been started yet. Message !newgame to start one."]
+        return ["No game has been started yet. Message c!newgame to start one."]
     elif game.state == GameState.WAITING:
         return ["You can't go all in because the game hasn't started yet."]
     elif not game.is_player(message.author):
