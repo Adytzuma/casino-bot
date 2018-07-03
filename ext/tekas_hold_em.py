@@ -320,7 +320,7 @@ class Tekas_Hold_em:
     async def _raise(self, ctx):
         pass
     
-   @commands.command(brief = 'Bet no money')
+    @commands.command(brief = 'Bet no money')
     async def check(self, ctx):
         pass
     
