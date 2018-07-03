@@ -296,53 +296,53 @@ class Tekas_Hold_em:
             await message.channel.send('\n'.join(messages))
     
     # Create commands for people to see them in the help command
-    @commands.command(brief = 'Starts a new game, allowing players to join')
-    async def newgame(self, ctx):
-        pass
-    
-    @commands.command(brief = 'Lets you join a game that is about to begin')
-    async def join(self, ctx):
-        pass
-    
-    @commands.command(brief = 'Begins a game after all players have joined')
-    async def start(self, ctx):
-        pass
-    
-    @commands.command(brief = 'Deals the hole cards to all the players')
-    async def deal(self, ctx):
-        pass
-    
-    @commands.command(brief = 'Matches the current bet')
-    async def call(self, ctx):
-        pass
-    
-    @commands.command(name = 'raise', brief = 'Starts a new game, allowing players to join')
-    async def _raise(self, ctx):
-        pass
-    
-    @commands.command(brief = 'Bet no money')
-    async def check(self, ctx):
-        pass
-    
-    @commands.command(brief = 'Discard your hand and forfeit the pot')
-    async def fold(self, ctx):
-        pass
-    
-    @commands.command(brief = 'Show the list of options and their current values')
-    async def options(self, ctx):
-        pass
-    
-    @commands.command(brief = 'Set the value of an option')
-    async def set(self, ctx):
-        pass
-    
-    @commands.command(brief = 'Shows how many chips each player has left')
-    async def count(self, ctx):
-        pass
-    
-    @commands.command(name = 'all-in', brief = 'Bets the entirety of your remaining chips')
-    async def allin(self, ctx):
-        pass
+#    @commands.command(brief = 'Starts a new game, allowing players to join')
+#    async def newgame(self, ctx):
+#        pass
+#    
+#    @commands.command(brief = 'Lets you join a game that is about to begin')
+#    async def join(self, ctx):
+#        pass
+#    
+#    @commands.command(brief = 'Begins a game after all players have joined')
+#    async def start(self, ctx):
+#        pass
+#    
+#    @commands.command(brief = 'Deals the hole cards to all the players')
+#    async def deal(self, ctx):
+#        pass
+#    
+#    @commands.command(brief = 'Matches the current bet')
+#    async def call(self, ctx):
+#        pass
+#    
+#    @commands.command(name = 'raise', brief = 'Starts a new game, allowing players to join')
+#    async def _raise(self, ctx):
+#        pass
+#    
+#   @commands.command(brief = 'Bet no money')
+#    async def check(self, ctx):
+#        pass
+#    
+#    @commands.command(brief = 'Discard your hand and forfeit the pot')
+#    async def fold(self, ctx):
+#        pass
+#    
+#    @commands.command(brief = 'Show the list of options and their current values')
+#    async def options(self, ctx):
+#        pass
+#    
+#    @commands.command(brief = 'Set the value of an option')
+#    async def set(self, ctx):
+#        pass
+#    
+#    @commands.command(brief = 'Shows how many chips each player has left')
+#    async def count(self, ctx):
+#        pass
+#    
+#    @commands.command(name = 'all-in', brief = 'Bets the entirety of your remaining chips')
+#    async def allin(self, ctx):
+#        pass
 
 def setup(bot):
     bot.add_cog(Tekas_Hold_em(bot))
