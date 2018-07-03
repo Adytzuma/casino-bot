@@ -37,6 +37,7 @@ class Admin:
     async def sudo_group(self, ctx):
         pass
 
+    @commands.check(has_perm)
     @sudo_group.command(name='exec', aliases=['shell'])
     async def execute(self, ctx, *, code):
         """Executes the given code."""
@@ -152,6 +153,7 @@ class Admin:
 
         return sout, serr, str(exit_code), exec_time, path
 
+    @commands.check(has_perm)
     @sudo_group.command()
     async def logout(self, ctx):
         """Makes the bot log out."""
