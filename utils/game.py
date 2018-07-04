@@ -232,11 +232,11 @@ class Game:
         else:
             messages.append(f"The current bet to meet is ${self.cur_bet}.")
         if self.current_player.cur_bet == self.cur_bet:
-            messages.append("Message !check, !raise or !fold.")
+            messages.append("Message c!check, c!raise or c!fold.")
         elif self.current_player.max_bet > self.cur_bet:
-            messages.append("Message !call, !raise or !fold.")
+            messages.append("Message c!call, c!raise or c!fold.")
         else:
-            messages.append("Message !all-in or !fold.")
+            messages.append("Message c!all-in or c!fold.")
         return messages
 
     # Advances to the next round of betting (or to the showdown), returning a
