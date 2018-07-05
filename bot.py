@@ -73,24 +73,19 @@ class Casino (commands.Bot):
             await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name='c!help'))
             await sleep(30)
     
-    
-    @bot.event
     async def on_ready(self):
         await ext_load(bot)
         em = discord.Embed(title='Bot deployed', colour=discord.Colour.green(), timestamp=datetime.utcnow())
         msg = await bot.get_channel(446298417413750786).send(embed=em)
         await msg.add_reaction('✅')
-    
-        
-    @bot.listen
+
+
     async def on_message(self, message):
         if message.author.bot is True:
             return
         else:
             await bot.process_commands(message)
         
-    
-    @bot.event
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound) or isinstance(error, commands.CheckFailure):
             return
@@ -112,24 +107,23 @@ class Casino (commands.Bot):
         await channel.send(fmt)
         binder.start(ctx)
     
-    
-    @bot.event
     async def on_guild_join(self, server):
         em = discord.Embed(title='Server joined', colour=discord.Colour.green(), timestamp=datetime.utcnow())
         em.set_thumbnail(url=server.icon_url)
         em.add_field(name='Server name:', value=server.name, inline=True)
         em.add_field(name='Server id:', value=server.id, inline=True)
         em.add_field(name='Server owner:', value="<@!" + str(server.owner.id) + ">", inline=True)
+        em.add_field(name='Server owner id:', value=server.owner.id, inline=True)
         await bot.get_channel(446292018415665152).send(embed=em)
     
-    
-    @bot.event
+
     async def on_guild_remove(self, server):
         em = discord.Embed(title='Server left', colour=discord.Colour.gold(), timestamp=datetime.utcnow())
         em.set_thumbnail(url=server.icon_url)
         em.add_field(name='Server name:', value=server.name, inline=True)
         em.add_field(name='Server id:', value=server.id, inline=True)
         em.add_field(name='Server owner:', value="<@!" + str(server.owner.id) + ">", inline=True)
+        em.add_field(name='Server owner id:', value=server.owner.id, inline=True)
         await bot.get_channel(446292018415665152).send(embed=em)
 
 bot = Casino()
