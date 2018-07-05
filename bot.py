@@ -55,24 +55,6 @@ class Casino (commands.Bot):
                     % i) + '\nError:```py\n{}{}\n```'.format(value, traceback.format_exc()))
                 await msg.add_reaction('❌')
     
-    
-    async def presence(self):
-        await bot.wait_until_ready()
-        while not bot.is_closed():
-            a = 0
-            for i in bot.guilds:
-                for u in i.members:
-                    if u.bot is False:
-                        a = a + 1
-    
-            await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='%s users | '
-                                                                                                         '%s servers' % 
-                                                                                                         (a, len(bot.guilds)
-                                                                                                          )))
-            await sleep(30)
-            await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name='c!help'))
-            await sleep(30)
-    
     async def on_ready(self):
         await ext_load(bot)
         em = discord.Embed(title='Bot deployed', colour=discord.Colour.green(), timestamp=datetime.utcnow())
@@ -127,6 +109,17 @@ class Casino (commands.Bot):
         await bot.get_channel(446292018415665152).send(embed=em)
 
 bot = Casino()
+
+async def presence(self):
+    await bot.wait_until_ready()
+    while not bot.is_closed():
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='%s users | '
+                                                                                                     '%s servers' % 
+                                                                                                     (bot.users, len(bot.guilds)
+                                                                                                      )))
+        await sleep(30)
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name='c!help'))
+        await sleep(30)
 
 bot.loop.create_task(presence())
 bot.run(os.getenv("TOKEN"))
