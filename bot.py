@@ -110,7 +110,7 @@ class Casino (commands.Bot):
 
 bot = Casino()
 
-async def presence(self):
+async def presence():
     await bot.wait_until_ready()
     while not bot.is_closed():
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='%s users | '
