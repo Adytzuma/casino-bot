@@ -268,7 +268,7 @@ commandds: Dict[str, Commandd] = {
                         all_in),
 }
 
-class Tekas_Hold_em:
+class Texas_Hold_em:
     def __init__(self, bot):
         self.bot = bot
     
