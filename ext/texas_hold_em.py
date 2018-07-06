@@ -346,5 +346,5 @@ class Texas_Hold_em:
         pass
 
 def setup(bot):
-    bot.add_cog(Tekas_Hold_em(bot))
+    bot.add_cog(Texas_Hold_em(bot))
 
